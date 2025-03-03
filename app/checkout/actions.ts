@@ -19,6 +19,6 @@ export async function getCountriesInfo() {
 export async function getCountryNamesForQuery(query: string) {
   const countries = await getCountriesInfo();
   return Object.keys(countries).filter((countryName: string) =>
-    countryName.startsWith(query),
+    countryName.toLowerCase().startsWith(query.toLowerCase()),
   );
 }
