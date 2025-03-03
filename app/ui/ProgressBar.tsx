@@ -22,7 +22,7 @@ export default function ProgressBar({ activeLabel }: Props) {
     },
   ];
   return (
-    <ol className="flex">
+    <ol className="flex justify-center gap-12">
       {steps.map((step) => (
         <li key={step.label}>{step.label}</li>
       ))}
