@@ -41,10 +41,9 @@ export default function AddressFormsContainer({ getCountries }: Props) {
 
   const onInputChange = (
     addressType: AddressType,
-    event: ChangeEvent<HTMLInputElement>,
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    const { value, name, type } = event.target;
-    console.log(value, name, type);
+    const { value, name } = event.target;
     setFormData({
       ...formData,
       [addressType]: { ...formData[addressType], [name]: value },
@@ -88,6 +87,6 @@ export default function AddressFormsContainer({ getCountries }: Props) {
           />
         )}
       </form>
-    </>
+    </main>
   );
 }
