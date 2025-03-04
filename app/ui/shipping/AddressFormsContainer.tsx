@@ -66,8 +66,12 @@ export default function AddressFormsContainer({ getCountries }: Props) {
   }
 
   return (
-    <>
-      <form id="address-form" name="address-form">
+    <main className="m-4">
+      <form
+        id="address-form"
+        name="address-form"
+        className="flex flex-col gap-8"
+      >
         <AddressForm
           addressType="shipping"
           addressData={formData.shipping}
