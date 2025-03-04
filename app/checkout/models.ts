@@ -7,11 +7,27 @@ export type CountriesInfo = {
 export type AddressType = "shipping" | "billing";
 
 export const AddressSchema: ZodType<FormData> = z.object({
-  name: z.string(),
-  address: z.string(),
-  zip: z.string(),
-  region: z.string().optional(),
-  country: z.string(),
-  phone: z.string(),
-  email: z.string().email(),
+  name: z
+    .string({ message: "Name can't be empty." })
+    .max(100, "Name can have max. 255 characters."),
+  address: z
+    .string({ message: "Address can't be empty." })
+    .max(100, "Address can have max. 255 characters."),
+  zip: z
+    .string({ message: "ZIP / postal code can't be empty" })
+    .max(100, "ZIP / postal code can have max. 255 characters."),
+  region: z
+    .string()
+    .max(100, "State / province can have max. 255 characters.")
+    .optional(),
+  country: z
+    .string({ message: "Country / territory can't be empty." })
+    .max(100, "Country / territory can have max. 255 characters."),
+  phone: z
+    .string({ message: "Phone number can't be empty." })
+    .max(15, "Phone number can have max. 15 digits."),
+  email: z
+    .string({ message: "Email can't be empty." })
+    .email({ message: "Enter a valid email." })
+    .max(100, "Email can have max. 255 characters."),
 });
