@@ -8,6 +8,7 @@ type AddressData = {
   region: string;
   country: string;
   tel: string;
+  email: string;
 };
 
 interface Props {
@@ -20,7 +21,7 @@ interface Props {
   ) => void;
   onInputChange: (
     addressType: AddressType,
-    event: ChangeEvent<HTMLInputElement>,
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
   onCheckboxChange?: () => void;
   isBillingAddressSame?: boolean;
@@ -52,7 +53,7 @@ export default function AddressForm({
       </section>
       <section>
         <label htmlFor={`${addressType}-address`}>Address</label>
-        <input
+        <textarea
           id={`${addressType}-address`}
           name="address"
           autoComplete="street-address"
@@ -115,7 +116,19 @@ export default function AddressForm({
           value={addressData.tel}
           onChange={(event) => onInputChange(addressType, event)}
           type="tel"
-          className="border border-black"
+          className="border border-black w-112"
+        />
+      </section>
+      <section className="flex flex-col gap-2">
+        <label htmlFor={`${addressType}-email`}>Email</label>
+        <input
+          id={`${addressType}-email`}
+          name="email"
+          autoComplete="email"
+          value={addressData.email}
+          onChange={(event) => onInputChange(addressType, event)}
+          type="text"
+          className="border border-black w-112"
         />
       </section>
       {addressType === "shipping" && (

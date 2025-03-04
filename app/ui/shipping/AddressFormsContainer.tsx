@@ -18,6 +18,7 @@ export default function AddressFormsContainer({ getCountries }: Props) {
       region: "",
       country: "",
       tel: "",
+      email: "",
     },
     billing: {
       name: "",
@@ -26,6 +27,7 @@ export default function AddressFormsContainer({ getCountries }: Props) {
       region: "",
       country: "",
       tel: "",
+      email: "",
     },
     isBillingAddressSame: true,
   });
