@@ -1,6 +1,7 @@
 import { getCountryNamesForQuery } from "@/app/checkout/actions";
 import AddressFormsContainer from "@/app/ui/shipping/AddressFormsContainer";
-import ProgressBar from "@/app/ui/ProgressBar";
+import ProgressBreadcrumbs from "@/app/ui/ProgressBreadcrumbs";
+import { ReturningCustomer } from "@/app/ui/shipping/ReturningCustomer";
 
 export default function ShippingPage() {
   return (
