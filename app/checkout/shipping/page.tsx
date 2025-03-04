@@ -5,7 +5,8 @@ import ProgressBar from "@/app/ui/ProgressBar";
 export default function ShippingPage() {
   return (
     <div>
-      <ProgressBar activeLabel="Shipping & Billing" />
+      <ProgressBreadcrumbs activeLabel="Shipping & Billing" />
+      <ReturningCustomer />
       <AddressFormsContainer getCountries={getCountryNamesForQuery} />
     </div>
   );
