@@ -66,31 +66,25 @@ export default function AddressFormsContainer({ getCountries }: Props) {
   }
 
   return (
-    <main className="m-4">
-      <form
-        id="address-form"
-        name="address-form"
-        className="flex flex-col gap-8"
-      >
+    <main className="flex flex-col gap-8 m-4">
+      <AddressForm
+        addressType="shipping"
+        addressData={formData.shipping}
+        countries={countries}
+        onCountryInputChange={onCountryInputChange}
+        onInputChange={onInputChange}
+        onCheckboxChange={onCheckboxChange}
+        isBillingAddressSame={formData.isBillingAddressSame}
+      />
+      {!formData.isBillingAddressSame && (
         <AddressForm
-          addressType="shipping"
-          addressData={formData.shipping}
+          addressType="billing"
+          addressData={formData.billing}
           countries={countries}
           onCountryInputChange={onCountryInputChange}
           onInputChange={onInputChange}
-          onCheckboxChange={onCheckboxChange}
-          isBillingAddressSame={formData.isBillingAddressSame}
         />
-        {!formData.isBillingAddressSame && (
-          <AddressForm
-            addressType="billing"
-            addressData={formData.billing}
-            countries={countries}
-            onCountryInputChange={onCountryInputChange}
-            onInputChange={onInputChange}
-          />
-        )}
-      </form>
+      )}
     </main>
   );
 }

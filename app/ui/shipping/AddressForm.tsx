@@ -37,7 +37,11 @@ export default function AddressForm({
   isBillingAddressSame = undefined,
 }: Props) {
   return (
-    <section className="flex flex-col gap-4">
+    <form
+      id={`${addressType}-address-form`}
+      name={`${addressType}-address-form`}
+      className="flex flex-col gap-4"
+    >
       <h1 className="capitalize text-3xl mb-4">{addressType} address</h1>
       <section className="flex flex-col gap-2">
         <label htmlFor={`${addressType}-name`}>Full Name</label>
@@ -143,6 +147,6 @@ export default function AddressForm({
           <label htmlFor="billing-address-same">Use as Billing Address</label>
         </section>
       )}
-    </section>
+    </form>
   );
 }
