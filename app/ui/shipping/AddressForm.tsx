@@ -22,6 +22,8 @@ interface Props {
     addressType: AddressType,
     event: ChangeEvent<HTMLInputElement>,
   ) => void;
+  onCheckboxChange?: () => void;
+  isBillingAddressSame?: boolean;
 }
 
 export default function AddressForm({
