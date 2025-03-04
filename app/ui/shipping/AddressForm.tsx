@@ -30,6 +30,8 @@ export default function AddressForm({
   countries,
   onCountryInputChange,
   onInputChange,
+  onCheckboxChange,
+  isBillingAddressSame = undefined,
 }: Props) {
   return (
     <section>
@@ -114,6 +116,19 @@ export default function AddressForm({
           className="border border-black"
         />
       </section>
+      {addressType === "shipping" && (
+        <section>
+          <input
+            id="billing-address-same"
+            name="billing-address-same"
+            type="checkbox"
+            checked={isBillingAddressSame}
+            onChange={onCheckboxChange}
+            className="border border-black"
+          />
+          <label htmlFor="billing-address-same">Use as Billing Address</label>
+        </section>
+      )}
     </section>
   );
 }

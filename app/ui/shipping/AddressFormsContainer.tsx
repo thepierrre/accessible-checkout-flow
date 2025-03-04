@@ -73,27 +73,18 @@ export default function AddressFormsContainer({ getCountries }: Props) {
           countries={countries}
           onCountryInputChange={onCountryInputChange}
           onInputChange={onInputChange}
+          onCheckboxChange={onCheckboxChange}
+          isBillingAddressSame={formData.isBillingAddressSame}
         />
-        <section>
-          <input
-            id="billing-address-same"
-            name="billing-address-same"
-            type="checkbox"
-            checked={formData.isBillingAddressSame}
-            onChange={onCheckboxChange}
-            className="border border-black"
+        {!formData.isBillingAddressSame && (
+          <AddressForm
+            addressType="billing"
+            addressData={formData.billing}
+            countries={countries}
+            onCountryInputChange={onCountryInputChange}
+            onInputChange={onInputChange}
           />
-          <label htmlFor="billing-address-same">Use as Billing Address</label>
-          {!formData.isBillingAddressSame && (
-            <AddressForm
-              addressType="billing"
-              addressData={formData.billing}
-              countries={countries}
-              onCountryInputChange={onCountryInputChange}
-              onInputChange={onInputChange}
-            />
-          )}
-        </section>
+        )}
       </form>
     </>
   );
