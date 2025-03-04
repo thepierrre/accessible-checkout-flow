@@ -6,7 +6,6 @@ export default function ShippingPage() {
   return (
     <div>
       <ProgressBar activeLabel="Shipping & Billing" />
-      <h1>Shipping</h1>
       <AddressFormsContainer getCountries={getCountryNamesForQuery} />
     </div>
   );
