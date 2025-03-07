@@ -5,10 +5,12 @@ import { ReturningCustomer } from "@/app/ui/shipping/ReturningCustomer";
 
 export default function ShippingPage() {
   return (
-    <div>
-      <ProgressBreadcrumbs activeLabel="Shipping & Billing" />
-      <ReturningCustomer />
-      <AddressFormsContainer getCountries={getCountryNamesForQuery} />
+    <div className="flex flex-col items-center">
+      <ProgressBreadcrumbs activeLabel="Payment" />
+      <main className="flex flex-col gap-8 w-112">
+        <ReturningCustomer />
+        <AddressFormsContainer getCountries={getCountryNamesForQuery} />
+      </main>
     </div>
   );
 }

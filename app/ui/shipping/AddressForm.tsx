@@ -1,5 +1,11 @@
 import { ChangeEvent } from "react";
 import { AddressType } from "@/app/checkout/models";
+import { clsx } from "clsx";
+
+// FIXME: This is temporary. Export the inputs to a reusable component.
+const classNames = {
+  input: "border border-black w-112 py-1 px-2 rounded-md",
+};
 
 type AddressData = {
   name: string;
@@ -14,7 +20,7 @@ type AddressData = {
 interface Props {
   addressType: AddressType;
   addressData: AddressData;
-  countries: string[];
+  suggestedCountries: string[];
   onCountryInputChange: (
     addressType: AddressType,
     event: ChangeEvent<HTMLInputElement>,
@@ -30,21 +36,25 @@ interface Props {
 export default function AddressForm({
   addressType,
   addressData,
-  countries,
+  suggestedCountries,
   onCountryInputChange,
   onInputChange,
   onCheckboxChange,
   isBillingAddressSame = undefined,
 }: Props) {
+  const { input } = classNames;
+
   return (
     <form
       id={`${addressType}-address-form`}
       name={`${addressType}-address-form`}
       className="flex flex-col gap-4"
     >
-      <h1 className="capitalize text-3xl mb-4">{addressType} address</h1>
+      <h1 className="text-3xl mb-4">
+        <span className="capitalize">{addressType}</span> address
+      </h1>
       <section className="flex flex-col gap-2">
-        <label htmlFor={`${addressType}-name`}>Full Name</label>
+        <label htmlFor={`${addressType}-name`}>Full name</label>
         <input
           id={`${addressType}-name`}
           name="name"
@@ -52,7 +62,7 @@ export default function AddressForm({
           value={addressData.name}
           onChange={(event) => onInputChange(addressType, event)}
           type="text"
-          className="border border-black w-112"
+          className={input}
         />
       </section>
       <section className="flex flex-col gap-2">
@@ -63,11 +73,11 @@ export default function AddressForm({
           autoComplete="street-address"
           value={addressData.address}
           onChange={(event) => onInputChange(addressType, event)}
-          className="border border-black w-112"
+          className={clsx(input, "h-20")}
         />
       </section>
       <section className="flex flex-col gap-2">
-        <label htmlFor={`${addressType}-zip`}>ZIP / Postal Code</label>
+        <label htmlFor={`${addressType}-zip`}>ZIP / Postal code</label>
         <input
           id={`${addressType}-zip`}
           name="zip"
@@ -75,7 +85,7 @@ export default function AddressForm({
           value={addressData.zip}
           onChange={(event) => onInputChange(addressType, event)}
           type="text"
-          className="border border-black w-112"
+          className={input}
         />
       </section>
       <section className="flex flex-col gap-2">
@@ -89,7 +99,7 @@ export default function AddressForm({
           value={addressData.region}
           onChange={(event) => onInputChange(addressType, event)}
           type="text"
-          className="border border-black w-112"
+          className={input}
         />
       </section>
       <section className="flex flex-col gap-2">
@@ -99,15 +109,17 @@ export default function AddressForm({
           name="country"
           autoComplete="country"
           value={addressData.country}
-          list="country-names"
           onChange={(event) => onCountryInputChange(addressType, event)}
-          className="border border-black w-112"
+          type="text"
+          className={input}
         />
-        <datalist id="country-names">
-          {countries.map((country: string) => (
-            <option key={country} value={country} />
-          ))}
-        </datalist>
+        {suggestedCountries.length > 0 && (
+          <ul>
+            {suggestedCountries.map((country) => (
+              <li key={country}>{country}</li>
+            ))}
+          </ul>
+        )}
       </section>
       <section className="flex flex-col gap-2">
         {/*TODO: Add "Why do we need this information?"*/}
@@ -119,7 +131,7 @@ export default function AddressForm({
           value={addressData.tel}
           onChange={(event) => onInputChange(addressType, event)}
           type="tel"
-          className="border border-black w-112"
+          className={input}
         />
       </section>
       <section className="flex flex-col gap-2">
@@ -131,7 +143,7 @@ export default function AddressForm({
           value={addressData.email}
           onChange={(event) => onInputChange(addressType, event)}
           type="text"
-          className="border border-black w-112"
+          className={input}
         />
       </section>
       {addressType === "shipping" && (
@@ -142,7 +154,6 @@ export default function AddressForm({
             type="checkbox"
             checked={isBillingAddressSame}
             onChange={onCheckboxChange}
-            className="border border-black"
           />
           <label htmlFor="billing-address-same">Use as Billing Address</label>
         </section>

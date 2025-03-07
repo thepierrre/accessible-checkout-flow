@@ -1,8 +1,8 @@
 export function ReturningCustomer() {
   return (
-    <aside>
+    <section className="flex gap-2">
       <span>Returning customer?</span>
       <span>Click here to log in.</span>
-    </aside>
+    </section>
   );
 }
