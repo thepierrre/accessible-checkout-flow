@@ -30,6 +30,7 @@ interface Props {
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
   onCheckboxChange?: () => void;
+  onSuggestedCountryClick: (country: string, addressType: AddressType) => void;
   isBillingAddressSame?: boolean;
 }
 
@@ -40,6 +41,7 @@ export default function AddressForm({
   onCountryInputChange,
   onInputChange,
   onCheckboxChange,
+  onSuggestedCountryClick,
   isBillingAddressSame = undefined,
 }: Props) {
   const { input } = classNames;
@@ -102,7 +104,7 @@ export default function AddressForm({
           className={input}
         />
       </section>
-      <section className="flex flex-col gap-2">
+      <section className="relative flex flex-col gap-2">
         <label htmlFor={`${addressType}-country`}>Country / Territory</label>
         <input
           id={`${addressType}-country`}
@@ -114,9 +116,14 @@ export default function AddressForm({
           className={input}
         />
         {suggestedCountries.length > 0 && (
-          <ul>
+          <ul className="absolute w-112 top-20 max-h-44 overflow-y-auto bg-white flex flex-col shadow-md shadow-gray-400 rounded-md p-4 gap-4">
             {suggestedCountries.map((country) => (
-              <li key={country}>{country}</li>
+              <li
+                key={country}
+                onClick={() => onSuggestedCountryClick(country, addressType)}
+              >
+                {country}
+              </li>
             ))}
           </ul>
         )}

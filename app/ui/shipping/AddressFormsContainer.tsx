@@ -68,6 +68,13 @@ export default function AddressFormsContainer({ getCountries }: Props) {
     console.log("found countries: ", suggestedCountries);
   }
 
+  function onSuggestedCountryClick(country: string, addressType: AddressType) {
+    setFormData({
+      ...formData,
+      [addressType]: { ...formData[addressType], country: country },
+    });
+  }
+
   return (
     <>
       <AddressForm
@@ -77,6 +84,7 @@ export default function AddressFormsContainer({ getCountries }: Props) {
         onCountryInputChange={onCountryInputChange}
         onInputChange={onInputChange}
         onCheckboxChange={onCheckboxChange}
+        onSuggestedCountryClick={onSuggestedCountryClick}
         isBillingAddressSame={formData.isBillingAddressSame}
       />
       {!formData.isBillingAddressSame && (
@@ -86,6 +94,7 @@ export default function AddressFormsContainer({ getCountries }: Props) {
           suggestedCountries={suggestedCountries}
           onCountryInputChange={onCountryInputChange}
           onInputChange={onInputChange}
+          onSuggestedCountryClick={onSuggestedCountryClick}
         />
       )}
     </>
