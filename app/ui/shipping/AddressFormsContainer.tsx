@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function AddressFormsContainer({ getCountries }: Props) {
-  const [countries, setCountries] = useState<string[]>([]);
+  const [suggestedCountries, setSuggestedCountries] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     shipping: {
       name: "",
@@ -61,16 +61,19 @@ export default function AddressFormsContainer({ getCountries }: Props) {
     });
     if (value) {
       const foundCountries = await getCountries(value);
-      setCountries(foundCountries);
+      setSuggestedCountries(foundCountries);
+    } else {
+      setSuggestedCountries([]);
     }
+    console.log("found countries: ", suggestedCountries);
   }
 
   return (
-    <main className="flex flex-col gap-8 m-4">
+    <>
       <AddressForm
         addressType="shipping"
         addressData={formData.shipping}
-        countries={countries}
+        suggestedCountries={suggestedCountries}
         onCountryInputChange={onCountryInputChange}
         onInputChange={onInputChange}
         onCheckboxChange={onCheckboxChange}
@@ -80,11 +83,11 @@ export default function AddressFormsContainer({ getCountries }: Props) {
         <AddressForm
           addressType="billing"
           addressData={formData.billing}
-          countries={countries}
+          suggestedCountries={suggestedCountries}
           onCountryInputChange={onCountryInputChange}
           onInputChange={onInputChange}
         />
       )}
-    </main>
+    </>
   );
 }
