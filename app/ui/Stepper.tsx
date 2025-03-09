@@ -28,10 +28,6 @@ export default function Stepper({ activeLabel }: Props) {
     },
   ];
 
-  const activeLabelIndex: number = steps.findIndex(
-    (step) => step.label === activeLabel,
-  );
-
   const checkSvg = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -48,10 +44,20 @@ export default function Stepper({ activeLabel }: Props) {
     </svg>
   );
 
+  const currentStepIndex: number = steps.findIndex(
+    (step) => step.label === activeLabel,
+  );
+
+  function isStepComplete(index: number): boolean {
+    return index < currentStepIndex;
+  }
+
+  const isCurrentlyAtLastStep = currentStepIndex === 3;
+
   function progressCircleClass(index: number): string {
-    if (index < activeLabelIndex) {
+    if (isStepComplete(index) || isCurrentlyAtLastStep) {
       return "bg-green-500";
-    } else if (index === activeLabelIndex) {
+    } else if (index === currentStepIndex) {
       return "border-2 border-green-500 text-green-500";
     } else {
       return "border-2 border-gray-400 text-gray-400 font-medium";
@@ -59,7 +65,7 @@ export default function Stepper({ activeLabel }: Props) {
   }
 
   function progressBarStyle(index: number): string {
-    if (index < activeLabelIndex || index === activeLabelIndex) {
+    if (isStepComplete(index) || index === currentStepIndex) {
       return "bg-green-500";
     } else {
       return "bg-gray-400";
@@ -80,7 +86,9 @@ export default function Stepper({ activeLabel }: Props) {
                     progressCircleClass(index),
                   )}
                 >
-                  {activeLabelIndex > index ? checkSvg : `${index + 1}`}
+                  {isStepComplete(index) || isCurrentlyAtLastStep
+                    ? checkSvg
+                    : `${index + 1}`}
                 </div>
                 <div>{step.label}</div>
               </div>
