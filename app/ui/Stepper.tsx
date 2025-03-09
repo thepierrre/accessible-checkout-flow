@@ -4,7 +4,7 @@ interface Props {
   activeLabel: string;
 }
 
-export default function ProgressBreadcrumbs({ activeLabel }: Props) {
+export default function Stepper({ activeLabel }: Props) {
   const steps = [
     {
       label: "Shipping & Billing",

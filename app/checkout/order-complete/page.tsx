@@ -1,4 +1,4 @@
-import ProgressBreadcrumbs from "@/app/ui/ProgressBreadcrumbs";
+import Stepper from "@/app/ui/Stepper";
 
 export default function OrderCompletePage() {
   return (

@@ -3,7 +3,7 @@ import {
   getCountryNamesForQuery,
 } from "@/app/checkout/actions";
 import AddressFormsContainer from "@/app/ui/shipping/AddressFormsContainer";
-import ProgressBreadcrumbs from "@/app/ui/ProgressBreadcrumbs";
+import Stepper from "@/app/ui/Stepper";
 import { ReturningCustomer } from "@/app/ui/shipping/ReturningCustomer";
 
 export default async function ShippingAndBillingPage() {
