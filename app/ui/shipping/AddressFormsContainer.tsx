@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import AddressForm from "@/app/ui/shipping/AddressForm";
 import { AddressType } from "@/app/checkout/models";
 
@@ -37,10 +37,25 @@ export default function AddressFormsContainer({
     isBillingAddressSame: true,
   });
 
+  const billingAddressRef = useRef<HTMLFormElement | null>(null);
+
+  useEffect(() => {
+    if (!formData.isBillingAddressSame && billingAddressRef.current) {
+      billingAddressRef.current.scrollIntoView({
+        block: "start",
+        behavior: "smooth",
+      });
+    }
+  }, [formData.isBillingAddressSame]);
+
   const onCheckboxChange = () => {
-    setFormData({
-      ...formData,
-      isBillingAddressSame: !formData.isBillingAddressSame,
+    setFormData((prevState) => {
+      const isBillingAddressSame = !prevState.isBillingAddressSame;
+
+      return {
+        ...prevState,
+        isBillingAddressSame,
+      };
     });
   };
 
@@ -81,7 +96,7 @@ export default function AddressFormsContainer({
   }
 
   return (
-    <>
+    <section>
       <AddressForm
         addressType="shipping"
         addressData={formData.shipping}
@@ -94,6 +109,7 @@ export default function AddressFormsContainer({
       />
       {!formData.isBillingAddressSame && (
         <AddressForm
+          ref={billingAddressRef}
           addressType="billing"
           addressData={formData.billing}
           suggestedCountries={suggestedCountries}
@@ -102,6 +118,6 @@ export default function AddressFormsContainer({
           onSuggestedCountryClick={onSuggestedCountryClick}
         />
       )}
-    </>
+    </section>
   );
 }

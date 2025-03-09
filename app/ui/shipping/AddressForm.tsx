@@ -1,4 +1,4 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, Ref } from "react";
 import { AddressData, AddressType } from "@/app/checkout/models";
 import { clsx } from "clsx";
 import CountriesDatalist from "@/app/ui/shipping/CountriesDatalist";
@@ -9,6 +9,7 @@ const classNames = {
 };
 
 interface Props {
+  ref?: Ref<HTMLFormElement>;
   addressType: AddressType;
   addressData: AddressData;
   suggestedCountries: string[];
@@ -26,6 +27,7 @@ interface Props {
 }
 
 export default function AddressForm({
+  ref = null,
   addressType,
   addressData,
   suggestedCountries,
@@ -42,6 +44,7 @@ export default function AddressForm({
       id={`${addressType}-address-form`}
       name={`${addressType}-address-form`}
       className="flex flex-col gap-4"
+      ref={ref}
     >
       <h1 className="text-3xl mb-4">
         <span className="capitalize">{addressType}</span> address
@@ -138,7 +141,7 @@ export default function AddressForm({
             checked={isBillingAddressSame}
             onChange={onCheckboxChange}
           />
-          <label htmlFor="billing-address-same">Use as Billing Address</label>
+          <label htmlFor="billing-address-same">Use as billing address</label>
         </section>
       )}
     </form>
