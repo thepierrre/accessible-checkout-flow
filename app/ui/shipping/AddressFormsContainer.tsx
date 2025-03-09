@@ -5,11 +5,16 @@ import AddressForm from "@/app/ui/shipping/AddressForm";
 import { AddressType } from "@/app/checkout/models";
 
 interface Props {
-  getCountries: (query: string) => Promise<string[]>;
+  allCountries: string[];
+  getCountriesForQuery: (query: string) => Promise<string[]>;
 }
 
-export default function AddressFormsContainer({ getCountries }: Props) {
-  const [suggestedCountries, setSuggestedCountries] = useState<string[]>([]);
+export default function AddressFormsContainer({
+  allCountries,
+  getCountriesForQuery,
+}: Props) {
+  const [suggestedCountries, setSuggestedCountries] =
+    useState<string[]>(allCountries);
   const [formData, setFormData] = useState({
     shipping: {
       name: "",
@@ -60,10 +65,10 @@ export default function AddressFormsContainer({ getCountries }: Props) {
       [addressType]: { ...formData[addressType], country: value },
     });
     if (value) {
-      const foundCountries = await getCountries(value);
+      const foundCountries: string[] = await getCountriesForQuery(value);
       setSuggestedCountries(foundCountries);
     } else {
-      setSuggestedCountries([]);
+      setSuggestedCountries(allCountries);
     }
     console.log("found countries: ", suggestedCountries);
   }

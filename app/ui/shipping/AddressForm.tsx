@@ -1,20 +1,11 @@
 import { ChangeEvent } from "react";
 import { AddressData, AddressType } from "@/app/checkout/models";
 import { clsx } from "clsx";
+import CountriesDatalist from "@/app/ui/shipping/CountriesDatalist";
 
 // FIXME: This is temporary. Export the inputs to a reusable component.
 const classNames = {
   input: "border border-black w-112 py-1 px-2 rounded-md",
-};
-
-type AddressData = {
-  name: string;
-  address: string;
-  zip: string;
-  region: string;
-  country: string;
-  tel: string;
-  email: string;
 };
 
 interface Props {
@@ -104,30 +95,15 @@ export default function AddressForm({
           className={input}
         />
       </section>
-      <section className="relative flex flex-col gap-2">
-        <label htmlFor={`${addressType}-country`}>Country / Territory</label>
-        <input
-          id={`${addressType}-country`}
-          name="country"
-          autoComplete="country"
-          value={addressData.country}
-          onChange={(event) => onCountryInputChange(addressType, event)}
-          type="text"
-          className={input}
-        />
-        {suggestedCountries.length > 0 && (
-          <ul className="absolute w-112 top-20 max-h-44 overflow-y-auto bg-white flex flex-col shadow-md shadow-gray-400 rounded-md p-4 gap-4">
-            {suggestedCountries.map((country) => (
-              <li
-                key={country}
-                onClick={() => onSuggestedCountryClick(country, addressType)}
-              >
-                {country}
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+
+      <CountriesDatalist
+        suggestedCountries={suggestedCountries}
+        addressType={addressType}
+        country={addressData.country}
+        onCountryInputChange={onCountryInputChange}
+        onCountryClick={onSuggestedCountryClick}
+      />
+
       <section className="flex flex-col gap-2">
         {/*TODO: Add "Why do we need this information?"*/}
         <label htmlFor={`${addressType}-tel`}>Phone</label>
