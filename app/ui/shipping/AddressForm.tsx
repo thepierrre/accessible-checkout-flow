@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react";
-import { AddressType } from "@/app/checkout/models";
+import { AddressData, AddressType } from "@/app/checkout/models";
 import { clsx } from "clsx";
 
 // FIXME: This is temporary. Export the inputs to a reusable component.
