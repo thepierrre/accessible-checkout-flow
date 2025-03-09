@@ -1,0 +1,10 @@
+import ProgressBreadcrumbs from "@/app/ui/ProgressBreadcrumbs";
+
+export default function PaymentPage() {
+  return (
+    <div className="flex flex-col items-center">
+      <ProgressBreadcrumbs activeLabel="Payment" />
+      <main className="flex flex-col gap-8 w-112"></main>
+    </div>
+  );
+}
