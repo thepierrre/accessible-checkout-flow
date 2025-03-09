@@ -52,7 +52,7 @@ export default function ProgressBreadcrumbs({ activeLabel }: Props) {
     if (index < activeLabelIndex) {
       return "bg-green-500";
     } else if (index === activeLabelIndex) {
-      return "border-2 border-green-500 text-green-500 text-lg";
+      return "border-2 border-green-500 text-green-500";
     } else {
       return "border-2 border-gray-400 text-gray-400 font-medium";
     }
@@ -70,19 +70,21 @@ export default function ProgressBreadcrumbs({ activeLabel }: Props) {
     <nav className="border-b-black w-full">
       <ol className="flex justify-center gap-4 py-12">
         {steps.map((step, index) => (
-          <li key={step.label} className="flex flex-col gap-2">
-            <div className={clsx("w-60 h-1", progressBarStyle(index))}></div>
-            <div className="flex gap-4 items-center">
-              <div
-                className={clsx(
-                  "w-10 h-10 rounded-3xl flex items-center justify-center",
-                  progressCircleClass(index),
-                )}
-              >
-                {activeLabelIndex > index ? checkSvg : `${index + 1}`}
+          <li key={step.label}>
+            <a href={step.href} className="flex flex-col gap-2">
+              <div className={clsx("w-60 h-1", progressBarStyle(index))}></div>
+              <div className="flex gap-4 items-center">
+                <div
+                  className={clsx(
+                    "w-10 h-10 rounded-3xl flex items-center justify-center",
+                    progressCircleClass(index),
+                  )}
+                >
+                  {activeLabelIndex > index ? checkSvg : `${index + 1}`}
+                </div>
+                <div>{step.label}</div>
               </div>
-              <div>{step.label}</div>
-            </div>
+            </a>
           </li>
         ))}
       </ol>

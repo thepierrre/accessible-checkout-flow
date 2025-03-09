@@ -6,7 +6,7 @@ import { ReturningCustomer } from "@/app/ui/shipping/ReturningCustomer";
 export default function ShippingPage() {
   return (
     <div className="flex flex-col items-center">
-      <ProgressBreadcrumbs activeLabel="Payment" />
+      <ProgressBreadcrumbs activeLabel="Shipping & Billing" />
       <main className="flex flex-col gap-8 w-112">
         <ReturningCustomer />
         <AddressFormsContainer getCountries={getCountryNamesForQuery} />
