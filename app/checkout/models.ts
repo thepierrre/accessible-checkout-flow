@@ -6,6 +6,16 @@ export type CountriesInfo = {
 
 export type AddressType = "shipping" | "billing";
 
+export type AddressData = {
+  name: string;
+  address: string;
+  zip: string;
+  region: string;
+  country: string;
+  tel: string;
+  email: string;
+};
+
 export const AddressSchema: ZodType<FormData> = z.object({
   name: z
     .string({ message: "Name can't be empty." })
