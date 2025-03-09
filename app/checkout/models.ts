@@ -4,6 +4,13 @@ export type CountriesInfo = {
   [name: string]: number[];
 };
 
+export type CheckoutSteps =
+  | "Basket"
+  | "Shipping & Billing"
+  | "Review Order"
+  | "Payment"
+  | "Order complete";
+
 export type AddressType = "shipping" | "billing";
 
 export type AddressData = {
