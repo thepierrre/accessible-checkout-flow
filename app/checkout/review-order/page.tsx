@@ -1,4 +1,5 @@
 import Stepper from "@/app/ui/Stepper";
+import NavigationButtons from "@/app/ui/shipping/NavigationButtons";
 
 export default function ReviewOrderPage() {
   return (
