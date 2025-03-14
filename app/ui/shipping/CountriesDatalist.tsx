@@ -50,17 +50,7 @@ export default function CountriesDatalist({
         onChange={onCountryInputChange}
         onClick={handleInputClick}
       />
-      {/*<label htmlFor={`${addressType}-country`}>Country / Territory</label>*/}
-      {/*<input*/}
-      {/*  id={`${addressType}-country`}*/}
-      {/*  {...register(`${addressType}.country`)}*/}
-      {/*  autoComplete="off"*/}
-      {/*  //value={country}*/}
-      {/*  onClick={() => setDatalistIsShown(true)}*/}
-      {/*  onChange={(event) => onCountryInputChange(addressType, event)}*/}
-      {/*  type="text"*/}
-      {/*  className="border border-black w-112 py-1 px-2 rounded-md"*/}
-      {/*/>*/}
+
       {datalistIsShown && (
         <ul
           id="countries-list"

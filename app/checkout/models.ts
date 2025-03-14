@@ -19,9 +19,20 @@ export type AddressData = {
   zip: string;
   region?: string;
   country: string;
-  phone: string;
+  phone: { code: string; number: string };
   email: string;
 };
+
+// export const phoneSchema = z.object({
+//   code: z
+//     .string()
+//     .min(1, "Phone number can't be empty.")
+//     .max(15, "Phone number can have max. 15 digits."),
+//   number: z
+//     .string()
+//     .min(1, "Phone number can't be empty.")
+//     .max(15, "Phone number can have max. 15 digits."),
+// });
 
 export const addressFormSchema = z.object({
   name: z
@@ -44,7 +55,11 @@ export const addressFormSchema = z.object({
     .string()
     .min(1, "Country / territory can't be empty.")
     .max(100, "Country / territory can have max. 255 characters."),
-  phone: z
+  phoneCode: z
+    .string()
+    .min(1, "Phone number can't be empty.")
+    .max(15, "Phone number can have max. 15 digits."),
+  phoneNumber: z
     .string()
     .min(1, "Phone number can't be empty.")
     .max(15, "Phone number can have max. 15 digits."),

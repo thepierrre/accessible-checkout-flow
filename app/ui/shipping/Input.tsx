@@ -39,24 +39,12 @@ export default function Input({
         className="flex gap-2 align-center"
         onPointerLeave={() => setIsMouseOver(false)}
       >
-        <label htmlFor={`${addressType}-${name}`} className="font-semibold">
+        <label
+          htmlFor={`${addressType}-${name}`}
+          className="font-semibold antialiased"
+        >
           {labelText}
         </label>
-        {/*{name === "phone" && (*/}
-        {/*  <>*/}
-        {/*    <div*/}
-        {/*      onPointerEnter={() => setIsMouseOver(true)}*/}
-        {/*      className="relative inline-block"*/}
-        {/*    >*/}
-        {/*      ?*/}
-        {/*    </div>*/}
-        {/*    {isMouseOver && (*/}
-        {/*      <div className="bg-gray-300 text-sm py-1 px-2 rounded-md">*/}
-        {/*        <p>We ask in case there&#39;s an issue with your order</p>*/}
-        {/*      </div>*/}
-        {/*    )}*/}
-        {/*  </>*/}
-        {/*)}*/}
       </div>
 
       <input
@@ -66,11 +54,11 @@ export default function Input({
         onClick={onClick && onClick}
         autoComplete={autoComplete}
         type={type}
-        className="border border-black w-112 py-1 px-2 rounded-md h-8"
+        className="border border-gray-700 w-112 h-8 p-2 rounded-md text-sm"
       />
 
       {errorMessage && (
-        <p className="text-red-500 animate-in fade-in duration-700 text-sm">
+        <p className="text-red-500 animate-in fade-in duration-700 text-sm ">
           {errorMessage}
         </p>
       )}

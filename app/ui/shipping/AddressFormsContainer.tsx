@@ -38,7 +38,8 @@ export default function AddressFormsContainer({
         address: "",
         zip: "",
         country: "",
-        phone: "",
+        phoneCode: "+1",
+        phoneNumber: "",
         email: "",
         region: "",
       },
@@ -47,7 +48,8 @@ export default function AddressFormsContainer({
         address: "",
         zip: "",
         country: "",
-        phone: "",
+        phoneCode: "+1",
+        phoneNumber: "",
         email: "",
         region: "",
       },
@@ -94,7 +96,8 @@ export default function AddressFormsContainer({
         address: "",
         zip: "",
         country: "",
-        phone: "",
+        phoneCode: "+1",
+        phoneNumber: "",
         email: "",
         region: "",
       });
@@ -121,6 +124,14 @@ export default function AddressFormsContainer({
     setValue(`${addressType}.country`, country, { shouldValidate: true });
   }
 
+  function onCountryPhoneCodeClick(
+    phoneCodeNum: number,
+    addressType: AddressType,
+  ) {
+    const phoneCode = phoneCodeNum.toString();
+    setValue(`${addressType}.phoneCode`, phoneCode);
+  }
+
   const handleFormSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (isBillingSame) {
@@ -145,10 +156,12 @@ export default function AddressFormsContainer({
         onCountryInputChange={onCountryInputChange}
         onCheckboxChange={onCheckboxChange}
         onSuggestedCountryClick={onSuggestedCountryClick}
+        onCountryPhoneCodeClick={onCountryPhoneCodeClick}
         isBillingAddressSame={isBillingSame}
         register={register}
         watch={watch}
         errors={errors}
+        setValue={setValue}
       />
       {!isBillingSame && (
         <AddressForm
@@ -158,9 +171,11 @@ export default function AddressFormsContainer({
           countryPhoneCodes={countryPhoneCodes}
           onCountryInputChange={onCountryInputChange}
           onSuggestedCountryClick={onSuggestedCountryClick}
+          onCountryPhoneCodeClick={onCountryPhoneCodeClick}
           register={register}
           watch={watch}
           errors={errors}
+          setValue={setValue}
         />
       )}
       <NavigationButtons

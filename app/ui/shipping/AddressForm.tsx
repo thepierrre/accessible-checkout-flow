@@ -13,6 +13,7 @@ import {
   FieldErrorsImpl,
   Merge,
   UseFormRegister,
+  UseFormSetValue,
   UseFormWatch,
 } from "react-hook-form";
 import Input from "@/app/ui/shipping/Input";
@@ -29,10 +30,15 @@ interface Props {
   ) => void;
   onCheckboxChange?: () => void;
   onSuggestedCountryClick: (country: string, addressType: AddressType) => void;
+  onCountryPhoneCodeClick: (
+    phoneCodeNum: number,
+    addressType: AddressType,
+  ) => void;
   isBillingAddressSame?: boolean;
   register: UseFormRegister<CombinedAddressFormData>;
   watch: UseFormWatch<CombinedAddressFormData>;
   errors: FieldErrors<CombinedAddressFormData>;
+  setValue: UseFormSetValue<CombinedAddressFormData>;
 }
 
 export type FieldNameType = keyof {
@@ -40,7 +46,8 @@ export type FieldNameType = keyof {
   address: string;
   zip: string;
   country: string;
-  phone: string;
+  phoneCode: string;
+  phoneNumber: string;
   email: string;
   region: string;
 };
@@ -53,10 +60,12 @@ export default function AddressForm({
   onCountryInputChange,
   onCheckboxChange,
   onSuggestedCountryClick,
+  onCountryPhoneCodeClick,
   isBillingAddressSame = undefined,
   register,
   watch,
   errors,
+  setValue,
 }: Props) {
   const country = watch(`${addressType}.country`);
 
@@ -66,7 +75,7 @@ export default function AddressForm({
 
   return (
     <fieldset className="flex flex-col gap-4" ref={ref}>
-      <h1 className="text-3xl mb-4">
+      <h1 className="text-4xl mb-4 font-medium  antialiased drop-shadow-sm">
         <span className="capitalize">{addressType}</span> address
       </h1>
       <Input
@@ -125,14 +134,16 @@ export default function AddressForm({
         getErrorMessage={getErrorMessage}
       />
       <PhoneInput
-        name="phone"
-        labelText="Phone"
+        labelText="Phone number"
         addressType={addressType}
         register={register}
         autoComplete="tel"
         type="tel"
         getErrorMessage={getErrorMessage}
         countryPhoneCodes={countryPhoneCodes}
+        onCountryPhoneCodeClick={onCountryPhoneCodeClick}
+        setValue={setValue}
+        watch={watch}
       />
       {addressType === "shipping" && (
         <section className="flex gap-2">
