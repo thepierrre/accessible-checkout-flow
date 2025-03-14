@@ -11,7 +11,6 @@ export async function POST(request: NextRequest) {
       amount: amount,
       currency: "eur",
       // Detect available payment methods based on the user's browser.
-      automatic_payment_methods: { enabled: true },
     });
 
     return NextResponse.json({ clientSecret: paymentIntent.client_secret });

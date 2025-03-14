@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CheckoutSteps } from "@/app/checkout/models";
+import { PartialAddressFormData, CheckoutSteps } from "@/app/checkout/models";
 
 interface Props {
   previousStepName: CheckoutSteps;
@@ -11,18 +11,17 @@ interface Props {
 export default function NavigationButtons({
   previousStepName,
   nextStepName,
-  prevStepHref,
   nextStepHref,
 }: Props) {
   return (
     <section className="flex place-content-between">
-      <Link href={prevStepHref} className="bg-green-300 py-2 px-6 rounded-lg">
+      <button type="button" className="bg-green-300 py-2 px-6 rounded-lg">
         {previousStepName === "Basket" ? "Back to Basket" : previousStepName}
-      </Link>
+      </button>
       {nextStepName && nextStepHref && (
-        <Link href={nextStepHref} className="bg-green-700 py-2 px-6 rounded-lg">
+        <button type="submit" className="bg-green-700 py-2 px-6 rounded-lg">
           {nextStepName}
-        </Link>
+        </button>
       )}
     </section>
   );

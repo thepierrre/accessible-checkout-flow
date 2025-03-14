@@ -1,73 +1,104 @@
 "use client";
-
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import "country-flag-icons/3x2/flags.css";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import AddressForm from "@/app/ui/shipping/AddressForm";
-import { AddressType } from "@/app/checkout/models";
+import {
+  AddressType,
+  CombinedAddressFormData,
+  combinedAddressFormSchema,
+  CountriesInfo,
+} from "@/app/checkout/models";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import NavigationButtons from "@/app/ui/shipping/NavigationButtons";
+import { getAllCountryCodes } from "@/app/checkout/actions";
 
 interface Props {
   allCountries: string[];
   getCountriesForQuery: (query: string) => Promise<string[]>;
+  countryPhoneCodes: CountriesInfo;
 }
 
 export default function AddressFormsContainer({
   allCountries,
   getCountriesForQuery,
+  countryPhoneCodes,
 }: Props) {
   const [suggestedCountries, setSuggestedCountries] =
     useState<string[]>(allCountries);
-  const [formData, setFormData] = useState({
-    shipping: {
-      name: "",
-      address: "",
-      zip: "",
-      region: "",
-      country: "",
-      tel: "",
-      email: "",
+
+  const billingAddressRef = useRef<HTMLFieldSetElement | null>(null);
+
+  const form = useForm<CombinedAddressFormData>({
+    resolver: zodResolver(combinedAddressFormSchema),
+    mode: "all",
+    defaultValues: {
+      shipping: {
+        name: "",
+        address: "",
+        zip: "",
+        country: "",
+        phone: "",
+        email: "",
+        region: "",
+      },
+      billing: {
+        name: "",
+        address: "",
+        zip: "",
+        country: "",
+        phone: "",
+        email: "",
+        region: "",
+      },
+      isBillingAddressSame: true,
     },
-    billing: {
-      name: "",
-      address: "",
-      zip: "",
-      region: "",
-      country: "",
-      tel: "",
-      email: "",
-    },
-    isBillingAddressSame: true,
   });
 
-  const billingAddressRef = useRef<HTMLFormElement | null>(null);
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    setValue,
+    watch,
+    formState: { errors, isSubmitting },
+  } = form;
+
+  const isBillingSame = watch("isBillingAddressSame");
 
   useEffect(() => {
-    if (!formData.isBillingAddressSame && billingAddressRef.current) {
+    if (!isBillingSame && billingAddressRef.current) {
       billingAddressRef.current.scrollIntoView({
         block: "start",
         behavior: "smooth",
       });
     }
-  }, [formData.isBillingAddressSame]);
+  }, [isBillingSame]);
+
+  useEffect(() => {
+    if (getValues("isBillingAddressSame")) {
+      setValue("billing", getValues("shipping"));
+    }
+  });
 
   const onCheckboxChange = () => {
-    setFormData((prevState) => {
-      const isBillingAddressSame = !prevState.isBillingAddressSame;
+    const currentBillingStatus: boolean = getValues("isBillingAddressSame");
+    const newBillingStatus: boolean = !currentBillingStatus;
+    setValue("isBillingAddressSame", newBillingStatus);
 
-      return {
-        ...prevState,
-        isBillingAddressSame,
-      };
-    });
-  };
-
-  const onInputChange = (
-    addressType: AddressType,
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { value, name } = event.target;
-    setFormData({
-      ...formData,
-      [addressType]: { ...formData[addressType], [name]: value },
-    });
+    if (newBillingStatus) {
+      setValue("billing", getValues("shipping"));
+    } else {
+      setValue("billing", {
+        name: "",
+        address: "",
+        zip: "",
+        country: "",
+        phone: "",
+        email: "",
+        region: "",
+      });
+    }
   };
 
   async function onCountryInputChange(
@@ -75,49 +106,69 @@ export default function AddressFormsContainer({
     event: ChangeEvent<HTMLInputElement>,
   ) {
     const { value } = event.target;
-    setFormData({
-      ...formData,
-      [addressType]: { ...formData[addressType], country: value },
-    });
-    if (value) {
-      const foundCountries: string[] = await getCountriesForQuery(value);
-      setSuggestedCountries(foundCountries);
-    } else {
-      setSuggestedCountries(allCountries);
-    }
+
+    setValue(`${addressType}.country`, value);
+
+    const foundCountries = value
+      ? await getCountriesForQuery(value)
+      : allCountries;
+    setSuggestedCountries(foundCountries);
+
     console.log("found countries: ", suggestedCountries);
   }
 
   function onSuggestedCountryClick(country: string, addressType: AddressType) {
-    setFormData({
-      ...formData,
-      [addressType]: { ...formData[addressType], country: country },
-    });
+    setValue(`${addressType}.country`, country, { shouldValidate: true });
   }
 
+  const handleFormSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    if (isBillingSame) {
+      setValue("billing", getValues("shipping"));
+    }
+    await handleSubmit(
+      (data: CombinedAddressFormData) => {
+        console.log(data);
+      },
+      (errors) => {
+        console.log(errors);
+      },
+    )();
+  };
+
   return (
-    <section>
+    <form id="address-form" name="address-form" onSubmit={handleFormSubmit}>
       <AddressForm
         addressType="shipping"
-        addressData={formData.shipping}
         suggestedCountries={suggestedCountries}
+        countryPhoneCodes={countryPhoneCodes}
         onCountryInputChange={onCountryInputChange}
-        onInputChange={onInputChange}
         onCheckboxChange={onCheckboxChange}
         onSuggestedCountryClick={onSuggestedCountryClick}
-        isBillingAddressSame={formData.isBillingAddressSame}
+        isBillingAddressSame={isBillingSame}
+        register={register}
+        watch={watch}
+        errors={errors}
       />
-      {!formData.isBillingAddressSame && (
+      {!isBillingSame && (
         <AddressForm
           ref={billingAddressRef}
           addressType="billing"
-          addressData={formData.billing}
           suggestedCountries={suggestedCountries}
+          countryPhoneCodes={countryPhoneCodes}
           onCountryInputChange={onCountryInputChange}
-          onInputChange={onInputChange}
           onSuggestedCountryClick={onSuggestedCountryClick}
+          register={register}
+          watch={watch}
+          errors={errors}
         />
       )}
-    </section>
+      <NavigationButtons
+        previousStepName="Basket"
+        nextStepName="Review Order"
+        prevStepHref="basket"
+        nextStepHref="review-order"
+      />
+    </form>
   );
 }

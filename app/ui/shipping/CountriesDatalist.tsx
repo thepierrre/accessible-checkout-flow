@@ -1,5 +1,8 @@
-import { AddressType } from "@/app/checkout/models";
+import { AddressType, CombinedAddressFormData } from "@/app/checkout/models";
 import { ChangeEvent, useState } from "react";
+import { UseFormRegister } from "react-hook-form";
+import { FieldNameType } from "@/app/ui/shipping/AddressForm";
+import Input from "@/app/ui/shipping/Input";
 
 interface Props {
   suggestedCountries: string[];
@@ -10,16 +13,23 @@ interface Props {
     event: ChangeEvent<HTMLInputElement>,
   ) => void;
   onCountryClick: (country: string, addressType: AddressType) => void;
+  register: UseFormRegister<CombinedAddressFormData>;
+  getErrorMessage: (fieldName: FieldNameType) => string | null;
 }
 
 export default function CountriesDatalist({
   suggestedCountries,
   addressType,
-  country,
   onCountryInputChange,
   onCountryClick,
+  register,
+  getErrorMessage,
 }: Props) {
   const [datalistIsShown, setDatalistIsShown] = useState(false);
+
+  function handleInputClick() {
+    setDatalistIsShown(true);
+  }
 
   return (
     <section
@@ -29,17 +39,28 @@ export default function CountriesDatalist({
         console.log("section blur");
       }}
     >
-      <label htmlFor={`${addressType}-country`}>Country / Territory</label>
-      <input
-        id={`${addressType}-country`}
+      <Input
         name="country"
-        autoComplete="off"
-        value={country}
-        onClick={() => setDatalistIsShown(true)}
-        onChange={(event) => onCountryInputChange(addressType, event)}
+        labelText="Country / Territory"
+        addressType={addressType}
+        register={register}
+        autoComplete="country"
         type="text"
-        className="border border-black w-112 py-1 px-2 rounded-md"
+        getErrorMessage={getErrorMessage}
+        onChange={onCountryInputChange}
+        onClick={handleInputClick}
       />
+      {/*<label htmlFor={`${addressType}-country`}>Country / Territory</label>*/}
+      {/*<input*/}
+      {/*  id={`${addressType}-country`}*/}
+      {/*  {...register(`${addressType}.country`)}*/}
+      {/*  autoComplete="off"*/}
+      {/*  //value={country}*/}
+      {/*  onClick={() => setDatalistIsShown(true)}*/}
+      {/*  onChange={(event) => onCountryInputChange(addressType, event)}*/}
+      {/*  type="text"*/}
+      {/*  className="border border-black w-112 py-1 px-2 rounded-md"*/}
+      {/*/>*/}
       {datalistIsShown && (
         <ul
           id="countries-list"

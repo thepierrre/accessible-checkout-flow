@@ -1,10 +1,10 @@
 "use server";
 
-import { countries } from "countries-list";
+import { countries, getCountryCode } from "countries-list";
 import { CountriesInfo } from "@/app/checkout/models";
 
 // TODO: Cache
-export async function getCountriesInfo() {
+export async function getCountryPhoneCodes() {
   return Object.values(countries).reduce(
     (accumulatedObject, currentCountry) => {
       return {
@@ -17,14 +17,14 @@ export async function getCountriesInfo() {
 }
 
 export async function getAllCountryNames(): Promise<string[]> {
-  const countries = await getCountriesInfo();
+  const countries = await getCountryPhoneCodes();
   return Object.keys(countries).map((country) => country);
 }
 
 export async function getCountryNamesForQuery(
   query: string,
 ): Promise<string[]> {
-  const countries = await getCountriesInfo();
+  const countries = await getCountryPhoneCodes();
   return Object.keys(countries).filter((countryName: string) =>
     countryName.toLowerCase().startsWith(query.toLowerCase()),
   );
