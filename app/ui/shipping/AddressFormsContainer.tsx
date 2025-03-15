@@ -83,13 +83,17 @@ export default function AddressFormsContainer({
   });
 
   const onCheckboxChange = () => {
-    const currentBillingStatus: boolean = getValues("isBillingAddressSame");
-    const newBillingStatus: boolean = !currentBillingStatus;
-    setValue("isBillingAddressSame", newBillingStatus);
+    const currentIsBillingSame: boolean = getValues("isBillingAddressSame");
+    const newIsBillingSame: boolean = !currentIsBillingSame;
 
-    if (newBillingStatus) {
+    if (newIsBillingSame) {
+      setTimeout(() => {
+        setValue("isBillingAddressSame", newIsBillingSame);
+      }, 1000);
+      window.scrollTo({ top: 0, behavior: "smooth" });
       setValue("billing", getValues("shipping"));
     } else {
+      setValue("isBillingAddressSame", newIsBillingSame);
       setValue("billing", {
         name: "",
         address: "",
