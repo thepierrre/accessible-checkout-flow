@@ -160,18 +160,32 @@ export default function AddressFormsContainer({
         errors={errors}
         setValue={setValue}
       />
-      <section className="flex gap-2">
+      <section className="flex gap-2 my-4">
         <input
-          id="billing-address-same"
-          name="billing-address-same"
+          id="billing-same-checkbox"
           type="checkbox"
           checked={isBillingSame}
           onChange={onCheckboxChange}
-          className="w-5 h-5"
+          className="relative peer shrink-0 self-center appearance-none w-6 h-6 border-2 border-blue-500 rounded-md bg-white checked:bg-blue-500 checked:border-0 focus:outline-none focus:ring-offset-0 focus:ring-2 focus:ring-blue-700"
         />
-        <label htmlFor="billing-address-same">
-          Billing address is the same
+        <label
+          htmlFor="billing-same-checkbox"
+          className="font-semibold antialiased text-xl"
+        >
+          Use for billing
         </label>
+        <svg
+          className="absolute w-4 h-4 mt-1.5 ml-1 hidden peer-checked:block pointer-events-none"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="white"
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
       </section>
       {!isBillingSame && (
         <AddressForm
