@@ -11,7 +11,6 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import NavigationButtons from "@/app/ui/shipping/NavigationButtons";
-import { getAllCountryCodes } from "@/app/checkout/actions";
 
 interface Props {
   allCountries: string[];
@@ -154,15 +153,26 @@ export default function AddressFormsContainer({
         suggestedCountries={suggestedCountries}
         countryPhoneCodes={countryPhoneCodes}
         onCountryInputChange={onCountryInputChange}
-        onCheckboxChange={onCheckboxChange}
         onSuggestedCountryClick={onSuggestedCountryClick}
         onCountryPhoneCodeClick={onCountryPhoneCodeClick}
-        isBillingAddressSame={isBillingSame}
         register={register}
         watch={watch}
         errors={errors}
         setValue={setValue}
       />
+      <section className="flex gap-2">
+        <input
+          id="billing-address-same"
+          name="billing-address-same"
+          type="checkbox"
+          checked={isBillingSame}
+          onChange={onCheckboxChange}
+          className="w-5 h-5"
+        />
+        <label htmlFor="billing-address-same">
+          Billing address is the same
+        </label>
+      </section>
       {!isBillingSame && (
         <AddressForm
           ref={billingAddressRef}

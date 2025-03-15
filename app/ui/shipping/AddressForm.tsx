@@ -1,17 +1,12 @@
 import { ChangeEvent, Ref } from "react";
 import {
-  AddressData,
   AddressType,
   CombinedAddressFormData,
   CountriesInfo,
 } from "@/app/checkout/models";
-import { clsx } from "clsx";
 import CountriesDatalist from "@/app/ui/shipping/CountriesDatalist";
 import {
-  FieldError,
   FieldErrors,
-  FieldErrorsImpl,
-  Merge,
   UseFormRegister,
   UseFormSetValue,
   UseFormWatch,
@@ -28,13 +23,11 @@ interface Props {
     addressType: AddressType,
     event: ChangeEvent<HTMLInputElement>,
   ) => void;
-  onCheckboxChange?: () => void;
   onSuggestedCountryClick: (country: string, addressType: AddressType) => void;
   onCountryPhoneCodeClick: (
     phoneCodeNum: number,
     addressType: AddressType,
   ) => void;
-  isBillingAddressSame?: boolean;
   register: UseFormRegister<CombinedAddressFormData>;
   watch: UseFormWatch<CombinedAddressFormData>;
   errors: FieldErrors<CombinedAddressFormData>;
@@ -58,10 +51,8 @@ export default function AddressForm({
   suggestedCountries,
   countryPhoneCodes,
   onCountryInputChange,
-  onCheckboxChange,
   onSuggestedCountryClick,
   onCountryPhoneCodeClick,
-  isBillingAddressSame = undefined,
   register,
   watch,
   errors,
@@ -145,21 +136,6 @@ export default function AddressForm({
         setValue={setValue}
         watch={watch}
       />
-      {addressType === "shipping" && (
-        <section className="flex gap-2">
-          <input
-            id="billing-address-same"
-            name="billing-address-same"
-            type="checkbox"
-            checked={isBillingAddressSame}
-            onChange={onCheckboxChange}
-            className="w-5 h-5"
-          />
-          <label htmlFor="billing-address-same">
-            Billing address is the same
-          </label>
-        </section>
-      )}
     </fieldset>
   );
 }
