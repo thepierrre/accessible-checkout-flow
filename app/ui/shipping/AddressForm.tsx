@@ -65,13 +65,20 @@ export default function AddressForm({
   }
 
   return (
-    <fieldset className="flex flex-col gap-4" ref={ref}>
-      <h1 className="text-4xl mb-4 font-medium  antialiased drop-shadow-sm">
-        <span className="capitalize">{addressType}</span> address
-      </h1>
+    <fieldset className="flex flex-col gap-4 w-full" ref={ref}>
+      <header>
+        <h1 className="text-3xl mb-2 font-medium">
+          <span className="capitalize">{addressType}</span> address
+        </h1>
+        <h2 className="mb-2 text-gray-dark">
+          Please enter your {addressType} details below.
+        </h2>
+      </header>
+
       <Input
         name="email"
         labelText="Email"
+        placeholder="e.g. max.mustermann@example.com"
         addressType={addressType}
         register={register}
         autoComplete="email"
@@ -81,6 +88,7 @@ export default function AddressForm({
       <Input
         name="name"
         labelText="Full name"
+        placeholder="e.g. Max Mustermann"
         addressType={addressType}
         register={register}
         autoComplete="name"
@@ -91,6 +99,7 @@ export default function AddressForm({
       <Input
         name="address"
         labelText="Address"
+        placeholder="e.g. Munich Av. 20, Apt. 1"
         addressType={addressType}
         register={register}
         autoComplete="street-address"
@@ -99,7 +108,8 @@ export default function AddressForm({
       />
       <Input
         name="zip"
-        labelText="ZIP / Postal code"
+        labelText="ZIP/Postal code"
+        placeholder="e.g. 81002"
         addressType={addressType}
         register={register}
         autoComplete="postal-code"
@@ -108,7 +118,8 @@ export default function AddressForm({
       />
       <Input
         name="region"
-        labelText="State / Province (optional)"
+        labelText="State/Province (optional)"
+        placeholder="e.g. Bavaria"
         addressType={addressType}
         register={register}
         autoComplete="address-level1"

@@ -41,7 +41,8 @@ export default function CountriesDatalist({
     >
       <Input
         name="country"
-        labelText="Country / Territory"
+        labelText="Country/Territory"
+        placeholder="e.g. Germany"
         addressType={addressType}
         register={register}
         autoComplete="country"

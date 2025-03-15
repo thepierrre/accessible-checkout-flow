@@ -5,7 +5,7 @@ export type CountriesInfo = {
 };
 
 export type CheckoutSteps =
-  | "Basket"
+  | "Cart"
   | "Shipping & Billing"
   | "Review Order"
   | "Payment"
@@ -45,16 +45,16 @@ export const addressFormSchema = z.object({
     .max(100, "Address can have max. 255 characters."),
   zip: z
     .string()
-    .min(1, "ZIP / postal code can't be empty.")
-    .max(100, "ZIP / postal code can have max. 255 characters."),
+    .min(1, "ZIP/Postal code can't be empty.")
+    .max(100, "ZIP/Postal code can have max. 255 characters."),
   region: z
     .string()
-    .max(100, "State / province can have max. 255 characters.")
+    .max(100, "State/Province can have max. 255 characters.")
     .optional(),
   country: z
     .string()
-    .min(1, "Country / territory can't be empty.")
-    .max(100, "Country / territory can have max. 255 characters."),
+    .min(1, "Country/Territory can't be empty.")
+    .max(100, "Country/Territory can have max. 255 characters."),
   phoneCode: z
     .string()
     .min(1, "Phone number can't be empty.")
@@ -65,8 +65,8 @@ export const addressFormSchema = z.object({
     .max(15, "Phone number can have max. 15 digits."),
   email: z
     .string()
-    .email({ message: "Enter a valid email." })
     .min(1, "Email can't be empty.")
+    .email({ message: "Enter a valid email." })
     .max(100, "Email can have max. 255 characters."),
 });
 

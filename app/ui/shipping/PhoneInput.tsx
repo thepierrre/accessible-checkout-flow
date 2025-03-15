@@ -11,6 +11,7 @@ import {
 } from "@/app/checkout/models";
 import { FieldNameType } from "@/app/ui/shipping/AddressForm";
 import { ChangeEvent, useEffect, useState } from "react";
+import { clsx } from "clsx";
 
 interface Props {
   labelText: string;
@@ -75,7 +76,10 @@ export default function PhoneInput({
         className="flex gap-2 align-center"
         onPointerLeave={() => setIsMouseOver(false)}
       >
-        <label htmlFor={`${addressType}-phone`} className="font-semibold">
+        <label
+          htmlFor={`${addressType}-phone`}
+          className="font-medium after:content-['*']"
+        >
           {labelText}
         </label>
       </div>
@@ -90,7 +94,12 @@ export default function PhoneInput({
         <button
           id="dropdown-phone-button"
           data-dropdown-toggle="dropdown-phone"
-          className="min-w-18 inline-flex items-center py-2 px-4 h-8 text-sm font-medium text-center text-gray-900  border border-gray-700 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100"
+          className={clsx(
+            "min-w-18 inline-flex items-center py-2 px-4 h-8 text-sm font-medium text-center text-black-primary  border border-gray-700 rounded-s-lg hover:bg-gray-200 focus:outline-none focus:border-2",
+            phoneNumberErrorMessage
+              ? "border-red-primary focus:border-red-primary"
+              : "border-gray-700 focus:border-blue-semidark",
+          )}
           type="button"
           onClick={() => setDatalistIsShown(true)}
         >
@@ -113,7 +122,7 @@ export default function PhoneInput({
         </button>
         {datalistIsShown && (
           <ul
-            className="absolute bg-white shadow-md shadow-gray-400 rounded-md bottom-16 overflow-y-auto py-2 text-sm text-gray-700 dark:text-gray-200 max-h-44"
+            className="absolute bg-white shadow-md shadow-gray-400 rounded-md bottom-16 overflow-y-auto py-2 text-sm text-black-primary max-h-44"
             aria-labelledby="dropdown-phone-button"
           >
             {Object.keys(countryPhoneCodes).map((country) => {
@@ -122,7 +131,7 @@ export default function PhoneInput({
                 <li key={`${country}=${phoneCode}`}>
                   <button
                     type="button"
-                    className="inline-flex w-112 px-4 py-2 text-sm hover:bg-gray-100 text-black"
+                    className="inline-flex w-112 px-4 py-2 text-sm hover:bg-gray-100 text-black-primary"
                     role="menuitem"
                     onMouseDown={() => {
                       onCountryPhoneCodeClick(phoneCode);
@@ -147,19 +156,24 @@ export default function PhoneInput({
           type="tel"
           id="phone-input"
           autoComplete="tel"
-          className="block p-2 h-8 grow text-sm text-gray-900 rounded-e-lg border-s-0 border border-gray-700 focus:ring-blue-500 focus:border-blue-500"
+          className={clsx(
+            "block p-2 h-8 grow text-sm text-gray-900 rounded-e-lg border-s-0 border border-gray-700 focus:outline-none focus:border-2",
+            phoneNumberErrorMessage
+              ? "border-red-primary focus:border-red-primary"
+              : "border-gray-700 focus:border-blue-semidark",
+          )}
           // pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-          placeholder=""
+          placeholder="e.g. 123456789"
           {...register(`${addressType}.phoneNumber`)}
         />
       </div>
       {phoneCodeErrorMessage && (
-        <p className="text-red-500 animate-in fade-in duration-700 text-sm">
+        <p className="text-red-primary animate-in fade-in duration-700 text-sm">
           {phoneCodeErrorMessage}
         </p>
       )}
       {phoneNumberErrorMessage && (
-        <p className="text-red-500 animate-in fade-in duration-700 text-sm">
+        <p className="text-red-primary animate-in fade-in duration-700 text-sm">
           {phoneNumberErrorMessage}
         </p>
       )}

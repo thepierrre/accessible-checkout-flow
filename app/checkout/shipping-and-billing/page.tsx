@@ -16,7 +16,7 @@ export default async function ShippingAndBillingPage() {
   return (
     <div className="flex flex-col items-center mb-8">
       {/*<Stepper activeLabel="Shipping & Billing" />*/}
-      <main className="flex flex-col gap-8 w-112">
+      <main className="flex flex-col gap-8 w-144">
         <ReturningCustomer />
         <AddressFormsContainer
           allCountries={allCountryNames}

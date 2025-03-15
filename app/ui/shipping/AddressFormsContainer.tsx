@@ -11,6 +11,9 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import NavigationButtons from "@/app/ui/shipping/NavigationButtons";
+import { redirect } from "next/navigation";
+import Image from "next/image";
+import warningIcon from "../../../public/warning-icon.svg";
 
 interface Props {
   allCountries: string[];
@@ -62,8 +65,11 @@ export default function AddressFormsContainer({
     getValues,
     setValue,
     watch,
+    clearErrors,
     formState: { errors, isSubmitting },
   } = form;
+
+  const hasFormErrors = Object.keys(errors).length > 0;
 
   const isBillingSame = watch("isBillingAddressSame");
 
@@ -85,11 +91,11 @@ export default function AddressFormsContainer({
   const onCheckboxChange = () => {
     const currentIsBillingSame: boolean = getValues("isBillingAddressSame");
     const newIsBillingSame: boolean = !currentIsBillingSame;
-
+    console.log(errors);
     if (newIsBillingSame) {
       setTimeout(() => {
         setValue("isBillingAddressSame", newIsBillingSame);
-      }, 1000);
+      }, 550);
       window.scrollTo({ top: 0, behavior: "smooth" });
       setValue("billing", getValues("shipping"));
     } else {
@@ -104,6 +110,7 @@ export default function AddressFormsContainer({
         email: "",
         region: "",
       });
+      clearErrors("billing");
     }
   };
 
@@ -143,6 +150,7 @@ export default function AddressFormsContainer({
     await handleSubmit(
       (data: CombinedAddressFormData) => {
         console.log(data);
+        redirect("/checkout/payment");
       },
       (errors) => {
         console.log(errors);
@@ -151,7 +159,12 @@ export default function AddressFormsContainer({
   };
 
   return (
-    <form id="address-form" name="address-form" onSubmit={handleFormSubmit}>
+    <form
+      id="address-form"
+      name="address-form"
+      onSubmit={handleFormSubmit}
+      className="w-full p-6 border border-gray-primary rounded-lg"
+    >
       <AddressForm
         addressType="shipping"
         suggestedCountries={suggestedCountries}
@@ -164,18 +177,15 @@ export default function AddressFormsContainer({
         errors={errors}
         setValue={setValue}
       />
-      <section className="flex gap-2 my-4">
+      <section className="flex gap-2 my-8">
         <input
           id="billing-same-checkbox"
           type="checkbox"
           checked={isBillingSame}
           onChange={onCheckboxChange}
-          className="relative peer shrink-0 self-center appearance-none w-6 h-6 border-2 border-blue-500 rounded-md bg-white checked:bg-blue-500 checked:border-0 focus:outline-none focus:ring-offset-0 focus:ring-2 focus:ring-blue-700"
+          className="relative peer shrink-0 self-center appearance-none w-6 h-6 border-2 border-blue-primary rounded-md bg-white checked:bg-blue-primary checked:border-0 focus:outline-none focus:ring-offset-0 focus:ring-2 focus:ring-blue-700"
         />
-        <label
-          htmlFor="billing-same-checkbox"
-          className="font-semibold antialiased text-xl"
-        >
+        <label htmlFor="billing-same-checkbox" className="font-medium text-xl">
           Use for billing
         </label>
         <svg
@@ -206,8 +216,18 @@ export default function AddressFormsContainer({
           setValue={setValue}
         />
       )}
+      {hasFormErrors && (
+        <section className="flex gap-4 text-red-primary border border-red-primary py-2 px-4 rounded-lg my-8">
+          <Image src={warningIcon} alt="Error warning icon" />
+          <div>
+            <p className="font-semibold antialiased">Error</p>
+            <p>Please fix the errors in the form.</p>
+          </div>
+        </section>
+      )}
       <NavigationButtons
-        previousStepName="Basket"
+        isSubmitting={isSubmitting}
+        previousStepName="Cart"
         nextStepName="Review Order"
         prevStepHref="basket"
         nextStepHref="review-order"
