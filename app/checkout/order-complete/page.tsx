@@ -1,4 +1,4 @@
-import Stepper from "@/app/ui/Stepper";
+import Stepper from "@/app/components/Stepper";
 
 export default function OrderCompletePage() {
   return (

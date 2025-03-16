@@ -2,11 +2,11 @@ import {
   getAllCountryNames,
   getCountryNamesForQuery,
   getCountryPhoneCodes,
-} from "@/app/checkout/actions";
-import AddressFormsContainer from "@/app/ui/shipping/AddressFormsContainer";
-import Stepper from "@/app/ui/Stepper";
-import { ReturningCustomer } from "@/app/ui/shipping/ReturningCustomer";
-import NavigationButtons from "@/app/ui/shipping/NavigationButtons";
+} from "@/app/lib/actions";
+import AddressFormsContainer from "@/app/components/shipping-and-billing/AddressFormsContainer";
+import Stepper from "@/app/components/Stepper";
+import { ReturningCustomer } from "@/app/components/shipping-and-billing/ReturningCustomer";
+import NavigationButtons from "@/app/components/shipping-and-billing/NavigationButtons";
 import { CountriesInfo } from "@/app/checkout/models";
 
 export default async function ShippingAndBillingPage() {

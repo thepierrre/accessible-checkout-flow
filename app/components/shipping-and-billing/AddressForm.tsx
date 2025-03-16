@@ -4,15 +4,15 @@ import {
   CombinedAddressFormData,
   CountriesInfo,
 } from "@/app/checkout/models";
-import CountriesDatalist from "@/app/ui/shipping/CountriesDatalist";
+import CountriesDatalist from "@/app/components/shipping-and-billing/CountriesDatalist";
 import {
   FieldErrors,
   UseFormRegister,
   UseFormSetValue,
   UseFormWatch,
 } from "react-hook-form";
-import Input from "@/app/ui/shipping/Input";
-import PhoneInput from "@/app/ui/shipping/PhoneInput";
+import Input from "@/app/components/shipping-and-billing/Input";
+import PhoneInput from "@/app/components/shipping-and-billing/PhoneInput";
 
 interface Props {
   ref?: Ref<HTMLFieldSetElement>;

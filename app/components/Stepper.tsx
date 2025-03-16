@@ -8,7 +8,7 @@ export default function Stepper({ activeLabel }: Props) {
   const steps = [
     {
       label: "Shipping & Billing",
-      href: "shipping-and-billing",
+      href: "shipping-and-billing-and-billing",
       active: activeLabel === "Shipping & Billing",
     },
     {

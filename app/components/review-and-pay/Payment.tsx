@@ -129,7 +129,7 @@ export default function Payment({ amount }: Props) {
     });
 
     if (error) {
-      // This point is reached only if there's an immediate error when confirming the payment. Show the error to your customer (for example, payment details incomplete).
+      // This point is reached only if there's an immediate error when confirming the review-and-pay. Show the error to your customer (for example, review-and-pay details incomplete).
     } else {
       // Your customer will be redirected to your `return_url`.
     }

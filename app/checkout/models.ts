@@ -1,4 +1,4 @@
-import { z, ZodType } from "zod";
+import { z } from "zod";
 
 export type CountriesInfo = {
   [countryName: string]: number[];
@@ -22,17 +22,6 @@ export type AddressData = {
   phone: { code: string; number: string };
   email: string;
 };
-
-// export const phoneSchema = z.object({
-//   code: z
-//     .string()
-//     .min(1, "Phone number can't be empty.")
-//     .max(15, "Phone number can have max. 15 digits."),
-//   number: z
-//     .string()
-//     .min(1, "Phone number can't be empty.")
-//     .max(15, "Phone number can have max. 15 digits."),
-// });
 
 export const addressFormSchema = z.object({
   name: z
@@ -75,7 +64,5 @@ export const combinedAddressFormSchema = z.object({
   billing: addressFormSchema,
   isBillingAddressSame: z.boolean(),
 });
-
-export type PartialAddressFormData = z.infer<typeof addressFormSchema>;
 
 export type CombinedAddressFormData = z.infer<typeof combinedAddressFormSchema>;

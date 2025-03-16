@@ -1,8 +1,8 @@
 import { AddressType, CombinedAddressFormData } from "@/app/checkout/models";
 import { ChangeEvent, useState } from "react";
 import { UseFormRegister } from "react-hook-form";
-import { FieldNameType } from "@/app/ui/shipping/AddressForm";
-import Input from "@/app/ui/shipping/Input";
+import { FieldNameType } from "@/app/components/shipping-and-billing/AddressForm";
+import Input from "@/app/components/shipping-and-billing/Input";
 
 interface Props {
   suggestedCountries: string[];

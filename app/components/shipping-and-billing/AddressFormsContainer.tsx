@@ -1,7 +1,7 @@
 "use client";
 import "country-flag-icons/3x2/flags.css";
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
-import AddressForm from "@/app/ui/shipping/AddressForm";
+import AddressForm from "@/app/components/shipping-and-billing/AddressForm";
 import {
   AddressType,
   CombinedAddressFormData,
@@ -10,10 +10,10 @@ import {
 } from "@/app/checkout/models";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import NavigationButtons from "@/app/ui/shipping/NavigationButtons";
+import NavigationButtons from "@/app/components/shipping-and-billing/NavigationButtons";
 import { redirect } from "next/navigation";
-import Image from "next/image";
-import warningIcon from "../../../public/warning-icon.svg";
+import ErrorContainer from "@/app/components/shipping-and-billing/ErrorContainer";
+import BillingCheckbox from "@/app/components/shipping-and-billing/BillingCheckbox";
 
 interface Props {
   allCountries: string[];
@@ -30,6 +30,7 @@ export default function AddressFormsContainer({
     useState<string[]>(allCountries);
 
   const billingAddressRef = useRef<HTMLFieldSetElement | null>(null);
+  const billingCheckboxRef = useRef<HTMLInputElement | null>(null);
 
   const form = useForm<CombinedAddressFormData>({
     resolver: zodResolver(combinedAddressFormSchema),
@@ -85,6 +86,23 @@ export default function AddressFormsContainer({
   useEffect(() => {
     if (getValues("isBillingAddressSame")) {
       setValue("billing", getValues("shipping"));
+    }
+  });
+
+  useEffect(() => {
+    if (billingCheckboxRef.current) {
+      const checkbox = billingCheckboxRef.current;
+
+      function onCheckboxEnterPress(event: KeyboardEvent) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          checkbox.click();
+        }
+      }
+
+      checkbox.addEventListener("keydown", onCheckboxEnterPress);
+      return () =>
+        checkbox.removeEventListener("keydown", onCheckboxEnterPress);
     }
   });
 
@@ -177,30 +195,12 @@ export default function AddressFormsContainer({
         errors={errors}
         setValue={setValue}
       />
-      <section className="flex gap-2 my-8">
-        <input
-          id="billing-same-checkbox"
-          type="checkbox"
-          checked={isBillingSame}
-          onChange={onCheckboxChange}
-          className="relative peer shrink-0 self-center appearance-none w-6 h-6 border-2 border-blue-primary rounded-md bg-white checked:bg-blue-primary checked:border-0 focus:outline-none focus:ring-offset-0 focus:ring-2 focus:ring-blue-700"
-        />
-        <label htmlFor="billing-same-checkbox" className="font-medium text-xl">
-          Use for billing
-        </label>
-        <svg
-          className="absolute w-4 h-4 mt-1.5 ml-1 hidden peer-checked:block pointer-events-none"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="white"
-          strokeWidth="4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-      </section>
+      <BillingCheckbox
+        ref={billingCheckboxRef}
+        checked={isBillingSame}
+        onChange={onCheckboxChange}
+      />
+
       {!isBillingSame && (
         <AddressForm
           ref={billingAddressRef}
@@ -216,15 +216,7 @@ export default function AddressFormsContainer({
           setValue={setValue}
         />
       )}
-      {hasFormErrors && (
-        <section className="flex gap-4 text-red-primary border border-red-primary py-2 px-4 rounded-lg my-8">
-          <Image src={warningIcon} alt="Error warning icon" />
-          <div>
-            <p className="font-semibold antialiased">Error</p>
-            <p>Please fix the errors in the form.</p>
-          </div>
-        </section>
-      )}
+      {hasFormErrors && <ErrorContainer />}
       <NavigationButtons
         isSubmitting={isSubmitting}
         previousStepName="Cart"

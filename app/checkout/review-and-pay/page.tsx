@@ -2,11 +2,11 @@
 
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
-import Stepper from "@/app/ui/Stepper";
-import NavigationButtons from "@/app/ui/shipping/NavigationButtons";
+import Stepper from "@/app/components/Stepper";
+import NavigationButtons from "@/app/components/shipping-and-billing/NavigationButtons";
 import { convertToSubcurrency } from "@/app/lib/convertToSubcurrency";
-import Payment from "@/app/ui/payment/Payment";
-import ReviewOrder from "@/app/ui/payment/ReviewOrder";
+import Payment from "@/app/components/review-and-pay/Payment";
+import ReviewOrder from "@/app/components/review-and-pay/ReviewOrder";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is not defined.");

@@ -1,6 +1,6 @@
 "use server";
 
-import { countries, getCountryCode } from "countries-list";
+import { countries } from "countries-list";
 import { CountriesInfo } from "@/app/checkout/models";
 
 // TODO: Cache

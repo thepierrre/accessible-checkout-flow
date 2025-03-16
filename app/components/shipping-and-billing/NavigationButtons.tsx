@@ -30,7 +30,7 @@ export default function NavigationButtons({
       <button
         type="button"
         onClick={handlePreviousStepClick}
-        className="bg-white border-2 border-blue-primary py-2 px-6 rounded-lg text-blue-semidark hover:bg-blue-semilight hover:text-white focus:outline-solid focus:outline-offset-2"
+        className="bg-white border-2 border-blue-primary py-2 px-6 rounded-lg text-blue-semidark hover:bg-blue-semilight hover:text-white focus:ring focus:ring-blue-primary"
       >
         {previousStepName === "Cart" ? "Return to Cart" : previousStepName}
       </button>

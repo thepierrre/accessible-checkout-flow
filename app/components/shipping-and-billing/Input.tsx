@@ -1,6 +1,6 @@
 import { UseFormRegister } from "react-hook-form";
 import { AddressType, CombinedAddressFormData } from "@/app/checkout/models";
-import { FieldNameType } from "@/app/ui/shipping/AddressForm";
+import { FieldNameType } from "@/app/components/shipping-and-billing/AddressForm";
 import { ChangeEvent, useState } from "react";
 import { event } from "next/dist/build/output/log";
 import { clsx } from "clsx";

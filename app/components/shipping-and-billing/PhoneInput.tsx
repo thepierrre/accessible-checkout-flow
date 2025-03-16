@@ -9,7 +9,7 @@ import {
   CombinedAddressFormData,
   CountriesInfo,
 } from "@/app/checkout/models";
-import { FieldNameType } from "@/app/ui/shipping/AddressForm";
+import { FieldNameType } from "@/app/components/shipping-and-billing/AddressForm";
 import { ChangeEvent, useEffect, useState } from "react";
 import { clsx } from "clsx";
 
