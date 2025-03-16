@@ -6,11 +6,17 @@ export function ReturningCustomer() {
   return (
     <section className="flex flex-col gap-2 text-lg text-black-primary border-b pb-1 border-gray-primary px-6">
       <div className="flex gap-1">
-        <Link href="/login" className="text-blue-primary font-medium">
+        <Link
+          href="/login"
+          className="text-blue-primary font-medium focus:outline-blue-primary"
+        >
           Log in
         </Link>
         <p>or</p>
-        <Link href="/create-account" className="text-blue-primary font-medium">
+        <Link
+          href="/create-account"
+          className="text-blue-primary font-medium focus:outline-blue-primary"
+        >
           sign up
         </Link>
         <p>(optional)</p>

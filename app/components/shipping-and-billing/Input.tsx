@@ -62,10 +62,10 @@ export default function Input({
         autoComplete={autoComplete}
         type={type}
         className={clsx(
-          "border w-full h-8 p-2 rounded-md text-sm focus:outline-none focus:border-2",
+          "border w-full h-8 p-2 rounded-md text-sm focus:outline-none focus:outline-1 focus:outline-offset-0",
           errorMessage
-            ? "border-red-primary focus:border-red-primary"
-            : "border-black-primary focus:border-blue-semidark",
+            ? "border-red-primary focus:outline-red-primary"
+            : "border-black-primary focus:outline-blue-semidark ",
         )}
       />
 

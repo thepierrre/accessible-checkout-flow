@@ -95,10 +95,10 @@ export default function PhoneInput({
           id="dropdown-phone-button"
           data-dropdown-toggle="dropdown-phone"
           className={clsx(
-            "min-w-18 inline-flex items-center py-2 px-4 h-8 text-sm font-medium text-center text-black-primary  border border-gray-700 rounded-s-lg hover:bg-gray-200 focus:outline-none focus:border-2",
+            "min-w-18 inline-flex items-center py-2 px-4 h-8 text-sm font-medium text-center text-black-primary  border border-gray-700 rounded-s-lg hover:bg-gray-200 focus:outline-none focus:outline-1 focus:outline-offset-0",
             phoneNumberErrorMessage
-              ? "border-red-primary focus:border-red-primary"
-              : "border-gray-700 focus:border-blue-semidark",
+              ? "border-red-primary focus:outline-red-primary"
+              : "border-gray-700 focus:outline-blue-semidark",
           )}
           type="button"
           onClick={() => setDatalistIsShown(true)}
@@ -157,10 +157,10 @@ export default function PhoneInput({
           id="phone-input"
           autoComplete="tel"
           className={clsx(
-            "block p-2 h-8 grow text-sm text-gray-900 rounded-e-lg border-s-0 border border-gray-700 focus:outline-none focus:border-2",
+            "block p-2 h-8 grow text-sm text-gray-900 rounded-e-lg border-s-0 border border-gray-700 focus:outline-none focus:outline-1 focus:outline-offset-0",
             phoneNumberErrorMessage
-              ? "border-red-primary focus:border-red-primary"
-              : "border-gray-700 focus:border-blue-semidark",
+              ? "border-red-primary focus:outline-red-primary"
+              : "border-gray-700 focus:outline-blue-semidark",
           )}
           // pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
           placeholder="e.g. 123456789"
