@@ -17,13 +17,13 @@ import BillingCheckbox from "@/app/components/shipping-and-billing/BillingCheckb
 
 interface Props {
   allCountries: string[];
-  getCountriesForQuery: (query: string) => Promise<string[]>;
+  getCountriesForQueryAction: (query: string) => Promise<string[]>;
   countryPhoneCodes: CountriesInfo;
 }
 
 export default function AddressFormsContainer({
   allCountries,
-  getCountriesForQuery,
+  getCountriesForQueryAction,
   countryPhoneCodes,
 }: Props) {
   const [suggestedCountries, setSuggestedCountries] =
@@ -141,7 +141,7 @@ export default function AddressFormsContainer({
     setValue(`${addressType}.country`, value);
 
     const foundCountries = value
-      ? await getCountriesForQuery(value)
+      ? await getCountriesForQueryAction(value)
       : allCountries;
     setSuggestedCountries(foundCountries);
 
