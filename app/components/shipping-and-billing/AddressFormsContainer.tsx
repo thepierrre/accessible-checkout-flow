@@ -123,7 +123,7 @@ export default function AddressFormsContainer({
   const onCheckboxChange = () => {
     const currentIsBillingSame: boolean = getValues("isBillingAddressSame");
     const newIsBillingSame: boolean = !currentIsBillingSame;
-    console.log(errors);
+
     if (newIsBillingSame) {
       setTimeout(() => {
         setValue("isBillingAddressSame", true);
@@ -198,7 +198,10 @@ export default function AddressFormsContainer({
         }
       },
       (errors) => {
-        console.error(errors);
+        console.error(
+          "Failed to submit. The form has one or more errors:",
+          errors,
+        );
       },
     )();
   };
