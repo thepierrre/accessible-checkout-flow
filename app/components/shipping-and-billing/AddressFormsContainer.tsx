@@ -32,6 +32,7 @@ export default function AddressFormsContainer({
   const [suggestedCountries, setSuggestedCountries] =
     useState<string[]>(allCountries);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [isCheckboxChecked, setIsCheckboxChecked] = useState<boolean>(true);
 
   const billingAddressRef = useRef<HTMLFieldSetElement | null>(null);
   const billingCheckboxRef = useRef<HTMLInputElement | null>(null);
@@ -88,6 +89,7 @@ export default function AddressFormsContainer({
 
   useEffect(() => {
     if (!isBillingSame && billingAddressRef.current) {
+      setIsCheckboxChecked(false);
       billingAddressRef.current.scrollIntoView({
         block: "start",
         behavior: "smooth",
@@ -124,10 +126,11 @@ export default function AddressFormsContainer({
     console.log(errors);
     if (newIsBillingSame) {
       setTimeout(() => {
-        setValue("isBillingAddressSame", newIsBillingSame);
+        setValue("isBillingAddressSame", true);
       }, 550);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      setIsCheckboxChecked(true);
       setValue("billing", getValues("shipping"));
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
       setValue("isBillingAddressSame", newIsBillingSame);
       setValue("billing", {
@@ -224,7 +227,7 @@ export default function AddressFormsContainer({
       />
       <BillingCheckbox
         ref={billingCheckboxRef}
-        checked={isBillingSame}
+        checked={isCheckboxChecked}
         onChange={onCheckboxChange}
       />
 
