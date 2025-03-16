@@ -1,8 +1,8 @@
 "use server";
 
 import { countries } from "countries-list";
+import { cache } from "react";
 import { CombinedAddressFormData, CountriesInfo } from "@/app/checkout/models";
-import { NextResponse } from "next/server";
 
 type ServerErrorResponse = {
   success: boolean;
@@ -29,8 +29,7 @@ export async function submitAddressForm(
   }
 }
 
-// TODO: Cache
-export async function getCountryPhoneCodes() {
+async function _getCountryPhoneCodes() {
   return Object.values(countries).reduce(
     (accumulatedObject, currentCountry) => {
       return {
@@ -42,10 +41,14 @@ export async function getCountryPhoneCodes() {
   );
 }
 
-export async function getAllCountryNames(): Promise<string[]> {
+export const getCountryPhoneCodes = cache(_getCountryPhoneCodes);
+
+async function _getAllCountryNames(): Promise<string[]> {
   const countries = await getCountryPhoneCodes();
   return Object.keys(countries).map((country) => country);
 }
+
+export const getAllCountryNames = cache(_getAllCountryNames);
 
 export async function getCountryNamesForQuery(
   query: string,
