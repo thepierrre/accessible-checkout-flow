@@ -55,7 +55,7 @@ export default function CountriesDatalist({
       {datalistIsShown && (
         <ul
           id="countries-list"
-          className="absolute w-112 top-20 max-h-44 overflow-y-auto bg-white flex flex-col shadow-md shadow-gray-400 rounded-md p-4 gap-4"
+          className="absolute w-112 z-50 top-20 max-h-44 py-2 overflow-y-auto text-sm bg-white flex flex-col shadow-md shadow-gray-400 rounded-md "
         >
           {suggestedCountries.map((country) => (
             <li
@@ -67,6 +67,7 @@ export default function CountriesDatalist({
                 setDatalistIsShown(false);
                 console.log("after hiding datalist: ", datalistIsShown);
               }}
+              className="px-4 py-2  hover:bg-gray-100"
             >
               {country}
             </li>

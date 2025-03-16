@@ -78,7 +78,7 @@ export default function AddressForm({
       <Input
         name="email"
         labelText="Email"
-        placeholder="e.g. max.mustermann@example.com"
+        placeholder="max.mustermann@example.com"
         addressType={addressType}
         register={register}
         autoComplete="email"
@@ -88,7 +88,7 @@ export default function AddressForm({
       <Input
         name="name"
         labelText="Full name"
-        placeholder="e.g. Max Mustermann"
+        placeholder="Max Mustermann"
         addressType={addressType}
         register={register}
         autoComplete="name"
@@ -99,7 +99,7 @@ export default function AddressForm({
       <Input
         name="address"
         labelText="Address"
-        placeholder="e.g. Munich Av. 20, Apt. 1"
+        placeholder="Munich Av. 20, Apt. 1"
         addressType={addressType}
         register={register}
         autoComplete="street-address"
@@ -109,7 +109,7 @@ export default function AddressForm({
       <Input
         name="zip"
         labelText="ZIP/Postal code"
-        placeholder="e.g. 81002"
+        placeholder="81002"
         addressType={addressType}
         register={register}
         autoComplete="postal-code"
@@ -119,7 +119,7 @@ export default function AddressForm({
       <Input
         name="region"
         labelText="State/Province (optional)"
-        placeholder="e.g. Bavaria"
+        placeholder="Bavaria"
         addressType={addressType}
         register={register}
         autoComplete="address-level1"

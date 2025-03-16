@@ -50,7 +50,7 @@ export default function PhoneInput({
 }: Props) {
   const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
   const [datalistIsShown, setDatalistIsShown] = useState<boolean>(false);
-  const [selectedPhoneCode, setSelectedPhoneCode] = useState<string>("+1");
+  const [selectedPhoneCode, setSelectedPhoneCode] = useState<string>("1");
 
   const phoneCodeErrorMessage = getErrorMessage("phoneCode");
   const phoneNumberErrorMessage = getErrorMessage("phoneNumber");
@@ -103,7 +103,7 @@ export default function PhoneInput({
           type="button"
           onClick={() => setDatalistIsShown(true)}
         >
-          {selectedPhoneCode}
+          +{selectedPhoneCode}
           <svg
             className="w-2 h-2 ms-2"
             aria-hidden="true"
@@ -122,7 +122,7 @@ export default function PhoneInput({
         </button>
         {datalistIsShown && (
           <ul
-            className="absolute bg-white shadow-md shadow-gray-400 rounded-md bottom-16 overflow-y-auto py-2 text-sm text-black-primary max-h-44"
+            className="absolute bg-white shadow-md z-50 shadow-gray-400 rounded-md bottom-16 overflow-y-auto py-2 text-sm text-black-primary max-h-44"
             aria-labelledby="dropdown-phone-button"
           >
             {Object.keys(countryPhoneCodes).map((country) => {
@@ -163,7 +163,7 @@ export default function PhoneInput({
               : "border-gray-700 focus:outline-blue-semidark",
           )}
           // pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-          placeholder="e.g. 123456789"
+          placeholder="123456789"
           {...register(`${addressType}.phoneNumber`)}
         />
       </div>

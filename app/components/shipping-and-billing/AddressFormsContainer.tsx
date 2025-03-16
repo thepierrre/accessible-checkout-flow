@@ -98,12 +98,6 @@ export default function AddressFormsContainer({
   }, [isBillingSame]);
 
   useEffect(() => {
-    if (getValues("isBillingAddressSame")) {
-      setValue("billing", getValues("shipping"));
-    }
-  });
-
-  useEffect(() => {
     if (billingCheckboxRef.current) {
       const checkbox = billingCheckboxRef.current;
 

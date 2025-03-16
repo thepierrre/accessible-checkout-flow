@@ -8,7 +8,7 @@ interface Props {
 
 export default function BillingCheckbox({ ref, checked, onChange }: Props) {
   return (
-    <section className="flex gap-2 my-4">
+    <section className="relative flex gap-2 my-4">
       <input
         ref={ref}
         id="billing-same-checkbox"

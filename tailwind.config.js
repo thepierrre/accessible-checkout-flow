@@ -21,7 +21,7 @@ module.exports = {
           primary: "#ff174d",
         },
         blue: {
-          light: "#afbdff",
+          light: "#dfebff",
           semilight: "#9baaff",
           primary: "#4a67fe",
           semidark: "#3f5ad8",
