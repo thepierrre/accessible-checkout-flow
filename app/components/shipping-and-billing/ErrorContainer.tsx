@@ -1,13 +1,22 @@
 import Image from "next/image";
 import warningIcon from "@/public/warning-icon.svg";
+import { RefObject } from "react";
 
-export default function ErrorContainer() {
+interface Props {
+  ref: RefObject<HTMLElement | null>;
+  errorMessage: string;
+}
+
+export default function ErrorContainer({ ref, errorMessage }: Props) {
   return (
-    <section className="flex gap-4 text-red-primary border border-red-primary py-2 px-4 rounded-lg my-6">
+    <section
+      ref={ref}
+      className="flex gap-4 text-red-primary border border-red-primary py-2 px-4 rounded-lg mb-4 "
+    >
       <Image src={warningIcon} alt="Error warning icon" />
       <div>
         <p className="font-semibold antialiased">Error</p>
-        <p>Please fix the errors in the form.</p>
+        <p>{errorMessage}</p>
       </div>
     </section>
   );

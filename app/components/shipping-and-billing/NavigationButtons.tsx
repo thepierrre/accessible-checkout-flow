@@ -37,7 +37,13 @@ export default function NavigationButtons({
       {nextStepName && nextStepHref && (
         <button
           type="submit"
-          className="py-2 px-6 w-30 rounded-lg bg-blue-primary text-white  hover:bg-blue-semidark focus:outline-solid focus:outline-offset-2"
+          className={clsx(
+            "py-2 px-6 w-30 rounded-lg bg-blue-primary text-white  ",
+            isSubmitting
+              ? "bg-blue-light"
+              : "hover:bg-blue-semidark focus:outline-solid focus:outline-offset-2",
+          )}
+          disabled={isSubmitting}
         >
           {nextStepName === "Review Order" ? "Review & Pay" : nextStepName}
         </button>

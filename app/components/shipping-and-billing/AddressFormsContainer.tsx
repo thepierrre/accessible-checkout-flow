@@ -14,6 +14,8 @@ import NavigationButtons from "@/app/components/shipping-and-billing/NavigationB
 import { redirect } from "next/navigation";
 import ErrorContainer from "@/app/components/shipping-and-billing/ErrorContainer";
 import BillingCheckbox from "@/app/components/shipping-and-billing/BillingCheckbox";
+import { submitAddressForm as submitAddressFormAction } from "@/app/lib/actions";
+import { useRouter } from "next/navigation";
 
 interface Props {
   allCountries: string[];
@@ -26,11 +28,14 @@ export default function AddressFormsContainer({
   getCountriesForQueryAction,
   countryPhoneCodes,
 }: Props) {
+  const router = useRouter();
   const [suggestedCountries, setSuggestedCountries] =
     useState<string[]>(allCountries);
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const billingAddressRef = useRef<HTMLFieldSetElement | null>(null);
   const billingCheckboxRef = useRef<HTMLInputElement | null>(null);
+  const serverErrorRef = useRef<HTMLElement | null>(null);
 
   const form = useForm<CombinedAddressFormData>({
     resolver: zodResolver(combinedAddressFormSchema),
@@ -70,9 +75,16 @@ export default function AddressFormsContainer({
     formState: { errors, isSubmitting },
   } = form;
 
-  const hasFormErrors = Object.keys(errors).length > 0;
-
   const isBillingSame = watch("isBillingAddressSame");
+
+  useEffect(() => {
+    if (serverErrorRef.current) {
+      serverErrorRef.current.scrollIntoView({
+        block: "start",
+        behavior: "smooth",
+      });
+    }
+  });
 
   useEffect(() => {
     if (!isBillingSame && billingAddressRef.current) {
@@ -144,8 +156,6 @@ export default function AddressFormsContainer({
       ? await getCountriesForQueryAction(value)
       : allCountries;
     setSuggestedCountries(foundCountries);
-
-    console.log("found countries: ", suggestedCountries);
   }
 
   function onSuggestedCountryClick(country: string, addressType: AddressType) {
@@ -166,12 +176,26 @@ export default function AddressFormsContainer({
       setValue("billing", getValues("shipping"));
     }
     await handleSubmit(
-      (data: CombinedAddressFormData) => {
-        console.log(data);
-        redirect("/checkout/payment");
+      async (data: CombinedAddressFormData) => {
+        try {
+          const response = await submitAddressFormAction(data);
+          if (!response.success && response.error) {
+            console.error("Internal Server Error:", response.error);
+            setServerError(response.error);
+          }
+          router.push("review-and-pay");
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            console.error("Internal Server Error:", error.message);
+            setServerError(error.message);
+          } else {
+            console.error("Internal Server Error:", error);
+            setServerError("A server error occurred. Please try again.");
+          }
+        }
       },
       (errors) => {
-        console.log(errors);
+        console.error(errors);
       },
     )();
   };
@@ -183,6 +207,9 @@ export default function AddressFormsContainer({
       onSubmit={handleFormSubmit}
       className="w-full p-6 border border-gray-primary rounded-lg"
     >
+      {serverError && (
+        <ErrorContainer ref={serverErrorRef} errorMessage={serverError} />
+      )}
       <AddressForm
         addressType="shipping"
         suggestedCountries={suggestedCountries}
@@ -216,7 +243,6 @@ export default function AddressFormsContainer({
           setValue={setValue}
         />
       )}
-      {hasFormErrors && <ErrorContainer />}
       <NavigationButtons
         isSubmitting={isSubmitting}
         previousStepName="Cart"
