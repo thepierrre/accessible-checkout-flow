@@ -34,7 +34,7 @@ export default function Table() {
           />
         ))}
       </tbody>
-      <tfoot className="flex flex-col pt-2 font-semibold child:px-2 child:py-1 border-t border-dotted">
+      <tfoot className="flex flex-col pt-2 font-semibold child:px-2 child:px-4 child:py-1 border-t border-dotted">
         <Row name={"Shipping"} price={shippingCost} />
         <Row name={"Total"} price={calculateTotalCost()} />
       </tfoot>
