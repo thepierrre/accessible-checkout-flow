@@ -123,7 +123,7 @@ export default function AddressFormsContainer({
         behavior: "instant",
       });
     }
-  });
+  }, [isEditing]);
 
   useEffect(() => {
     if (billingCheckboxRef.current) {
