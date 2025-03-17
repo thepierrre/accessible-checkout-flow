@@ -46,7 +46,7 @@ export default function ReviewOrder() {
   }
 
   function handleAddCode() {
-    setIsAddingCode(true);
+    setIsAddingCode(!isAddingCode);
   }
 
   return (
