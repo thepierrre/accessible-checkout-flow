@@ -237,7 +237,7 @@ export default function ReviewOrder() {
             </h2>
             <Link
               ref={changeCartLinkRef}
-              href="/checkout/shipping-and-billing?edit=shipping"
+              href="/cart"
               onMouseEnter={() => setHoveredElement(changeCartLinkRef.current)}
               onMouseLeave={() => setHoveredElement(null)}
               className="flex gap-1"
