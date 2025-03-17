@@ -1,5 +1,4 @@
 import Table from "@/app/components/review-and-pay/Table";
-import { useRouter } from "next/navigation";
 import editIcon from "../../../public/icons/editIcon.svg";
 import editIconHover from "../../../public/icons/editIconHover.svg";
 import plusIcon from "../../../public/icons/plusIcon.svg";
@@ -16,7 +15,6 @@ export default function ReviewOrder() {
   const [hoveredElement, setHoveredElement] = useState<
     HTMLAnchorElement | HTMLDivElement | null
   >(null);
-  const router = useRouter();
 
   const changeShippingLinkRef = useRef<HTMLAnchorElement | null>(null);
   const changeBillingLinkRef = useRef<HTMLAnchorElement | null>(null);
