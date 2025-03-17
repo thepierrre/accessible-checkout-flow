@@ -90,7 +90,12 @@ export default function ReviewOrder() {
                   alt="Add code icon"
                   className="w-5 h-5 self-center"
                 />
-                <div className="absolute left-8">blabla</div>
+                {hoveredElement &&
+                  hoveredElement === questionIconDivRef.current && (
+                    <div className="absolute whitespace-nowrap z-50 left-8 p-2 text-xs bg-blue-extralight rounded-md shadow-md">
+                      <p>Promo codes can&#39;t be combined.</p>
+                    </div>
+                  )}
               </div>
             </div>
 
