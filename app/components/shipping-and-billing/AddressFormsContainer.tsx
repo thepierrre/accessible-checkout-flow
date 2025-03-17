@@ -11,11 +11,10 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import NavigationButtons from "@/app/components/shipping-and-billing/NavigationButtons";
-import { redirect } from "next/navigation";
 import ErrorContainer from "@/app/components/shipping-and-billing/ErrorContainer";
 import BillingCheckbox from "@/app/components/shipping-and-billing/BillingCheckbox";
 import { submitAddressForm as submitAddressFormAction } from "@/app/lib/actions";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface Props {
   allCountries: string[];
@@ -29,11 +28,16 @@ export default function AddressFormsContainer({
   countryPhoneCodes,
 }: Props) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [suggestedCountries, setSuggestedCountries] =
     useState<string[]>(allCountries);
+  const [isEditing, setIsEditing] = useState<boolean | "shipping" | "billing">(
+    false,
+  );
   const [serverError, setServerError] = useState<string | null>(null);
   const [isCheckboxChecked, setIsCheckboxChecked] = useState<boolean>(true);
 
+  const shippingAddressRef = useRef<HTMLFieldSetElement | null>(null);
   const billingAddressRef = useRef<HTMLFieldSetElement | null>(null);
   const billingCheckboxRef = useRef<HTMLInputElement | null>(null);
   const serverErrorRef = useRef<HTMLElement | null>(null);
@@ -98,6 +102,30 @@ export default function AddressFormsContainer({
   }, [isBillingSame]);
 
   useEffect(() => {
+    const searchParam = searchParams.get("edit");
+    console.log(searchParam);
+
+    if (searchParam === "shipping" && shippingAddressRef.current) {
+      setIsEditing("shipping");
+      shippingAddressRef.current.scrollIntoView({
+        block: "start",
+        behavior: "instant",
+      });
+    } else if (searchParam === "billing") {
+      setIsEditing("billing");
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (isEditing === "billing" && billingAddressRef.current) {
+      billingAddressRef.current.scrollIntoView({
+        block: "start",
+        behavior: "instant",
+      });
+    }
+  });
+
+  useEffect(() => {
     if (billingCheckboxRef.current) {
       const checkbox = billingCheckboxRef.current;
 
@@ -123,6 +151,7 @@ export default function AddressFormsContainer({
         setValue("isBillingAddressSame", true);
       }, 550);
       setIsCheckboxChecked(true);
+      setIsEditing(false);
       setValue("billing", getValues("shipping"));
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
@@ -167,6 +196,11 @@ export default function AddressFormsContainer({
     setValue(`${addressType}.phoneCode`, phoneCode);
   }
 
+  function saveFormDataToSessionStorage(data: CombinedAddressFormData) {
+    const dataString = JSON.stringify(data);
+    sessionStorage.setItem("addressFormData", dataString);
+  }
+
   const handleFormSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (isBillingSame) {
@@ -180,6 +214,9 @@ export default function AddressFormsContainer({
             console.error("Internal Server Error:", response.error);
             setServerError(response.error);
           }
+
+          saveFormDataToSessionStorage(data);
+
           router.push("review-and-pay");
         } catch (error: unknown) {
           if (error instanceof Error) {
@@ -211,6 +248,7 @@ export default function AddressFormsContainer({
         <ErrorContainer ref={serverErrorRef} errorMessage={serverError} />
       )}
       <AddressForm
+        ref={shippingAddressRef}
         addressType="shipping"
         suggestedCountries={suggestedCountries}
         countryPhoneCodes={countryPhoneCodes}
@@ -228,7 +266,7 @@ export default function AddressFormsContainer({
         onChange={onCheckboxChange}
       />
 
-      {!isBillingSame && (
+      {(!isBillingSame || isEditing) && (
         <AddressForm
           ref={billingAddressRef}
           addressType="billing"
@@ -245,10 +283,8 @@ export default function AddressFormsContainer({
       )}
       <NavigationButtons
         isSubmitting={isSubmitting}
-        previousStepName="Cart"
-        nextStepName="Review Order"
-        prevStepHref="basket"
-        nextStepHref="review-order"
+        currentStep="address"
+        isEditing={isEditing}
       />
     </form>
   );

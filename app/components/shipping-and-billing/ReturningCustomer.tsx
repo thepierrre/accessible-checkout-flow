@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import questionIcon from "../../../public/question-icon.svg";
+import questionIcon from "../../../public/icons/questionIcon.svg";
 
 export function ReturningCustomer() {
   return (

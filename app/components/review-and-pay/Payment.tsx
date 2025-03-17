@@ -136,9 +136,11 @@ export default function Payment({ amount }: Props) {
   };
 
   return (
-    <section className="flex w-1/2 h-full px-12 py-28 shadow-lg">
+    <section className="flex w-1/2 h-5/6 p-14">
       <div className="flex flex-col gap-8 w-3/5 mx-auto">
-        <h1 className="text-4xl text-gray-700">Choose payment</h1>
+        <h1 className="text-gray-700 text-3xl mb-6 font-medium">
+          2. Choose payment
+        </h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {clientSecret && (
             <>

@@ -5,49 +5,54 @@ import { ibmPlexMono } from "@/app/layout";
 
 interface Props {
   isSubmitting: boolean;
-  previousStepName: CheckoutSteps;
-  nextStepName?: CheckoutSteps;
-  prevStepHref: string;
-  nextStepHref?: string;
+  currentStep: "cart" | "address" | "final";
+  isEditing: boolean | "shipping" | "billing";
 }
 
 export default function NavigationButtons({
   isSubmitting,
-  previousStepName,
-  nextStepName,
-  nextStepHref,
+  currentStep,
+  isEditing,
 }: Props) {
   const router = useRouter();
 
   function handlePreviousStepClick() {
-    if (previousStepName === "Cart") {
+    if (currentStep === "address") {
       router.push("/cart");
+    }
+  }
+
+  function getNextStepText() {
+    if (currentStep === "cart") return "Shipping & Billing";
+    else if (currentStep === "address") {
+      if (isEditing) return "Save Changes & Pay";
+      else return "Review & Pay";
     }
   }
 
   return (
     <section className="flex place-content-between mt-6">
-      <button
-        type="button"
-        onClick={handlePreviousStepClick}
-        className="bg-white border-2 border-blue-primary py-2 px-6 rounded-lg text-blue-semidark hover:bg-blue-light  focus:ring focus:ring-blue-primary"
-      >
-        {previousStepName === "Cart" ? "Return to Cart" : previousStepName}
-      </button>
-      {nextStepName && nextStepHref && (
+      {currentStep === "address" && (
         <button
-          type="submit"
-          className={clsx(
-            "py-2 px-6 w-30 rounded-lg bg-blue-primary text-white  ",
-            isSubmitting
-              ? "bg-blue-light"
-              : "hover:bg-blue-semidark focus:outline-solid focus:outline-offset-2",
-          )}
-          disabled={isSubmitting}
+          type="button"
+          onClick={handlePreviousStepClick}
+          className="bg-white border-2 border-blue-primary py-2 px-6 rounded-lg text-blue-semidark hover:bg-blue-light  focus:ring focus:ring-blue-primary"
         >
-          {nextStepName === "Review Order" ? "Review & Pay" : nextStepName}
+          Back to Cart
         </button>
       )}
+      <button
+        type="submit"
+        className={clsx(
+          "py-2 px-6 w-30 rounded-lg bg-blue-primary text-white  ",
+          isSubmitting
+            ? "bg-blue-light"
+            : "hover:bg-blue-semidark focus:outline-solid focus:outline-offset-2",
+        )}
+        disabled={isSubmitting}
+      >
+        {getNextStepText()}
+      </button>
     </section>
   );
 }

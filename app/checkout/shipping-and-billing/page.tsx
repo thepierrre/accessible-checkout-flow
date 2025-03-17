@@ -12,7 +12,7 @@ export default async function ShippingAndBillingPage() {
   const countryPhoneCodes: CountriesInfo = await getCountryPhoneCodes();
 
   return (
-    <div className="flex flex-col items-center mb-8">
+    <div className="flex flex-col items-center my-8">
       <main className="flex flex-col gap-8 w-144">
         <ReturningCustomer />
         <AddressFormsContainer

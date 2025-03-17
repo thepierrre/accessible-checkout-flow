@@ -21,6 +21,7 @@ module.exports = {
           primary: "#ff174d",
         },
         blue: {
+          extralight: "#f0f7ff",
           light: "#dfebff",
           semilight: "#9baaff",
           primary: "#4a67fe",
@@ -52,5 +53,11 @@ module.exports = {
       },
     },
   },
-  plugins: [tailwindcssAnimate],
+  plugins: [
+    tailwindcssAnimate,
+    function ({ addVariant }) {
+      addVariant("child", "&>*");
+      addVariant("child-odd", "&>*:nth-child(odd)");
+    },
+  ],
 };

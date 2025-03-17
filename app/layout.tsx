@@ -1,5 +1,5 @@
 import "@/app/globals.css";
-import { IBM_Plex_Sans, IBM_Plex_Mono } from "@next/font/google";
+import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { clsx } from "clsx";
 
 const ibmPlexSans = IBM_Plex_Sans({
@@ -24,7 +24,7 @@ export default function RootLayout({
       <head>
         <title>Checkout Flow</title>
       </head>
-      <body className={clsx(ibmPlexSans.className, "mt-8")}>{children}</body>
+      <body className={clsx(ibmPlexSans.className)}>{children}</body>
     </html>
   );
 }

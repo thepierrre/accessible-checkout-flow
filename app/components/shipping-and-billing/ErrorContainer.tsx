@@ -1,5 +1,5 @@
 import Image from "next/image";
-import warningIcon from "@/public/warning-icon.svg";
+import warningIcon from "@/public/icons/warningIcon.svg";
 import { RefObject } from "react";
 
 interface Props {

@@ -24,9 +24,9 @@ export default function PaymentPage() {
   };
 
   return (
-    <div className="flex flex-col items-center w-screen h-screen">
+    <div className="flex flex-col items-center w-screen">
       {/*<Stepper activeLabel="Review & Payment" />*/}
-      <main className="flex flex-row w-full h-full">
+      <main className="flex flex-row w-full h-full gap-4">
         <ReviewOrder />
         <Elements stripe={stripePromise} options={stripeOptions}>
           <Payment amount={20.99} />
