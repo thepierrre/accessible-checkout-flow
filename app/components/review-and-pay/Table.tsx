@@ -25,7 +25,7 @@ export default function Table() {
 
   return (
     <table className="w-full text-sm">
-      <tbody className="w-full flex flex-col gap-1 mt-2 mb-4 child-odd:bg-gray-50 child:rounded-lg child:py-2 child:px-4">
+      <tbody className="w-full flex flex-col mt-2 mb-4 child-odd:bg-gray-50 child:rounded-lg child:py-2 child:px-4">
         {items.map((item) => (
           <Row
             key={item.name}

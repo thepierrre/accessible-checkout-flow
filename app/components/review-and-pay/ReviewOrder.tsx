@@ -54,7 +54,7 @@ export default function ReviewOrder() {
       <h1 className="text-3xl mb-6 font-medium">1. Review order</h1>
       <section className="flex flex-col gap-4">
         <section className="flex flex-col bg-white p-4 rounded-lg gap-4">
-          <div className="flex">
+          <div className="flex px-4">
             <div className="flex grow gap-2">
               <h2 className="text-xl">Promo codes</h2>
               <div
@@ -124,7 +124,7 @@ export default function ReviewOrder() {
           )}
         </section>
         <section className="bg-white p-4 rounded-lg">
-          <div className="flex border-b border-gray-primary pb-2 mb-2">
+          <div className="flex border-b border-gray-primary pb-2 px-4 mb-2">
             <h2 className="grow text-xl">Shipping</h2>
             <Link
               ref={changeShippingLinkRef}
@@ -151,7 +151,7 @@ export default function ReviewOrder() {
               </p>
             </Link>
           </div>
-          <div className="flex flex-col gap-1 text-sm">
+          <div className="flex flex-col gap-1 text-sm px-4 ">
             <p>{shipping.email}</p>
             <p>{shipping.name}</p>
             <p>{shipping.address}</p>
@@ -166,7 +166,7 @@ export default function ReviewOrder() {
         </section>
 
         <section className="flex flex-col bg-white p-4 rounded-lg">
-          <div className="flex border-b border-gray-primary pb-1 mb-2">
+          <div className="flex border-b border-gray-primary pb-1 px-4 mb-2">
             <h2 className="grow text-xl">Billing</h2>
             <Link
               ref={changeBillingLinkRef}
@@ -194,7 +194,7 @@ export default function ReviewOrder() {
             </Link>
           </div>
 
-          <div className="flex flex-col gap-1 text-sm">
+          <div className="flex flex-col gap-1 text-sm px-4 ">
             {!isBillingSameAsShipping() ? (
               <p className="text-sm">(Same as delivery)</p>
             ) : (
@@ -215,7 +215,7 @@ export default function ReviewOrder() {
         </section>
 
         <section className="flex flex-col bg-white p-4 rounded-lg">
-          <div className="flex border-b border-gray-primary pb-1 mb-2">
+          <div className="flex border-b border-gray-primary pb-1 px-4 mb-2">
             <h2 className="flex gap-2 grow">
               <span className="text-xl">Summary</span>
               <span className="self-end">(5 items)</span>
