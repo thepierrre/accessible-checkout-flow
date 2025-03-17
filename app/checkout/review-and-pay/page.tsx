@@ -2,8 +2,6 @@
 
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
-import Stepper from "@/app/components/Stepper";
-import NavigationButtons from "@/app/components/shipping-and-billing/NavigationButtons";
 import { convertToSubcurrency } from "@/app/lib/convertToSubcurrency";
 import Payment from "@/app/components/review-and-pay/Payment";
 import ReviewOrder from "@/app/components/review-and-pay/ReviewOrder";

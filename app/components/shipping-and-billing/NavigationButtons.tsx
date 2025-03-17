@@ -1,7 +1,5 @@
 import { useRouter } from "next/navigation";
-import { CheckoutSteps } from "@/app/checkout/models";
 import { clsx } from "clsx";
-import { ibmPlexMono } from "@/app/layout";
 
 interface Props {
   isSubmitting: boolean;

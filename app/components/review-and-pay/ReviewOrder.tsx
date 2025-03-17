@@ -1,7 +1,5 @@
-import Button from "@/app/components/review-and-pay/Button";
 import Table from "@/app/components/review-and-pay/Table";
 import { useRouter } from "next/navigation";
-import { FunctionComponent, useRef, useState } from "react";
 import editIcon from "../../../public/icons/editIcon.svg";
 import editIconHover from "../../../public/icons/editIconHover.svg";
 import plusIcon from "../../../public/icons/plusIcon.svg";
@@ -10,7 +8,8 @@ import questionIcon from "../../../public/icons/questionIcon.svg";
 import questionIconHover from "../../../public/icons/questionIconHover.svg";
 
 import Image from "next/image";
-import Link, { LinkProps } from "next/link";
+import Link from "next/link";
+import { useRef, useState } from "react";
 
 export default function ReviewOrder() {
   const [isAddingCode, setIsAddingCode] = useState(false);
@@ -50,18 +49,6 @@ export default function ReviewOrder() {
 
   function handleAddCode() {
     setIsAddingCode(true);
-  }
-
-  function handleChangeShipping() {
-    router.push("/checkout/shipping-and-billing?edit=shipping");
-  }
-
-  function handleChangeBilling() {
-    router.push("/checkout/shipping-and-billing?edit=billing");
-  }
-
-  function handleChangeCart() {
-    router.push("/cart");
   }
 
   return (
