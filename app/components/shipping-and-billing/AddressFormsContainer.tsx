@@ -210,9 +210,9 @@ export default function AddressFormsContainer({
       async (data: CombinedAddressFormData) => {
         try {
           const response = await submitAddressFormAction(data);
-          if (!response.success && response.error) {
-            console.error("Internal Server Error:", response.error);
-            setServerError(response.error);
+          if (!response.success && response.errorMessage) {
+            console.error("Internal Server Error:", response.errorMessage);
+            setServerError(response.errorMessage);
           }
 
           saveFormDataToSessionStorage(data);

@@ -9,8 +9,12 @@ import questionIconHover from "../../../public/icons/questionIconHover.svg";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
+import PromoCodeForm from "@/app/components/review-and-pay/PromoCodeForm";
 
 export default function ReviewOrder() {
+  const [discountApplied, setDiscountApplied] = useState<number | undefined>(
+    undefined,
+  );
   const [isAddingCode, setIsAddingCode] = useState(false);
   const [hoveredElement, setHoveredElement] = useState<
     HTMLAnchorElement | HTMLDivElement | null
@@ -49,14 +53,18 @@ export default function ReviewOrder() {
     setIsAddingCode(!isAddingCode);
   }
 
+  function applyDiscount(discount: number) {
+    setDiscountApplied(discount);
+  }
+
   return (
     <section className="w-1/2 h-full p-14 bg-blue-extralight text-gray-dark">
       <h1 className="text-3xl mb-6 font-medium">1. Review order</h1>
       <section className="flex flex-col gap-4">
-        <section className="flex flex-col bg-white p-4 rounded-lg gap-4">
+        <section className="flex flex-col bg-white p-4 rounded-lg gap-4 shadow-sm">
           <div className="flex px-4">
             <div className="flex grow gap-2">
-              <h2 className="text-xl">Promo codes</h2>
+              <h2 className="text-xl">Promo code</h2>
               <div
                 ref={questionIconDivRef}
                 onMouseEnter={() =>
@@ -108,22 +116,14 @@ export default function ReviewOrder() {
           </div>
 
           {isAddingCode && (
-            <div className="flex gap-4">
-              <input
-                placeholder="Enter code here"
-                autoComplete="off"
-                className="border w-full h-8 p-2 rounded-md text-sm focus:outline-none focus:outline-1 focus:outline-offset-0 border-black-primary focus:outline-blue-semidark "
-              ></input>
-              <button
-                onClick={handleApply}
-                className="bg-blue-primary hover:bg-blue-semidark h-8 px-8 text-white text-sm rounded-md self-end mb-0.5"
-              >
-                Apply
-              </button>
-            </div>
+            <PromoCodeForm
+              applyDiscount={applyDiscount}
+              discountApplied={discountApplied}
+              setDiscountApplied={setDiscountApplied}
+            />
           )}
         </section>
-        <section className="bg-white p-4 rounded-lg">
+        <section className="bg-white p-4 rounded-lg shadow-sm">
           <div className="flex border-b border-gray-primary pb-2 px-4 mb-2">
             <h2 className="grow text-xl">Shipping</h2>
             <Link
@@ -165,7 +165,7 @@ export default function ReviewOrder() {
           </div>
         </section>
 
-        <section className="flex flex-col bg-white p-4 rounded-lg">
+        <section className="flex flex-col bg-white p-4 rounded-lg shadow-sm">
           <div className="flex border-b border-gray-primary pb-1 px-4 mb-2">
             <h2 className="grow text-xl">Billing</h2>
             <Link
@@ -214,7 +214,7 @@ export default function ReviewOrder() {
           </div>
         </section>
 
-        <section className="flex flex-col bg-white p-4 rounded-lg">
+        <section className="flex flex-col bg-white p-4 rounded-lg shadow-sm">
           <div className="flex border-b border-gray-primary pb-1 px-4 mb-2">
             <h2 className="flex gap-2 grow">
               <span className="text-xl">Summary</span>
@@ -242,7 +242,7 @@ export default function ReviewOrder() {
               </p>
             </Link>
           </div>
-          <Table />
+          <Table discountApplied={discountApplied} />
         </section>
       </section>
     </section>

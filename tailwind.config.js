@@ -19,6 +19,7 @@ module.exports = {
         },
         red: {
           primary: "#ff174d",
+          dark: "#e01444",
         },
         blue: {
           extralight: "#f0f7ff",

@@ -4,14 +4,28 @@ import { countries } from "countries-list";
 import { cache } from "react";
 import { CombinedAddressFormData, CountriesInfo } from "@/app/checkout/models";
 
-type ServerErrorResponse = {
+type ServerResponse = {
   success: boolean;
-  error?: string;
+  message?: string;
+  errorMessage?: string;
 };
+
+export async function getDiscount(promoCode: string): Promise<ServerResponse> {
+  if (promoCode === "TIMEFORCOFFEE") {
+    return { success: true, message: "10" };
+  } else if (promoCode === "SALE-XXL") {
+    return { success: true, message: "25" };
+  } else {
+    return {
+      success: false,
+      errorMessage: "Promo code is incorrect or expired.",
+    };
+  }
+}
 
 export async function submitAddressForm(
   formData: CombinedAddressFormData,
-): Promise<ServerErrorResponse> {
+): Promise<ServerResponse> {
   try {
     console.log(formData);
     return { success: true };
@@ -19,11 +33,11 @@ export async function submitAddressForm(
   } catch (error: unknown) {
     console.error("Internal Server Error:", error);
     if (error instanceof Error) {
-      return { success: false, error: error.message };
+      return { success: false, errorMessage: error.message };
     } else {
       return {
         success: false,
-        error: "A server error occurred. Please try again.",
+        errorMessage: "A server error occurred. Please try again.",
       };
     }
   }

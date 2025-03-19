@@ -1,26 +1,39 @@
 import Row from "@/app/components/review-and-pay/Row";
 
-type Item = { name: string; amount: number; itemPrice: number };
+type Item = { name: string; amount: number; priceForUnit: number };
 
-export default function Table() {
+interface Props {
+  discountApplied?: number;
+}
+
+export default function Table({ discountApplied }: Props) {
   const items: Item[] = [
-    { name: "Burtukaana, Ethiopia (natural)", amount: 1, itemPrice: 15.5 },
-    { name: "Lake Kivu, Kongo (washed)", amount: 1, itemPrice: 13.9 },
-    { name: "Rugali, Rwanda (natural)", amount: 1, itemPrice: 14.9 },
-    { name: "Kerinci, Indonesia (honey)", amount: 1, itemPrice: 13.9 },
-    { name: "Nansebo, Ethiopia (natural)", amount: 1, itemPrice: 14.9 },
+    { name: "Burtukaana, Ethiopia (natural)", amount: 1, priceForUnit: 15.5 },
+    { name: "Lake Kivu, Kongo (washed)", amount: 1, priceForUnit: 13.9 },
+    { name: "Rugali, Rwanda (natural)", amount: 1, priceForUnit: 14.9 },
+    { name: "Kerinci, Indonesia (honey)", amount: 1, priceForUnit: 13.9 },
+    { name: "Nansebo, Ethiopia (natural)", amount: 1, priceForUnit: 14.9 },
   ];
-
-  function calculateTotalPriceForItem(item: Item) {
-    return item.amount * item.itemPrice;
-  }
 
   const shippingCost = 2.99;
 
-  function calculateTotalCost(): number {
-    return items.reduce(function (accumulator, currentItem) {
-      return accumulator + calculateTotalPriceForItem(currentItem);
-    }, shippingCost);
+  function getAllItemsPrice(): number {
+    return items.reduce((accumulator, currentItem) => {
+      return accumulator + currentItem.amount * currentItem.priceForUnit;
+    }, 0);
+  }
+
+  function getTotalPriceForItem(item: Item): number {
+    return item.amount * item.priceForUnit;
+  }
+
+  function getSavedOnDiscount(discount?: number) {
+    if (!discount) return 0;
+    return getAllItemsPrice() * (discount / 100);
+  }
+
+  function getTotalPrice(discount?: number) {
+    return getAllItemsPrice() - getSavedOnDiscount(discount) + shippingCost;
   }
 
   return (
@@ -30,13 +43,21 @@ export default function Table() {
           <Row
             key={item.name}
             name={item.name}
-            price={calculateTotalPriceForItem(item)}
+            amount={getTotalPriceForItem(item)}
           />
         ))}
       </tbody>
-      <tfoot className="flex flex-col pt-2 font-semibold child:px-2 child:px-4 child:py-1 border-t border-dotted">
-        <Row name={"Shipping"} price={shippingCost} />
-        <Row name={"Total"} price={calculateTotalCost()} />
+      <tfoot className="flex flex-col pt-2 font-semibold child:px-4 child:py-1 border-t border-dotted">
+        <Row name={"Subtotal"} amount={getAllItemsPrice()} />
+        {discountApplied && (
+          <Row
+            name={"Discount"}
+            amount={getSavedOnDiscount(discountApplied)}
+            isDiscount
+          />
+        )}
+        <Row name={"Shipping"} amount={shippingCost} />
+        <Row name={"Total"} amount={getTotalPrice(discountApplied)} />
       </tfoot>
     </table>
   );
