@@ -1,18 +1,11 @@
 import "@/app/globals.css";
-import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { IBM_Plex_Sans } from "next/font/google";
 import { clsx } from "clsx";
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ["latin"],
   weight: ["100", "300", "400", "500", "700"],
 });
-
-const ibmPlexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["100", "300", "400", "500", "700"],
-});
-
-export { ibmPlexMono };
 
 export default function RootLayout({
   children,

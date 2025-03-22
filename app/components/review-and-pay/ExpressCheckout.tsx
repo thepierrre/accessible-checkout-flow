@@ -8,6 +8,9 @@ import {
   ExpressCheckoutElement,
   useCheckout,
   Elements,
+  CardCvcElement,
+  CardNumberElement,
+  CardExpiryElement,
 } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
 import { convertToSubcurrency } from "@/app/lib/convertToSubcurrency";
@@ -18,7 +21,7 @@ interface Props {
   amount: number;
 }
 
-export default function Payment({ amount }: Props) {
+export default function ExpressCheckout({ amount }: Props) {
   const stripe = useStripe();
   const elements = useElements();
   const [paymentRequest, setPaymentRequest] = useState<PaymentRequest | null>(
@@ -42,7 +45,7 @@ export default function Payment({ amount }: Props) {
   //       requestPayerEmail: true,
   //     });
   //
-  //     // Check the availability of the Payment Request API.
+  //     // Check the availability of the ExpressCheckout Request API.
   //
   //     if (pr) {
   //       pr.canMakePayment().then((result) => {
@@ -66,56 +69,12 @@ export default function Payment({ amount }: Props) {
       .then((data) => setClientSecret(data.clientSecret));
   }, [amount]);
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setLoading(true);
-
-    if (!stripe || !elements) {
-      setLoading(false);
-      return;
-    }
-
-    const { error: submitError } = await elements.submit();
-    if (submitError) {
-      setErrorMessage(submitError.message);
-      setLoading(false);
-      return;
-    }
-
-    const { error: confirmPaymentError } = await stripe.confirmPayment({
-      elements,
-      clientSecret,
-      confirmParams: {
-        return_url: `http://www.localhost:3000/payment-success?amount=${amount}`,
-      },
-    });
-
-    if (confirmPaymentError) {
-      setErrorMessage(confirmPaymentError.message);
-    }
-
-    setLoading(false);
-  }
-
   // FIXME: Improve the UX for the loading state.
   if (!clientSecret || !stripe || !elements) {
     return <div>Loading...</div>;
   }
 
-  const stripeOptions: StripePaymentElementOptions = {
-    layout: {
-      type: "tabs",
-    },
-    wallets: {
-      googlePay: "auto",
-    },
-  };
-
-  const options = {
-    emailRequired: true,
-  };
-
-  const onConfirm = async () => {
+  const handleExpressCheckout = async () => {
     const { error } = await stripe.confirmPayment({
       // `Elements` instance that's used to create the Express Checkout Element.
       elements,
@@ -129,6 +88,7 @@ export default function Payment({ amount }: Props) {
     });
 
     if (error) {
+      console.error(error);
       // This point is reached only if there's an immediate error when confirming the review-and-pay. Show the error to your customer (for example, review-and-pay details incomplete).
     } else {
       // Your customer will be redirected to your `return_url`.
@@ -136,33 +96,10 @@ export default function Payment({ amount }: Props) {
   };
 
   return (
-    <section className="flex w-1/2 h-5/6 p-14">
-      <div className="flex flex-col gap-8 w-3/5 mx-auto">
-        <h1 className="text-gray-700 text-3xl mb-6 font-medium">
-          2. Choose payment
-        </h1>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {clientSecret && (
-            <>
-              <section>
-                <ExpressCheckoutElement
-                  options={options}
-                  onConfirm={onConfirm}
-                />
-                <section className="flex mt-8 mb-6 items-center w-full gap-2">
-                  <hr className="grow h-px bg-gray-950"></hr>
-                  <p className="text-lg text-gray-700">Or pay by card</p>
-                  <hr className="grow h-px bg-gray-600"></hr>
-                </section>
-                <PaymentElement options={stripeOptions} />
-              </section>
-              <button className="bg-blue-500 hover:bg-blue-600 active:bg-blue-900 p-2 w-full rounded-md text-gray-100 text-lg">
-                Pay €{amount}
-              </button>
-            </>
-          )}
-        </form>
-      </div>
+    <section className="flex w-full child:max-w-128 justify-center">
+      {clientSecret && (
+        <ExpressCheckoutElement onConfirm={handleExpressCheckout} />
+      )}
     </section>
   );
 }

@@ -42,7 +42,7 @@ export default function NavigationButtons({
       <button
         type="submit"
         className={clsx(
-          "py-2 px-6 w-30 rounded-lg bg-blue-primary text-white  ",
+          "py-2 px-6 w-30 rounded-lg bg-blue-primary text-white",
           isSubmitting
             ? "bg-blue-light"
             : "hover:bg-blue-semidark focus:outline-solid focus:outline-offset-2",

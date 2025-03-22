@@ -12,15 +12,13 @@ export default async function ShippingAndBillingPage() {
   const countryPhoneCodes: CountriesInfo = await getCountryPhoneCodes();
 
   return (
-    <div className="flex flex-col items-center my-8">
-      <main className="flex flex-col gap-8 w-144">
-        <ReturningCustomer />
-        <AddressFormsContainer
-          allCountries={allCountryNames}
-          countryPhoneCodes={countryPhoneCodes}
-          getCountriesForQueryAction={getCountryNamesForQuery}
-        />
-      </main>
-    </div>
+    <main className="flex flex-col gap-8 items-center my-8 w-144">
+      <ReturningCustomer />
+      <AddressFormsContainer
+        allCountries={allCountryNames}
+        countryPhoneCodes={countryPhoneCodes}
+        getCountriesForQueryAction={getCountryNamesForQuery}
+      />
+    </main>
   );
 }

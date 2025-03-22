@@ -12,7 +12,7 @@ export default function Stepper({ activeLabel }: Props) {
       active: activeLabel === "Shipping & Billing",
     },
     {
-      label: "Review & Payment",
+      label: "Review & ExpressCheckout",
       href: "payment",
       active: activeLabel === "Payment",
     },

@@ -58,10 +58,15 @@ export default function ReviewOrder() {
   }
 
   return (
-    <section className="w-1/2 h-full p-14 bg-blue-extralight text-gray-dark">
-      <h1 className="text-3xl mb-6 font-medium">1. Review order</h1>
+    <section className="w-full">
+      <div className="flex flex-col items-center mx-auto">
+        <h1 className="text-3xl w-full mb-2 font-medium">Review order</h1>
+        <h2 className="mb-6 w-full text-gray-dark">
+          Take a moment to ensure everything is correct.
+        </h2>
+      </div>
       <section className="flex flex-col gap-4">
-        <section className="flex flex-col bg-white p-4 rounded-lg gap-4 shadow-sm">
+        <section className="flex flex-col bg-white p-4 gap-4 border border-gray-primary rounded-lg">
           <div className="flex px-4">
             <div className="flex grow gap-2">
               <h2 className="text-xl">Promo code</h2>
@@ -123,7 +128,7 @@ export default function ReviewOrder() {
             />
           )}
         </section>
-        <section className="bg-white p-4 rounded-lg shadow-sm">
+        <section className="bg-white p-4 rounded-lg border border-gray-primary">
           <div className="flex border-b border-gray-primary pb-2 px-4 mb-2">
             <h2 className="grow text-xl">Shipping</h2>
             <Link
@@ -165,7 +170,7 @@ export default function ReviewOrder() {
           </div>
         </section>
 
-        <section className="flex flex-col bg-white p-4 rounded-lg shadow-sm">
+        <section className="flex flex-col bg-white p-4 rounded-lg border border-gray-primary">
           <div className="flex border-b border-gray-primary pb-1 px-4 mb-2">
             <h2 className="grow text-xl">Billing</h2>
             <Link
@@ -214,7 +219,7 @@ export default function ReviewOrder() {
           </div>
         </section>
 
-        <section className="flex flex-col bg-white p-4 rounded-lg shadow-sm">
+        <section className="flex flex-col bg-white p-4 rounded-lg border border-gray-primary">
           <div className="flex border-b border-gray-primary pb-1 px-4 mb-2">
             <h2 className="flex gap-2 grow">
               <span className="text-xl">Summary</span>
