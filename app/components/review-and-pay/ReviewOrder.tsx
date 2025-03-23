@@ -1,10 +1,12 @@
 import Table from "@/app/components/review-and-pay/Table";
 import editIcon from "../../../public/icons/editIcon.svg";
 import editIconHover from "../../../public/icons/editIconHover.svg";
-import plusIcon from "../../../public/icons/plusIcon.svg";
-import plusIconHover from "../../../public/icons/plusIconHover.svg";
+import expandIcon from "../../../public/icons/expandIcon.svg";
+import expandIconHover from "../../../public/icons/expandIconHover.svg";
 import questionIcon from "../../../public/icons/questionIcon.svg";
 import questionIconHover from "../../../public/icons/questionIconHover.svg";
+import collapseIcon from "../../../public/icons/collapseIcon.svg";
+import collapseIconHover from "../../../public/icons/collapseIconHover.svg";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -49,12 +51,28 @@ export default function ReviewOrder() {
     setIsAddingCode(false);
   }
 
-  function handleAddCode() {
+  function handleCollapseOrExpand() {
     setIsAddingCode(!isAddingCode);
   }
 
   function applyDiscount(discount: number) {
     setDiscountApplied(discount);
+  }
+
+  function handleCodeIconDisplay() {
+    if (hoveredElement && hoveredElement === changeCartLinkRef.current) {
+      if (isAddingCode) {
+        return collapseIconHover;
+      } else {
+        return expandIconHover;
+      }
+    } else {
+      if (isAddingCode) {
+        return collapseIcon;
+      } else {
+        return expandIcon;
+      }
+    }
   }
 
   return (
@@ -66,9 +84,9 @@ export default function ReviewOrder() {
         </h2>
       </div>
       <section className="flex flex-col gap-4">
-        <section className="flex flex-col bg-white p-4 gap-4 border border-gray-primary rounded-lg">
+        <section className="flex flex-col bg-white p-4 border border-gray-primary rounded-lg">
           <div className="flex px-4">
-            <div className="flex grow gap-2">
+            <div className="flex grow gap-2 mb-2">
               <h2 className="text-xl">Promo code</h2>
               <div
                 ref={questionIconDivRef}
@@ -90,7 +108,7 @@ export default function ReviewOrder() {
                 />
                 {hoveredElement &&
                   hoveredElement === questionIconDivRef.current && (
-                    <div className="absolute whitespace-nowrap z-50 left-8 p-2 text-xs bg-blue-extralight rounded-md shadow-md">
+                    <div className="absolute whitespace-nowrap z-50 left-8 p-2 text-xs rounded-md shadow-md border border-blue-dark">
                       <p>Promo codes can&#39;t be combined.</p>
                     </div>
                   )}
@@ -102,21 +120,21 @@ export default function ReviewOrder() {
               onMouseLeave={() => setHoveredElement(null)}
               className="flex gap-1 text-blue-primary hover:text-blue-dark cursor-pointer"
             >
+              <p
+                onClick={handleCollapseOrExpand}
+                className="text-sm self-center text-blue-primary hover:text-blue-dark"
+              >
+                {!isAddingCode
+                  ? !discountApplied
+                    ? "Add code"
+                    : "Expand"
+                  : "Collapse"}
+              </p>
               <Image
-                src={
-                  hoveredElement && hoveredElement === changeCartLinkRef.current
-                    ? plusIconHover
-                    : plusIcon
-                }
+                src={handleCodeIconDisplay()}
                 alt="Add code icon"
                 className="w-4 h-4 self-center"
               />
-              <p
-                onClick={handleAddCode}
-                className="text-sm self-center text-blue-primary hover:text-blue-dark"
-              >
-                Add code
-              </p>
             </div>
           </div>
 
@@ -126,6 +144,11 @@ export default function ReviewOrder() {
               discountApplied={discountApplied}
               setDiscountApplied={setDiscountApplied}
             />
+          )}
+          {discountApplied && (
+            <p className="text-sm ml-4 text-teal-500 font-medium mt-1">
+              {discountApplied}% discount applied!
+            </p>
           )}
         </section>
         <section className="bg-white p-4 rounded-lg border border-gray-primary">
@@ -200,7 +223,7 @@ export default function ReviewOrder() {
           </div>
 
           <div className="flex flex-col gap-1 text-sm px-4 ">
-            {!isBillingSameAsShipping() ? (
+            {isBillingSameAsShipping() ? (
               <p className="text-sm">(Same as delivery)</p>
             ) : (
               <>

@@ -4,7 +4,7 @@ import questionIcon from "../../../public/icons/questionIcon.svg";
 
 export function ReturningCustomer() {
   return (
-    <section className="flex flex-col gap-2 text-lg text-black-primary border-b pb-1 border-gray-primary px-6">
+    <section className="w-144 flex flex-col gap-2 text-lg text-black-primary border-b pb-1 border-gray-primary px-6">
       <div className="flex gap-1">
         <Link
           href="/login"

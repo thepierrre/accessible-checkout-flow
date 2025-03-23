@@ -96,7 +96,7 @@ export default function ExpressCheckout({ amount }: Props) {
   };
 
   return (
-    <section className="flex w-full child:max-w-128 justify-center">
+    <section className="flex w-full child:w-full">
       {clientSecret && (
         <ExpressCheckoutElement onConfirm={handleExpressCheckout} />
       )}

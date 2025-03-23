@@ -94,9 +94,9 @@ export default function CardCheckout({ amount }: Props) {
   };
 
   return (
-    <div className="flex flex-col items-center gap-8 w-full">
+    <div className="flex flex-col gap-8 w-full">
       {clientSecret && (
-        <form onSubmit={handleCardCheckout} className="max-w-128">
+        <form onSubmit={handleCardCheckout} className="child:w-full">
           <PaymentElement options={options} />
           <button className="mt-6 py-2 w-full rounded-lg bg-blue-primary text-white hover:bg-blue-semidark focus:outline-solid focus:outline-offset-2">
             Pay €{amount}

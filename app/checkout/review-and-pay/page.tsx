@@ -64,7 +64,7 @@ export default function PaymentPage() {
   };
 
   return (
-    <main className="flex flex-col gap-12 items-center my-8 mx-auto w-2/5">
+    <main className="flex flex-col gap-12 items-center my-8 mx-auto w-144">
       <ReviewOrder />
       <div className="w-full flex flex-col">
         {/*<h1 className="text-3xl mb-8 font-medium">Choose payment</h1>*/}

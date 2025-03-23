@@ -242,7 +242,7 @@ export default function AddressFormsContainer({
       id="address-form"
       name="address-form"
       onSubmit={handleFormSubmit}
-      className="w-full p-6 border border-gray-primary rounded-lg"
+      className="p-6 border border-gray-primary rounded-lg w-144 mx-auto"
     >
       {serverError && (
         <ErrorContainer ref={serverErrorRef} errorMessage={serverError} />

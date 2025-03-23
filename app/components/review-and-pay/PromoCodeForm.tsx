@@ -3,7 +3,17 @@
 import { FieldErrors, useForm } from "react-hook-form";
 import { getDiscount as getDiscountAction } from "@/app/lib/actions";
 import { clsx } from "clsx";
-import { Dispatch, SetStateAction } from "react";
+import {
+  BaseSyntheticEvent,
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useRef,
+  useState,
+} from "react";
+import Image from "next/image";
+import removeIcon from "../../../public/icons/removeIcon.svg";
+import removeIconHover from "../../../public/icons/removeIconHover.svg";
 
 type FormValues = {
   promoCode: string;
@@ -20,11 +30,13 @@ export default function PromoCodeForm({
   discountApplied,
   setDiscountApplied,
 }: Props) {
+  const [isRemoveIconHovered, setIsRemoveIconHovered] = useState(false);
   const form = useForm<FormValues>({
     defaultValues: {
       promoCode: "",
     },
   });
+  const removeIconRef = useRef<HTMLDivElement | null>(null);
   const {
     handleSubmit,
     register,
@@ -83,49 +95,57 @@ export default function PromoCodeForm({
         onSubmit={handleSubmit(onValidFormSubmit, onInvalidFormSubmit)}
         className="mx-2 flex flex-col w-full p-2"
       >
-        <div className="w-full flex gap-4">
-          <input
-            id="promo-code"
-            {...register("promoCode")}
-            placeholder="Enter code here"
-            autoComplete="off"
-            disabled={discountApplied !== undefined}
-            //hidden={discountApplied !== undefined}
-            className={clsx(
-              "border w-full h-8 p-2 rounded-md text-sm focus:outline-none focus:outline-1 focus:outline-offset-0",
-              errors.promoCode?.message
-                ? "border-red-primary focus:outline-red-primary"
-                : "border-black-primary focus:outline-blue-semidark ",
+        <div className="w-full flex gap-2">
+          <div className="relative w-full">
+            <input
+              id="promo-code"
+              {...register("promoCode")}
+              placeholder="Enter code here"
+              autoComplete="off"
+              disabled={discountApplied !== undefined}
+              className={clsx(
+                "border w-full h-8 p-2 rounded-md text-sm focus:outline-none focus:outline-1 focus:outline-offset-0",
+                errors.promoCode?.message
+                  ? "border-red-primary focus:outline-red-primary"
+                  : "border-black-primary focus:outline-blue-semidark ",
+                discountApplied
+                  ? "bg-teal-50 pl-6 cursor-not-allowed text-teal-500 font-medium border-teal-500"
+                  : "pl-2",
+              )}
+            ></input>
+            {discountApplied && (
+              <span className="absolute left-2 top-1/2 -translate-y-1/2 text-teal-500">
+                ✔
+              </span>
             )}
-          ></input>
-          {/*{discountApplied && (*/}
-          {/*  <div className="w-full h-8 flex">*/}
-          {/*    <p className="self-center text-teal-400 font-medium">*/}
-          {/*      TIMEFORCOFFEE applied - {discountApplied}% discount!*/}
-          {/*    </p>*/}
-          {/*  </div>*/}
-          {/*)}*/}
+          </div>
 
-          <button
-            className={clsx(
-              "mr-4 h-8 px-8 text-white text-sm rounded-md self-end mb-0.5 disabled:cursor-not-allowed",
-              discountApplied
-                ? "bg-red-primary hover:bg-red-dark"
-                : "bg-blue-primary hover:bg-blue-semidark disabled:bg-blue-semilight",
-            )}
-            disabled={isInputEmpty || errors.promoCode?.message !== undefined}
-          >
-            {discountApplied ? "Remove" : "Apply"}
-          </button>
+          {!discountApplied ? (
+            <button
+              className="h-8 w-20 text-white text-sm rounded-md self-end mb-0.5 mr-3 disabled:cursor-not-allowed bg-blue-primary hover:bg-blue-semidark disabled:bg-blue-semilight"
+              disabled={isInputEmpty || errors.promoCode?.message !== undefined}
+            >
+              Apply
+            </button>
+          ) : (
+            <div
+              ref={removeIconRef}
+              onMouseEnter={() => setIsRemoveIconHovered(true)}
+              onMouseLeave={() => setIsRemoveIconHovered(false)}
+              className="flex items-center mr-3 cursor-pointer"
+              onClick={handleRemovePromoCode}
+            >
+              <Image
+                src={isRemoveIconHovered ? removeIconHover : removeIcon}
+                alt="Remove"
+                className="w-6 h-6"
+              />
+            </div>
+          )}
         </div>
         {errors.promoCode && (
           <p className="text-sm text-red-primary mt-1">
             {errors.promoCode.message}
-          </p>
-        )}
-        {!errors.promoCode && discountApplied && (
-          <p className="text-sm text-teal-500 font-medium mt-1">
-            {discountApplied}% discount applied!
           </p>
         )}
       </form>
