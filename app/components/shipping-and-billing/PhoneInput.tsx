@@ -4,6 +4,8 @@ import {
   UseFormWatch,
 } from "react-hook-form";
 
+import questionIcon from "../../../public/icons/questionIcon.svg";
+
 import {
   AddressType,
   CombinedAddressFormData,
@@ -19,7 +21,7 @@ import {
   useRef,
 } from "react";
 import { clsx } from "clsx";
-import { getCountryPhoneCodes } from "@/app/lib/actions";
+import Image from "next/image";
 
 interface Props {
   labelText: string;
@@ -33,7 +35,7 @@ interface Props {
     event: ChangeEvent<HTMLInputElement>,
   ) => void;
   onClick?: () => void;
-  //countryPhoneCodes: CountriesInfo;
+  countryPhoneCodes: CountriesInfo;
   onCountryPhoneCodeClick: (
     phoneCodeNum: number,
     addressType: AddressType,
@@ -47,14 +49,15 @@ export default function PhoneInput({
   addressType,
   register,
   getErrorMessage,
-  //countryPhoneCodes,
+  countryPhoneCodes,
   // onCountryPhoneCodeClick,
   setValue,
   watch,
 }: Props) {
+  const countryQueryRef = useRef<string>("");
   const queryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [suggestedCountriesWithCodes, setSuggestedCountriesWithCodes] =
-    useState<CountriesInfo>({});
+    useState<CountriesInfo>(countryPhoneCodes);
   const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
   const [datalistIsShown, setDatalistIsShown] = useState<boolean>(false);
   const [countryQuery, setCountryQuery] = useState<string>("");
@@ -70,35 +73,72 @@ export default function PhoneInput({
     setDatalistIsShown(false);
   }
 
-  useEffect(() => {
-    async function fetchPhoneCodes() {
-      const countryPhoneCodes = await getCountryPhoneCodes();
-      setSuggestedCountriesWithCodes(countryPhoneCodes);
-      console.log(countryPhoneCodes);
-    }
+  function handleDatasetOpening() {
+    setDatalistIsShown(true);
+    setSuggestedCountriesWithCodes(countryPhoneCodes);
+  }
 
-    fetchPhoneCodes();
-  }, []);
+  function handleDatasetClose() {
+    setDatalistIsShown(false);
+    setCountryQuery("");
+    countryQueryRef.current = "";
+    console.log("section blur");
+  }
+
+  function getMatchingCountries(query: string): CountriesInfo {
+    return Object.keys(suggestedCountriesWithCodes).length > 0
+      ? Object.fromEntries(
+          Object.keys(suggestedCountriesWithCodes)
+            .filter((country) => {
+              query = query.toLowerCase();
+              country = country.toLowerCase();
+
+              const countryNameQueryCombos: string[] = [];
+              const splitCountry = country.split(" ");
+              for (let i = 0; i < splitCountry.length; i++) {
+                countryNameQueryCombos.push(
+                  splitCountry[i],
+                  splitCountry.slice(i).join(""),
+                  splitCountry.slice(i).join(" "),
+                );
+              }
+              return countryNameQueryCombos.some((combo) =>
+                combo.startsWith(query),
+              );
+            })
+            .map((country) => [country, suggestedCountriesWithCodes[country]]),
+        )
+      : {};
+  }
+
+  function getMatchingNumericCodes(query: string): CountriesInfo {
+    return Object.keys(suggestedCountriesWithCodes).length > 0
+      ? Object.fromEntries(
+          Object.keys(suggestedCountriesWithCodes)
+            .filter((country) => {
+              if (query.charAt(0) === "+") {
+                query = query.substring(1);
+              }
+              return suggestedCountriesWithCodes[country]
+                .toString()
+                .startsWith(query);
+            })
+            .map((country) => [country, suggestedCountriesWithCodes[country]]),
+        )
+      : {};
+  }
 
   const handleCountryOrCodeQuery = useCallback(
     (event: KeyboardEvent) => {
-      console.log(countryQuery);
-      console.log(suggestedCountriesWithCodes);
+      const updatedQuery = (countryQueryRef.current + event.key).toLowerCase();
+      countryQueryRef.current = updatedQuery;
+      setCountryQuery(updatedQuery);
 
-      const filteredCountries: CountriesInfo = suggestedCountriesWithCodes
-        ? Object.fromEntries(
-            Object.keys(suggestedCountriesWithCodes)
-              .filter((country) =>
-                country.toLowerCase().startsWith(countryQuery),
-              )
-              .map((country) => [
-                country,
-                suggestedCountriesWithCodes[country],
-              ]),
-          )
-        : {};
+      console.log("countryQueryRefCurrent:", countryQueryRef.current);
 
-      console.log(filteredCountries);
+      const filteredCountries = isNaN(+updatedQuery)
+        ? getMatchingCountries(updatedQuery)
+        : getMatchingNumericCodes(updatedQuery);
 
       setSuggestedCountriesWithCodes(filteredCountries);
 
@@ -107,11 +147,12 @@ export default function PhoneInput({
       }
 
       queryTimeoutRef.current = setTimeout(() => {
+        countryQueryRef.current = "";
         setCountryQuery("");
         queryTimeoutRef.current = null;
       }, 300);
     },
-    [suggestedCountriesWithCodes],
+    [countryQuery, suggestedCountriesWithCodes],
   );
 
   useEffect(() => {
@@ -124,10 +165,7 @@ export default function PhoneInput({
     return () => {
       window.removeEventListener("keypress", handleCountryOrCodeQuery);
     };
-
-    // if datalist is shown, add event listener
-    // remove event listener if datalist is closed / if the phone code is chosen
-  }, [datalistIsShown, handleCountryOrCodeQuery]);
+  }, [datalistIsShown]);
 
   return (
     <section className="flex flex-col gap-0.5">
@@ -135,18 +173,18 @@ export default function PhoneInput({
         className="flex gap-2 align-center"
         onPointerLeave={() => setIsMouseOver(false)}
       >
-        <label htmlFor={`${addressType}-phone`} className="font-medium">
-          {labelText}
-        </label>
+        <div className="relative flex gap-1">
+          <label htmlFor={`${addressType}-phone`} className="font-medium">
+            {labelText}
+          </label>
+          <Image
+            src={questionIcon}
+            alt="Why do we need your phone number?"
+            className="w-5"
+          />
+        </div>
       </div>
-      <div
-        className="flex items-center"
-        onBlur={() => {
-          setDatalistIsShown(false);
-          setCountryQuery("");
-          console.log("section blur");
-        }}
-      >
+      <div className="flex items-center relative" onBlur={handleDatasetClose}>
         <button
           id="dropdown-phone-button"
           data-dropdown-toggle="dropdown-phone"
@@ -157,7 +195,7 @@ export default function PhoneInput({
               : "border-gray-700 focus:outline-blue-semidark",
           )}
           type="button"
-          onClick={() => setDatalistIsShown(true)}
+          onClick={handleDatasetOpening}
         >
           +{selectedPhoneCode}
           <svg
@@ -178,13 +216,13 @@ export default function PhoneInput({
         </button>
         {datalistIsShown && (
           <ul
-            className="absolute bg-white shadow-md z-50 shadow-gray-400 rounded-md bottom-5 overflow-y-auto py-2 text-sm text-black-primary max-h-44"
+            className="absolute bg-white shadow-md z-50 shadow-gray-400 rounded-md top-9 overflow-y-auto py-2 text-sm text-black-primary max-h-44"
             aria-labelledby="dropdown-phone-button"
           >
-            {suggestedCountriesWithCodes &&
+            {Object.keys(suggestedCountriesWithCodes).length > 0 ? (
               Object.keys(suggestedCountriesWithCodes).map((country) => {
                 const phoneCode =
-                  suggestedCountriesWithCodes[country][0].toString();
+                  suggestedCountriesWithCodes[country].toString();
                 return (
                   <li key={`${country}=${phoneCode}`}>
                     <button
@@ -201,7 +239,14 @@ export default function PhoneInput({
                     </button>
                   </li>
                 );
-              })}
+              })
+            ) : (
+              <li>
+                <p className="inline-flex w-112 px-4 py-2 text-sm text-black-primary">
+                  No matching countries.
+                </p>
+              </li>
+            )}
           </ul>
         )}
         <label

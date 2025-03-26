@@ -48,7 +48,7 @@ async function _getCountryPhoneCodes() {
     (accumulatedObject, currentCountry) => {
       return {
         ...accumulatedObject,
-        [currentCountry.name]: currentCountry.phone,
+        [currentCountry.name]: currentCountry.phone[0],
       };
     },
     {} as CountriesInfo,

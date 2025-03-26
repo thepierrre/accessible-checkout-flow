@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export type CountriesInfo = {
-  [countryName: string]: number[];
+  [countryName: string]: number;
 };
 
 export type CheckoutSteps =
