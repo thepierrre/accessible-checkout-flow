@@ -10,10 +10,18 @@ import collapseIconHover from "../../../public/icons/collapseIconHover.svg";
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PromoCodeForm from "@/app/components/review-and-pay/PromoCodeForm";
+import {
+  getAddressData,
+  isBillingSameAsShipping,
+} from "@/app/lib/addressDataUtils";
+import { AddressData } from "@/app/checkout/models";
+//import PromoCodeContext from "@/app/context/PromoCodeContext";
 
 export default function ReviewOrder() {
+  const [shipping, setShipping] = useState<AddressData | undefined>(undefined);
+  const [billing, setBilling] = useState<AddressData | undefined>(undefined);
   const [discountApplied, setDiscountApplied] = useState<number | undefined>(
     undefined,
   );
@@ -27,29 +35,33 @@ export default function ReviewOrder() {
   const changeCartLinkRef = useRef<HTMLAnchorElement | null>(null);
   const questionIconDivRef = useRef<HTMLDivElement | null>(null);
 
-  function getAddressData() {
-    const addressData = JSON.parse(
-      sessionStorage.getItem("addressFormData") ?? "",
-    );
-    console.log(addressData);
+  // function addressDataUtils() {
+  //   const addressData = JSON.parse(
+  //     sessionStorage.getItem("addressFormData") ?? "",
+  //   );
+  //   console.log(addressData);
+  //
+  //   return {
+  //     shipping: addressData.shipping,
+  //     billing: addressData.billing,
+  //   };
+  // }
 
-    return {
-      shipping: addressData.shipping,
-      billing: addressData.billing,
-    };
-  }
+  // function isBillingSameAsShipping() {
+  //   const { shipping, billing } = addressDataUtils();
+  //
+  //   return JSON.stringify(shipping) === JSON.stringify(billing);
+  // }
 
-  function isBillingSameAsShipping() {
+  useEffect(() => {
     const { shipping, billing } = getAddressData();
+    setShipping(shipping);
+    setBilling(billing);
+  }, []);
 
-    return JSON.stringify(shipping) === JSON.stringify(billing);
-  }
-
-  const { shipping, billing } = getAddressData();
-
-  function handleApply() {
-    setIsAddingCode(false);
-  }
+  // function handleApply() {
+  //   setIsAddingCode(false);
+  // }
 
   function handleCollapseOrExpand() {
     setIsAddingCode(!isAddingCode);
@@ -75,7 +87,12 @@ export default function ReviewOrder() {
     }
   }
 
+  if (!shipping || !billing) {
+    return;
+  }
+
   return (
+    // <PromoCodeContext.Provider value={}>
     <section className="w-full">
       <div className="flex flex-col items-center mx-auto">
         <h1 className="text-3xl w-full mb-2 font-medium">Review order</h1>
@@ -274,5 +291,6 @@ export default function ReviewOrder() {
         </section>
       </section>
     </section>
+    // </PromoCodeContext.Provider>
   );
 }

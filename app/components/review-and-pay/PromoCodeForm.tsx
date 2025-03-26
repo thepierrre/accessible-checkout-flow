@@ -47,11 +47,6 @@ export default function PromoCodeForm({
   } = form;
 
   async function onValidFormSubmit(data: FormValues) {
-    if (discountApplied) {
-      handleRemovePromoCode();
-      return;
-    }
-
     try {
       const { promoCode } = data;
       console.log(promoCode);

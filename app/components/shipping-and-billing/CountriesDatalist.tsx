@@ -42,7 +42,7 @@ export default function CountriesDatalist({
       <Input
         name="country"
         labelText="Country/Territory"
-        placeholder="e.g. Germany"
+        placeholder="Germany"
         addressType={addressType}
         register={register}
         autoComplete="country"
@@ -55,23 +55,27 @@ export default function CountriesDatalist({
       {datalistIsShown && (
         <ul
           id="countries-list"
-          className="absolute w-112 z-50 top-20 max-h-44 py-2 overflow-y-auto text-sm bg-white flex flex-col shadow-md shadow-gray-400 rounded-md "
+          className="absolute w-112 z-50 top-16 max-h-44 py-2 overflow-y-auto text-sm bg-white flex flex-col shadow-md shadow-gray-400 rounded-md "
         >
-          {suggestedCountries.map((country) => (
-            <li
-              key={country}
-              value={country}
-              onMouseDown={() => {
-                onCountryClick(country, addressType);
-                console.log("after country click");
-                setDatalistIsShown(false);
-                console.log("after hiding datalist: ", datalistIsShown);
-              }}
-              className="px-4 py-2  hover:bg-gray-100"
-            >
-              {country}
-            </li>
-          ))}
+          {suggestedCountries.length > 0 ? (
+            suggestedCountries.map((country) => (
+              <li
+                key={country}
+                value={country}
+                onMouseDown={() => {
+                  onCountryClick(country, addressType);
+                  console.log("after country click");
+                  setDatalistIsShown(false);
+                  console.log("after hiding datalist: ", datalistIsShown);
+                }}
+                className="px-4 py-2  hover:bg-gray-100"
+              >
+                {country}
+              </li>
+            ))
+          ) : (
+            <p className="px-4 py-2">No matching countries</p>
+          )}
         </ul>
       )}
     </section>

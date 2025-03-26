@@ -15,6 +15,10 @@ import ErrorContainer from "@/app/components/shipping-and-billing/ErrorContainer
 import BillingCheckbox from "@/app/components/shipping-and-billing/BillingCheckbox";
 import { submitAddressForm as submitAddressFormAction } from "@/app/lib/actions";
 import { useRouter, useSearchParams } from "next/navigation";
+import {
+  getAddressData,
+  isBillingSameAsShipping,
+} from "@/app/lib/addressDataUtils";
 
 interface Props {
   allCountries: string[];
@@ -81,6 +85,18 @@ export default function AddressFormsContainer({
   } = form;
 
   const isBillingSame = watch("isBillingAddressSame");
+
+  // useEffect(() => {
+  //   const { shipping, billing } = getAddressData();
+  //   if (shipping && billing && isBillingSameAsShipping()) {
+  //     console.log(isBillingSameAsShipping());
+  //     setValue("shipping", shipping);
+  //   } else if (shipping && billing && !isBillingSameAsShipping()) {
+  //     setValue("shipping", shipping);
+  //     setValue("billing", billing);
+  //     setValue("isBillingAddressSame", false);
+  //   }
+  // }, [setValue]);
 
   useEffect(() => {
     if (serverErrorRef.current) {
@@ -266,7 +282,7 @@ export default function AddressFormsContainer({
         onChange={onCheckboxChange}
       />
 
-      {(!isBillingSame || isEditing) && (
+      {(!isBillingSame || isEditing === "billing") && (
         <AddressForm
           ref={billingAddressRef}
           addressType="billing"

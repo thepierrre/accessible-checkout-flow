@@ -68,11 +68,14 @@ export default function Input({
         )}
       />
 
-      {errorMessage && (
-        <p className="text-red-primary animate-in fade-in duration-700 text-sm ">
-          {errorMessage}
-        </p>
-      )}
+      <p
+        className={clsx(
+          "overflow-hidden transition-[max-height] text-red-primary text-sm duration-700",
+          errorMessage ? "max-h-8" : "max-h-0",
+        )}
+      >
+        {errorMessage || "\u00A0"}
+      </p>
     </section>
   );
 }

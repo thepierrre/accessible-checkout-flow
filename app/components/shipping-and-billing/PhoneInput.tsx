@@ -10,8 +10,16 @@ import {
   CountriesInfo,
 } from "@/app/checkout/models";
 import { FieldNameType } from "@/app/components/shipping-and-billing/AddressForm";
-import { ChangeEvent, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  useEffect,
+  useState,
+  use,
+  useCallback,
+  useRef,
+} from "react";
 import { clsx } from "clsx";
+import { getCountryPhoneCodes } from "@/app/lib/actions";
 
 interface Props {
   labelText: string;
@@ -25,7 +33,7 @@ interface Props {
     event: ChangeEvent<HTMLInputElement>,
   ) => void;
   onClick?: () => void;
-  countryPhoneCodes: CountriesInfo;
+  //countryPhoneCodes: CountriesInfo;
   onCountryPhoneCodeClick: (
     phoneCodeNum: number,
     addressType: AddressType,
@@ -39,25 +47,21 @@ export default function PhoneInput({
   addressType,
   register,
   getErrorMessage,
-  countryPhoneCodes,
+  //countryPhoneCodes,
   // onCountryPhoneCodeClick,
   setValue,
   watch,
 }: Props) {
+  const queryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [suggestedCountriesWithCodes, setSuggestedCountriesWithCodes] =
+    useState<CountriesInfo>({});
   const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
   const [datalistIsShown, setDatalistIsShown] = useState<boolean>(false);
+  const [countryQuery, setCountryQuery] = useState<string>("");
   const [selectedPhoneCode, setSelectedPhoneCode] = useState<string>("1");
 
   const phoneCodeErrorMessage = getErrorMessage("phoneCode");
   const phoneNumberErrorMessage = getErrorMessage("phoneNumber");
-
-  const formPhoneCode = watch(`${addressType}.phoneCode`, selectedPhoneCode);
-
-  useEffect(() => {
-    if (formPhoneCode && formPhoneCode !== selectedPhoneCode) {
-      setSelectedPhoneCode(formPhoneCode);
-    }
-  }, [formPhoneCode, selectedPhoneCode]);
 
   function onCountryPhoneCodeClick(phoneCode: string) {
     console.log("selected phone code", phoneCode);
@@ -66,24 +70,80 @@ export default function PhoneInput({
     setDatalistIsShown(false);
   }
 
+  useEffect(() => {
+    async function fetchPhoneCodes() {
+      const countryPhoneCodes = await getCountryPhoneCodes();
+      setSuggestedCountriesWithCodes(countryPhoneCodes);
+      console.log(countryPhoneCodes);
+    }
+
+    fetchPhoneCodes();
+  }, []);
+
+  const handleCountryOrCodeQuery = useCallback(
+    (event: KeyboardEvent) => {
+      console.log(countryQuery);
+      console.log(suggestedCountriesWithCodes);
+
+      const filteredCountries: CountriesInfo = suggestedCountriesWithCodes
+        ? Object.fromEntries(
+            Object.keys(suggestedCountriesWithCodes)
+              .filter((country) =>
+                country.toLowerCase().startsWith(countryQuery),
+              )
+              .map((country) => [
+                country,
+                suggestedCountriesWithCodes[country],
+              ]),
+          )
+        : {};
+
+      console.log(filteredCountries);
+
+      setSuggestedCountriesWithCodes(filteredCountries);
+
+      if (queryTimeoutRef.current) {
+        clearTimeout(queryTimeoutRef.current);
+      }
+
+      queryTimeoutRef.current = setTimeout(() => {
+        setCountryQuery("");
+        queryTimeoutRef.current = null;
+      }, 300);
+    },
+    [suggestedCountriesWithCodes],
+  );
+
+  useEffect(() => {
+    if (datalistIsShown) {
+      window.addEventListener("keypress", handleCountryOrCodeQuery);
+    } else {
+      window.removeEventListener("keypress", handleCountryOrCodeQuery);
+    }
+
+    return () => {
+      window.removeEventListener("keypress", handleCountryOrCodeQuery);
+    };
+
+    // if datalist is shown, add event listener
+    // remove event listener if datalist is closed / if the phone code is chosen
+  }, [datalistIsShown, handleCountryOrCodeQuery]);
+
   return (
-    <section className="flex flex-col gap-1">
+    <section className="flex flex-col gap-0.5">
       <div
         className="flex gap-2 align-center"
         onPointerLeave={() => setIsMouseOver(false)}
       >
-        <label
-          htmlFor={`${addressType}-phone`}
-          className="font-medium after:content-['*']"
-        >
+        <label htmlFor={`${addressType}-phone`} className="font-medium">
           {labelText}
         </label>
       </div>
-
       <div
         className="flex items-center"
         onBlur={() => {
           setDatalistIsShown(false);
+          setCountryQuery("");
           console.log("section blur");
         }}
       >
@@ -118,28 +178,30 @@ export default function PhoneInput({
         </button>
         {datalistIsShown && (
           <ul
-            className="absolute bg-white shadow-md z-50 shadow-gray-400 rounded-md bottom-16 overflow-y-auto py-2 text-sm text-black-primary max-h-44"
+            className="absolute bg-white shadow-md z-50 shadow-gray-400 rounded-md bottom-5 overflow-y-auto py-2 text-sm text-black-primary max-h-44"
             aria-labelledby="dropdown-phone-button"
           >
-            {Object.keys(countryPhoneCodes).map((country) => {
-              const phoneCode = countryPhoneCodes[country][0].toString();
-              return (
-                <li key={`${country}=${phoneCode}`}>
-                  <button
-                    type="button"
-                    className="inline-flex w-112 px-4 py-2 text-sm hover:bg-gray-100 text-black-primary"
-                    role="menuitem"
-                    onMouseDown={() => {
-                      onCountryPhoneCodeClick(phoneCode);
-                    }}
-                  >
-                    <span className="inline-flex items-center">
-                      {country} (+{phoneCode})
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
+            {suggestedCountriesWithCodes &&
+              Object.keys(suggestedCountriesWithCodes).map((country) => {
+                const phoneCode =
+                  suggestedCountriesWithCodes[country][0].toString();
+                return (
+                  <li key={`${country}=${phoneCode}`}>
+                    <button
+                      type="button"
+                      className="inline-flex w-112 px-4 py-2 text-sm hover:bg-gray-100 text-black-primary"
+                      role="menuitem"
+                      onMouseDown={() => {
+                        onCountryPhoneCodeClick(phoneCode);
+                      }}
+                    >
+                      <span className="inline-flex items-center">
+                        {country} (+{phoneCode})
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
           </ul>
         )}
         <label
@@ -158,21 +220,26 @@ export default function PhoneInput({
               ? "border-red-primary focus:outline-red-primary"
               : "border-gray-700 focus:outline-blue-semidark",
           )}
-          // pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
           placeholder="123456789"
           {...register(`${addressType}.phoneNumber`)}
         />
       </div>
-      {phoneCodeErrorMessage && (
-        <p className="text-red-primary animate-in fade-in duration-700 text-sm">
-          {phoneCodeErrorMessage}
-        </p>
-      )}
-      {phoneNumberErrorMessage && (
-        <p className="text-red-primary animate-in fade-in duration-700 text-sm">
-          {phoneNumberErrorMessage}
-        </p>
-      )}
+      <p
+        className={clsx(
+          "overflow-hidden transition-[max-height] text-red-primary text-sm duration-700",
+          phoneCodeErrorMessage ? "max-h-8" : "max-h-0",
+        )}
+      >
+        {phoneCodeErrorMessage || "\u00A0"}
+      </p>
+      <p
+        className={clsx(
+          "overflow-hidden transition-[max-height] text-red-primary text-sm duration-700",
+          phoneNumberErrorMessage ? "max-h-8" : "max-h-0",
+        )}
+      >
+        {phoneNumberErrorMessage || "\u00A0"}
+      </p>
     </section>
   );
 }

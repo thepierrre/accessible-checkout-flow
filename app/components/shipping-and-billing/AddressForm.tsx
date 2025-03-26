@@ -136,7 +136,7 @@ export default function AddressForm({
         getErrorMessage={getErrorMessage}
       />
       <PhoneInput
-        labelText="Phone number"
+        labelText="Phone number (optional)"
         addressType={addressType}
         register={register}
         autoComplete="tel"

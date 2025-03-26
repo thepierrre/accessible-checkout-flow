@@ -1,5 +1,4 @@
 /** @type {import('tailwindcss').Config} */
-import tailwindcssAnimate from "tailwindcss-animate";
 
 module.exports = {
   content: [
@@ -55,7 +54,6 @@ module.exports = {
     },
   },
   plugins: [
-    tailwindcssAnimate,
     function ({ addVariant }) {
       addVariant("child", "&>*");
       addVariant("child-odd", "&>*:nth-child(odd)");
