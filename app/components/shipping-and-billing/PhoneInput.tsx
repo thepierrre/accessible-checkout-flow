@@ -9,19 +9,16 @@ import questionIcon from "../../../public/icons/questionIcon.svg";
 import {
   AddressType,
   CombinedAddressFormData,
-  CountriesInfo,
+  CountriesWithCodes,
 } from "@/app/checkout/models";
 import { FieldNameType } from "@/app/components/shipping-and-billing/AddressForm";
-import {
-  ChangeEvent,
-  useEffect,
-  useState,
-  use,
-  useCallback,
-  useRef,
-} from "react";
+import { ChangeEvent, useEffect, useState, useCallback, useRef } from "react";
 import { clsx } from "clsx";
 import Image from "next/image";
+import {
+  getCountryMatchesForNames,
+  getCountryMatchesForPhoneCodes,
+} from "@/app/lib/countryQueries";
 
 interface Props {
   labelText: string;
@@ -35,7 +32,7 @@ interface Props {
     event: ChangeEvent<HTMLInputElement>,
   ) => void;
   onClick?: () => void;
-  countryPhoneCodes: CountriesInfo;
+  countriesWithCodes: CountriesWithCodes;
   onCountryPhoneCodeClick: (
     phoneCodeNum: number,
     addressType: AddressType,
@@ -49,7 +46,7 @@ export default function PhoneInput({
   addressType,
   register,
   getErrorMessage,
-  countryPhoneCodes,
+  countriesWithCodes,
   // onCountryPhoneCodeClick,
   setValue,
   watch,
@@ -57,7 +54,7 @@ export default function PhoneInput({
   const countryQueryRef = useRef<string>("");
   const queryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [suggestedCountriesWithCodes, setSuggestedCountriesWithCodes] =
-    useState<CountriesInfo>(countryPhoneCodes);
+    useState<CountriesWithCodes>(countriesWithCodes);
   const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
   const [datalistIsShown, setDatalistIsShown] = useState<boolean>(false);
   const [countryQuery, setCountryQuery] = useState<string>("");
@@ -75,7 +72,7 @@ export default function PhoneInput({
 
   function handleDatasetOpening() {
     setDatalistIsShown(true);
-    setSuggestedCountriesWithCodes(countryPhoneCodes);
+    setSuggestedCountriesWithCodes(countriesWithCodes);
   }
 
   function handleDatasetClose() {
@@ -83,49 +80,6 @@ export default function PhoneInput({
     setCountryQuery("");
     countryQueryRef.current = "";
     console.log("section blur");
-  }
-
-  function getMatchingCountries(query: string): CountriesInfo {
-    return Object.keys(suggestedCountriesWithCodes).length > 0
-      ? Object.fromEntries(
-          Object.keys(suggestedCountriesWithCodes)
-            .filter((country) => {
-              query = query.toLowerCase();
-              country = country.toLowerCase();
-
-              const countryNameQueryCombos: string[] = [];
-              const splitCountry = country.split(" ");
-              for (let i = 0; i < splitCountry.length; i++) {
-                countryNameQueryCombos.push(
-                  splitCountry[i],
-                  splitCountry.slice(i).join(""),
-                  splitCountry.slice(i).join(" "),
-                );
-              }
-              return countryNameQueryCombos.some((combo) =>
-                combo.startsWith(query),
-              );
-            })
-            .map((country) => [country, suggestedCountriesWithCodes[country]]),
-        )
-      : {};
-  }
-
-  function getMatchingNumericCodes(query: string): CountriesInfo {
-    return Object.keys(suggestedCountriesWithCodes).length > 0
-      ? Object.fromEntries(
-          Object.keys(suggestedCountriesWithCodes)
-            .filter((country) => {
-              if (query.charAt(0) === "+") {
-                query = query.substring(1);
-              }
-              return suggestedCountriesWithCodes[country]
-                .toString()
-                .startsWith(query);
-            })
-            .map((country) => [country, suggestedCountriesWithCodes[country]]),
-        )
-      : {};
   }
 
   const handleCountryOrCodeQuery = useCallback(
@@ -137,8 +91,11 @@ export default function PhoneInput({
       console.log("countryQueryRefCurrent:", countryQueryRef.current);
 
       const filteredCountries = isNaN(+updatedQuery)
-        ? getMatchingCountries(updatedQuery)
-        : getMatchingNumericCodes(updatedQuery);
+        ? getCountryMatchesForNames(suggestedCountriesWithCodes, updatedQuery)
+        : getCountryMatchesForPhoneCodes(
+            suggestedCountriesWithCodes,
+            updatedQuery,
+          );
 
       setSuggestedCountriesWithCodes(filteredCountries);
 

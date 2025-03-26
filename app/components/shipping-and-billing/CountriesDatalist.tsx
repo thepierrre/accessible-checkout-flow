@@ -1,11 +1,15 @@
-import { AddressType, CombinedAddressFormData } from "@/app/checkout/models";
+import {
+  AddressType,
+  CombinedAddressFormData,
+  CountriesWithCodes,
+} from "@/app/checkout/models";
 import { ChangeEvent, useState } from "react";
 import { UseFormRegister } from "react-hook-form";
 import { FieldNameType } from "@/app/components/shipping-and-billing/AddressForm";
 import Input from "@/app/components/shipping-and-billing/Input";
 
 interface Props {
-  suggestedCountries: string[];
+  suggestedCountries: CountriesWithCodes;
   addressType: AddressType;
   country: string;
   onCountryInputChange: (
@@ -57,8 +61,8 @@ export default function CountriesDatalist({
           id="countries-list"
           className="absolute w-112 z-50 top-16 max-h-44 py-2 overflow-y-auto text-sm bg-white flex flex-col shadow-md shadow-gray-400 rounded-md "
         >
-          {suggestedCountries.length > 0 ? (
-            suggestedCountries.map((country) => (
+          {Object.keys(suggestedCountries).length > 0 ? (
+            Object.keys(suggestedCountries).map((country) => (
               <li
                 key={country}
                 value={country}

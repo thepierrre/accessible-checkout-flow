@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export type CountriesInfo = {
+export type CountriesWithCodes = {
   [countryName: string]: number;
 };
 

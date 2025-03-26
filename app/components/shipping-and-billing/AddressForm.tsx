@@ -2,7 +2,7 @@ import { ChangeEvent, Ref } from "react";
 import {
   AddressType,
   CombinedAddressFormData,
-  CountriesInfo,
+  CountriesWithCodes,
 } from "@/app/checkout/models";
 import CountriesDatalist from "@/app/components/shipping-and-billing/CountriesDatalist";
 import {
@@ -17,8 +17,8 @@ import PhoneInput from "@/app/components/shipping-and-billing/PhoneInput";
 interface Props {
   ref?: Ref<HTMLFieldSetElement>;
   addressType: AddressType;
-  suggestedCountries: string[];
-  countryPhoneCodes: CountriesInfo;
+  suggestedCountries: CountriesWithCodes;
+  countriesWithCodes: CountriesWithCodes;
   onCountryInputChange: (
     addressType: AddressType,
     event: ChangeEvent<HTMLInputElement>,
@@ -49,7 +49,7 @@ export default function AddressForm({
   ref = null,
   addressType,
   suggestedCountries,
-  countryPhoneCodes,
+  countriesWithCodes,
   onCountryInputChange,
   onSuggestedCountryClick,
   onCountryPhoneCodeClick,
@@ -142,7 +142,7 @@ export default function AddressForm({
         autoComplete="tel"
         type="tel"
         getErrorMessage={getErrorMessage}
-        countryPhoneCodes={countryPhoneCodes}
+        countriesWithCodes={countriesWithCodes}
         onCountryPhoneCodeClick={onCountryPhoneCodeClick}
         setValue={setValue}
         watch={watch}

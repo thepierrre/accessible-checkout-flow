@@ -6,7 +6,7 @@ import {
   AddressType,
   CombinedAddressFormData,
   combinedAddressFormSchema,
-  CountriesInfo,
+  CountriesWithCodes,
 } from "@/app/checkout/models";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,22 +19,23 @@ import {
   getAddressData,
   isBillingSameAsShipping,
 } from "@/app/lib/addressDataUtils";
+import { getCountryMatchesForNames } from "@/app/lib/countryQueries";
 
 interface Props {
-  allCountries: string[];
-  getCountriesForQueryAction: (query: string) => Promise<string[]>;
-  countryPhoneCodes: CountriesInfo;
+  //allCountries: string[];
+  //getCountriesForQueryAction: (query: string) => Promise<string[]>;
+  countriesWithCodes: CountriesWithCodes;
 }
 
 export default function AddressFormsContainer({
-  allCountries,
-  getCountriesForQueryAction,
-  countryPhoneCodes,
+  //allCountries,
+  //getCountriesForQueryAction,
+  countriesWithCodes,
 }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [suggestedCountries, setSuggestedCountries] =
-    useState<string[]>(allCountries);
+    useState<CountriesWithCodes>(countriesWithCodes);
   const [isEditing, setIsEditing] = useState<boolean | "shipping" | "billing">(
     false,
   );
@@ -195,8 +196,8 @@ export default function AddressFormsContainer({
     setValue(`${addressType}.country`, value);
 
     const foundCountries = value
-      ? await getCountriesForQueryAction(value)
-      : allCountries;
+      ? getCountryMatchesForNames(countriesWithCodes, value)
+      : countriesWithCodes;
     setSuggestedCountries(foundCountries);
   }
 
@@ -267,7 +268,7 @@ export default function AddressFormsContainer({
         ref={shippingAddressRef}
         addressType="shipping"
         suggestedCountries={suggestedCountries}
-        countryPhoneCodes={countryPhoneCodes}
+        countriesWithCodes={countriesWithCodes}
         onCountryInputChange={onCountryInputChange}
         onSuggestedCountryClick={onSuggestedCountryClick}
         onCountryPhoneCodeClick={onCountryPhoneCodeClick}
@@ -287,7 +288,7 @@ export default function AddressFormsContainer({
           ref={billingAddressRef}
           addressType="billing"
           suggestedCountries={suggestedCountries}
-          countryPhoneCodes={countryPhoneCodes}
+          countriesWithCodes={countriesWithCodes}
           onCountryInputChange={onCountryInputChange}
           onSuggestedCountryClick={onSuggestedCountryClick}
           onCountryPhoneCodeClick={onCountryPhoneCodeClick}

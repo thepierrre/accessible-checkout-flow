@@ -2,7 +2,10 @@
 
 import { countries } from "countries-list";
 import { cache } from "react";
-import { CombinedAddressFormData, CountriesInfo } from "@/app/checkout/models";
+import {
+  CombinedAddressFormData,
+  CountriesWithCodes,
+} from "@/app/checkout/models";
 
 type ServerResponse = {
   success: boolean;
@@ -29,7 +32,6 @@ export async function submitAddressForm(
   try {
     console.log(formData);
     return { success: true };
-    //throw { message: "bla" };
   } catch (error: unknown) {
     console.error("Internal Server Error:", error);
     if (error instanceof Error) {
@@ -51,7 +53,7 @@ async function _getCountryPhoneCodes() {
         [currentCountry.name]: currentCountry.phone[0],
       };
     },
-    {} as CountriesInfo,
+    {} as CountriesWithCodes,
   );
 }
 
