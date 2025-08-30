@@ -16,7 +16,7 @@ export function ReturningCustomer() {
                 </button>
                 <p>(optional)</p>
                 <Tooltip label="Log in to track your purchase history." position="right">
-                        <Image src={questionIcon} alt="login and sign-up information"/>
+                    <Image src={questionIcon} alt="login and sign-up information"/>
                 </Tooltip>
             </div>
         </section>

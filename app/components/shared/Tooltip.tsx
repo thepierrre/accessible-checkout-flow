@@ -1,6 +1,6 @@
 "use client";
 
-import {ReactNode, useState} from "react";
+import {ReactNode, useState, useRef} from "react";
 import {clsx} from "clsx";
 
 type TooltipProps = {
@@ -15,7 +15,7 @@ export default function Tooltip({children, label, position, delay = 300}: Toolti
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
     function showTooltip() {
-        setTimeout(() => {
+        timeoutId = setTimeout(() => {
             setIsShown(true);
         }, delay)
     }
@@ -29,7 +29,8 @@ export default function Tooltip({children, label, position, delay = 300}: Toolti
     }
 
     return (
-        <div onMouseEnter={showTooltip} onMouseLeave={hideTooltip} className="relative">
+        <div tabIndex={0}
+            onMouseEnter={showTooltip} onMouseLeave={hideTooltip} onFocus={showTooltip} onBlur={hideTooltip} className="relative">
             {children}
             {isShown && (
                 <div
