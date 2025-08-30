@@ -1,4 +1,4 @@
-import { ChangeEvent, Ref } from "react";
+import { ChangeEvent, Ref, useEffect } from "react";
 import {
   AddressType,
   CombinedAddressFormData,
@@ -65,9 +65,9 @@ export default function AddressForm({
   }
 
   return (
-    <fieldset className="flex flex-col gap-4 w-full" ref={ref}>
+    <fieldset className="flex w-full flex-col gap-4" ref={ref}>
       <header>
-        <h1 className="text-3xl mb-2 font-medium">
+        <h1 className="mb-2 text-3xl font-medium">
           <span className="capitalize">{addressType}</span> address
         </h1>
         <h2 className="mb-2 text-gray-dark">

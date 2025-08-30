@@ -1,7 +1,7 @@
 import { UseFormRegister } from "react-hook-form";
 import { AddressType, CombinedAddressFormData } from "@/app/checkout/models";
 import { FieldNameType } from "@/app/components/shipping-and-billing/AddressForm";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, Ref } from "react";
 import { clsx } from "clsx";
 
 interface Props {
@@ -18,6 +18,7 @@ interface Props {
     event: ChangeEvent<HTMLInputElement>,
   ) => void;
   onClick?: () => void;
+  ref?: Ref<HTMLDivElement>;
 }
 
 export default function Input({
@@ -32,25 +33,19 @@ export default function Input({
   onChange,
   onClick,
 }: Props) {
-  const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
   const errorMessage = getErrorMessage(name);
 
   return (
-    <section className="flex flex-col gap-1 w-full">
-      <div
-        className="flex gap-2 align-center"
-        onPointerLeave={() => setIsMouseOver(false)}
+    <div className="flex flex-col gap-2">
+      <label
+        htmlFor={`${addressType}-${name}`}
+        className={clsx(
+          "font-medium",
+          labelText !== "State/Province (optional)" && "after:content-['*']",
+        )}
       >
-        <label
-          htmlFor={`${addressType}-${name}`}
-          className={clsx(
-            "font-medium",
-            labelText !== "State/Province (optional)" && "after:content-['*']",
-          )}
-        >
-          {labelText}
-        </label>
-      </div>
+        {labelText}
+      </label>
 
       <input
         id={`${addressType}-${name}`}
@@ -61,21 +56,21 @@ export default function Input({
         autoComplete={autoComplete}
         type={type}
         className={clsx(
-          "border w-full h-8 p-2 rounded-md text-sm focus:outline-none focus:outline-1 focus:outline-offset-0",
+          "h-8 w-full rounded-md border p-2 text-sm focus:outline-none focus:outline-1 focus:outline-offset-0",
           errorMessage
             ? "border-red-primary focus:outline-red-primary"
-            : "border-black-primary focus:outline-blue-semidark ",
+            : "border-black-primary focus:outline-blue-semidark",
         )}
       />
 
       <p
         className={clsx(
-          "overflow-hidden transition-[max-height] text-red-primary text-sm duration-700",
+          "overflow-hidden text-sm text-red-primary transition-[max-height] duration-700",
           errorMessage ? "max-h-8" : "max-h-0",
         )}
       >
         {errorMessage || "\u00A0"}
       </p>
-    </section>
+    </div>
   );
 }

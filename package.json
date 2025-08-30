@@ -23,7 +23,6 @@
     "eslint-plugin-prettier": "^5.2.3",
     "install": "^0.13.0",
     "next": "15.1.6",
-    "prettier": "^3.4.2",
     "psql": "^0.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -41,7 +40,14 @@
     "eslint": "^9",
     "eslint-config-next": "15.1.6",
     "postcss": "^8.5.1",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "3.4.17",
     "typescript": "^5"
+  },
+  "prettier": {
+    "plugins": [
+      "prettier-plugin-tailwindcss"
+    ]
   }
 }

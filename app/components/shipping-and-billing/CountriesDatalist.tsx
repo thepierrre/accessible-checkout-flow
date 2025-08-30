@@ -3,10 +3,13 @@ import {
   CombinedAddressFormData,
   CountriesWithCodes,
 } from "@/app/checkout/models";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { UseFormRegister } from "react-hook-form";
 import { FieldNameType } from "@/app/components/shipping-and-billing/AddressForm";
 import Input from "@/app/components/shipping-and-billing/Input";
+import useKeyboardNavigation from "@/app/hooks/useKeyboardNavigation";
+import { clsx } from "clsx";
+import ListElement from "@/app/components/shipping-and-billing/ListElement";
 
 interface Props {
   suggestedCountries: CountriesWithCodes;
@@ -29,14 +32,64 @@ export default function CountriesDatalist({
   register,
   getErrorMessage,
 }: Props) {
+  const [activeElement, setActiveElement] = useKeyboardNavigation(
+    Object.keys(suggestedCountries).length,
+  );
+  const divRef = useRef<HTMLDivElement | null>(null);
   const [datalistIsShown, setDatalistIsShown] = useState(false);
+
+  useEffect(() => {
+    const div = divRef.current;
+    if (!div) return;
+
+    const handleFocusIn = (e: FocusEvent) => {
+      if (
+        e.target instanceof HTMLInputElement &&
+        e.target.name === `${addressType}.country`
+      ) {
+        setDatalistIsShown(true);
+        setActiveElement(0);
+      }
+    };
+
+    const handleFocusOut = (e: FocusEvent) => {
+      if (
+        e.target instanceof HTMLInputElement &&
+        e.target.name === `${addressType}.country`
+      ) {
+        setDatalistIsShown(false);
+        setActiveElement(0);
+      }
+    };
+
+    div.addEventListener("focusin", handleFocusIn);
+    div.addEventListener("focusout", handleFocusOut);
+
+    return () => {
+      div.removeEventListener("focusin", handleFocusIn);
+      div.removeEventListener("focusout", handleFocusOut);
+    };
+  });
 
   function handleInputClick() {
     setDatalistIsShown(true);
   }
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setDatalistIsShown(false);
+      }
+    };
+
+    if (datalistIsShown) {
+      document.addEventListener("keydown", handleKeyDown);
+    }
+  }, [datalistIsShown]);
+
   return (
-    <section
+    <div
+      ref={divRef}
       className="relative flex flex-col gap-2"
       onBlur={() => {
         setDatalistIsShown(false);
@@ -52,36 +105,36 @@ export default function CountriesDatalist({
         autoComplete="country"
         type="text"
         getErrorMessage={getErrorMessage}
-        onChange={onCountryInputChange}
+        onChange={(addressType, e) => {
+          onCountryInputChange(addressType, e);
+          setDatalistIsShown(true);
+        }}
         onClick={handleInputClick}
       />
 
       {datalistIsShown && (
         <ul
           id="countries-list"
-          className="absolute w-112 z-50 top-16 max-h-44 py-2 overflow-y-auto text-sm bg-white flex flex-col shadow-md shadow-gray-400 rounded-md "
+          className="absolute top-16 z-50 flex max-h-44 w-112 flex-col overflow-y-auto rounded-md bg-white py-2 text-sm shadow-md shadow-gray-400"
         >
           {Object.keys(suggestedCountries).length > 0 ? (
-            Object.keys(suggestedCountries).map((country) => (
-              <li
+            Object.keys(suggestedCountries).map((country, index) => (
+              <ListElement
+                activeIndex={activeElement}
+                country={country}
                 key={country}
-                value={country}
-                onMouseDown={() => {
-                  onCountryClick(country, addressType);
-                  console.log("after country click");
-                  setDatalistIsShown(false);
-                  console.log("after hiding datalist: ", datalistIsShown);
-                }}
-                className="px-4 py-2  hover:bg-gray-100"
-              >
-                {country}
-              </li>
+                index={index}
+                datalistIsShown={datalistIsShown}
+                setDatalistIsShown={setDatalistIsShown}
+                addressType={addressType}
+                onCountryClick={onCountryClick}
+              />
             ))
           ) : (
             <p className="px-4 py-2">No matching countries</p>
           )}
         </ul>
       )}
-    </section>
+    </div>
   );
 }

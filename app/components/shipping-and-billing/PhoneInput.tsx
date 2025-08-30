@@ -127,7 +127,7 @@ export default function PhoneInput({
   return (
     <section className="flex flex-col gap-0.5">
       <div
-        className="flex gap-2 align-center"
+        className="align-center flex gap-2"
         onPointerLeave={() => setIsMouseOver(false)}
       >
         <div className="relative flex gap-1">
@@ -141,12 +141,12 @@ export default function PhoneInput({
           />
         </div>
       </div>
-      <div className="flex items-center relative" onBlur={handleDatasetClose}>
+      <div className="relative flex items-center" onBlur={handleDatasetClose}>
         <button
           id="dropdown-phone-button"
           data-dropdown-toggle="dropdown-phone"
           className={clsx(
-            "min-w-18 inline-flex items-center py-2 px-4 h-8 text-sm font-medium text-center text-black-primary  border border-gray-700 rounded-s-lg hover:bg-gray-200 focus:outline-none focus:outline-1 focus:outline-offset-0",
+            "min-w-18 inline-flex h-8 items-center rounded-s-lg border px-4 py-2 text-center text-sm font-medium text-black-primary hover:bg-gray-200 focus:z-10 focus:outline-none focus:outline-1 focus:outline-offset-0",
             phoneNumberErrorMessage
               ? "border-red-primary focus:outline-red-primary"
               : "border-gray-700 focus:outline-blue-semidark",
@@ -156,7 +156,7 @@ export default function PhoneInput({
         >
           +{selectedPhoneCode}
           <svg
-            className="w-2 h-2 ms-2"
+            className="ms-2 h-2 w-2"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -173,7 +173,7 @@ export default function PhoneInput({
         </button>
         {datalistIsShown && (
           <ul
-            className="absolute bg-white shadow-md z-50 shadow-gray-400 rounded-md top-9 overflow-y-auto py-2 text-sm text-black-primary max-h-44"
+            className="absolute top-9 z-50 max-h-44 overflow-y-auto rounded-md bg-white py-2 text-sm text-black-primary shadow-md shadow-gray-400"
             aria-labelledby="dropdown-phone-button"
           >
             {Object.keys(suggestedCountriesWithCodes).length > 0 ? (
@@ -184,7 +184,7 @@ export default function PhoneInput({
                   <li key={`${country}=${phoneCode}`}>
                     <button
                       type="button"
-                      className="inline-flex w-112 px-4 py-2 text-sm hover:bg-gray-100 text-black-primary"
+                      className="inline-flex w-112 px-4 py-2 text-sm text-black-primary hover:bg-gray-100"
                       role="menuitem"
                       onMouseDown={() => {
                         onCountryPhoneCodeClick(phoneCode);
@@ -208,7 +208,7 @@ export default function PhoneInput({
         )}
         <label
           htmlFor="phone-input"
-          className="mb-2 text-sm font-semibold sr-only antialiased"
+          className="sr-only mb-2 text-sm font-semibold antialiased"
         >
           Phone number:
         </label>
@@ -217,7 +217,7 @@ export default function PhoneInput({
           id="phone-input"
           autoComplete="tel"
           className={clsx(
-            "block p-2 h-8 grow text-sm text-gray-900 rounded-e-lg border-s-0 border border-gray-700 focus:outline-none focus:outline-1 focus:outline-offset-0",
+            "relative h-8 grow rounded-e-lg border border-s-0 border-gray-700 p-2 text-sm text-gray-900 focus:outline-none focus:outline-1 focus:outline-offset-0",
             phoneNumberErrorMessage
               ? "border-red-primary focus:outline-red-primary"
               : "border-gray-700 focus:outline-blue-semidark",
@@ -228,7 +228,7 @@ export default function PhoneInput({
       </div>
       <p
         className={clsx(
-          "overflow-hidden transition-[max-height] text-red-primary text-sm duration-700",
+          "overflow-hidden text-sm text-red-primary transition-[max-height] duration-700",
           phoneCodeErrorMessage ? "max-h-8" : "max-h-0",
         )}
       >
@@ -236,7 +236,7 @@ export default function PhoneInput({
       </p>
       <p
         className={clsx(
-          "overflow-hidden transition-[max-height] text-red-primary text-sm duration-700",
+          "overflow-hidden text-sm text-red-primary transition-[max-height] duration-700",
           phoneNumberErrorMessage ? "max-h-8" : "max-h-0",
         )}
       >
