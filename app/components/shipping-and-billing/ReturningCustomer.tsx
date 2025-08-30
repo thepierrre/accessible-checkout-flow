@@ -1,8 +1,12 @@
+"use client";
+
+import { useId } from "react";
 import Image from "next/image";
 import questionIcon from "../../../public/icons/questionIcon.svg";
 import Tooltip from "@/app/components/shared/Tooltip";
 
 export function ReturningCustomer() {
+    const tooltipId = useId();
     return (
         <section
             className="w-144 flex flex-col gap-2 text-lg text-black-primary border-b pb-1 border-gray-primary px-6">
@@ -15,9 +19,21 @@ export function ReturningCustomer() {
                     sign up
                 </button>
                 <p>(optional)</p>
-                <Tooltip label="Log in to track your purchase history." position="right">
-                    <Image src={questionIcon} alt="login and sign-up information"/>
+                <Tooltip
+                    label="Log in to track your purchase history."
+                    position="right"
+                    id={tooltipId}
+                >
+                    {(triggerProps) => (
+                        <Image
+                            tabIndex={0}
+                            src={questionIcon}
+                            alt=""
+                            {...triggerProps}
+                        />
+                    )}
                 </Tooltip>
+
             </div>
         </section>
     );

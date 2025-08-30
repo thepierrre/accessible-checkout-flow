@@ -1,16 +1,23 @@
 "use client";
 
-import {ReactNode, useState, useRef} from "react";
+import {ReactNode, useState} from "react";
 import {clsx} from "clsx";
 
 type TooltipProps = {
-    children: ReactNode;
+    children: (props: {
+        onMouseEnter: () => void,
+        onMouseLeave: () => void,
+        onFocus: () => void;
+        onBlur: () => void;
+        "aria-describedby": string}
+    ) => ReactNode;
     label: string;
     position: "left" | "right";
+    id: string;
     delay?: number;
 }
 
-export default function Tooltip({children, label, position, delay = 300}: TooltipProps) {
+export default function Tooltip({children, label, position, id, delay = 300}: TooltipProps) {
     const [isShown, setIsShown] = useState(false);
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
@@ -29,11 +36,18 @@ export default function Tooltip({children, label, position, delay = 300}: Toolti
     }
 
     return (
-        <div tabIndex={0}
-            onMouseEnter={showTooltip} onMouseLeave={hideTooltip} onFocus={showTooltip} onBlur={hideTooltip} className="relative">
-            {children}
+        <div
+            className="relative">
+            {children({
+                onMouseEnter: showTooltip,
+                onMouseLeave: hideTooltip,
+                onFocus: showTooltip,
+                onBlur: hideTooltip,
+                "aria-describedby": id
+            }
+            )}
             {isShown && (
-                <div
+                <div role="tooltip" id={id}
                     className={clsx(position === "right" ? "left-full ml-1.5" : "right-full mr-1.5",
                         "absolute whitespace-nowrap bg-blue-primary  top-1/2 -translate-y-1/2  py-1 px-2 rounded-md text-white")}>
                     <p className="text-xs">{label}</p>

@@ -12,7 +12,7 @@ import {
   CountriesWithCodes,
 } from "@/app/checkout/models";
 import { FieldNameType } from "@/app/components/shipping-and-billing/AddressForm";
-import { ChangeEvent, useEffect, useState, useCallback, useRef } from "react";
+import { ChangeEvent, useEffect, useState, useCallback, useRef, useId } from "react";
 import { clsx } from "clsx";
 import Image from "next/image";
 import {
@@ -60,6 +60,7 @@ export default function PhoneInput({
   const [datalistIsShown, setDatalistIsShown] = useState<boolean>(false);
   const [countryQuery, setCountryQuery] = useState<string>("");
   const [selectedPhoneCode, setSelectedPhoneCode] = useState<string>("1");
+  const tooltipId = useId();
 
   const phoneCodeErrorMessage = getErrorMessage("phoneCode");
   const phoneNumberErrorMessage = getErrorMessage("phoneNumber");
@@ -135,12 +136,16 @@ export default function PhoneInput({
           <label htmlFor={`${addressType}-phone`} className="font-medium">
             {labelText}
           </label>
-          <Tooltip label="Used only if there's an issue." position="right">
-            <Image
-              src={questionIcon}
-              alt="Why do we need your phone number?"
-              className="w-5"
-          />
+          <Tooltip label="Used only if there's an issue." position="right" id={tooltipId}>
+            {(triggerProps) => (
+                <Image
+                src={questionIcon}
+                alt=""
+                className="w-5"
+                tabIndex={0}
+                {...triggerProps}
+            />)}
+
           </Tooltip>
 
         </div>
