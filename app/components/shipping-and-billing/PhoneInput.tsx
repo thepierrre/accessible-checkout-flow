@@ -19,6 +19,7 @@ import {
   getCountryMatchesForNames,
   getCountryMatchesForPhoneCodes,
 } from "@/app/lib/countryQueries";
+import Tooltip from "@/app/components/shared/Tooltip";
 
 interface Props {
   labelText: string;
@@ -134,11 +135,14 @@ export default function PhoneInput({
           <label htmlFor={`${addressType}-phone`} className="font-medium">
             {labelText}
           </label>
-          <Image
-            src={questionIcon}
-            alt="Why do we need your phone number?"
-            className="w-5"
+          <Tooltip label="Used only if there's an issue." position="right">
+            <Image
+              src={questionIcon}
+              alt="Why do we need your phone number?"
+              className="w-5"
           />
+          </Tooltip>
+
         </div>
       </div>
       <div className="relative flex items-center" onBlur={handleDatasetClose}>
