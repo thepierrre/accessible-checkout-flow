@@ -38,14 +38,17 @@ export default function Tooltip({children, label, position, id, delay = 300}: To
     return (
         <div
             className="relative">
-            {children({
-                onMouseEnter: showTooltip,
-                onMouseLeave: hideTooltip,
-                onFocus: showTooltip,
-                onBlur: hideTooltip,
-                "aria-describedby": id
-            }
-            )}
+            <div className="cursor-pointer">
+                {children({
+                        onMouseEnter: showTooltip,
+                        onMouseLeave: hideTooltip,
+                        onFocus: showTooltip,
+                        onBlur: hideTooltip,
+                        "aria-describedby": id
+                    }
+                )}
+            </div>
+
             {isShown && (
                 <div role="tooltip" id={id}
                     className={clsx(position === "right" ? "left-full ml-1.5" : "right-full mr-1.5",
