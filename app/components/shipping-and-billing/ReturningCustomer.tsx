@@ -1,6 +1,6 @@
 "use client";
 
-import { useId } from "react";
+import {useId} from "react";
 import Image from "next/image";
 import questionIcon from "../../../public/icons/questionIcon.svg";
 import Tooltip from "@/app/components/shared/Tooltip";
@@ -33,7 +33,6 @@ export function ReturningCustomer() {
                         />
                     )}
                 </Tooltip>
-
             </div>
         </section>
     );
