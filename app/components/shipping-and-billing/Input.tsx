@@ -65,6 +65,7 @@ export default function Input({
             </label>
 
             <input
+                onInput={(e) => register(`${addressType}.${name}`).onChange(e)}
                 {...rest}
                 ref={(el) => {
                     if (ref && "current" in ref) ref.current = el;
