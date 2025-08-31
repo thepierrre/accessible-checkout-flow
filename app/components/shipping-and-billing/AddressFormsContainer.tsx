@@ -17,7 +17,10 @@ import {submitAddressForm as submitAddressFormAction} from "@/app/lib/actions";
 import {useRouter, useSearchParams} from "next/navigation";
 
 import {getCountryMatchesForNames} from "@/app/lib/countryQueries";
-import {getAddressData, isBillingSameAsShipping} from "@/app/lib/addressDataUtils";
+import usePersistedAddress from "@/app/hooks/shippingAndBilling/usePersistedAddress";
+import useScrollOnError from "@/app/hooks/shippingAndBilling/useScrollOnError";
+import useEditMode from "@/app/hooks/shippingAndBilling/useEditMode";
+import useScrollIntoView from "@/app/hooks/useScrollIntoView";
 
 interface Props {
     //allCountries: string[];
@@ -77,80 +80,16 @@ export default function AddressFormsContainer({
         getValues,
         setValue,
         watch,
-        clearErrors,
         formState: {errors, isSubmitting},
     } = form;
 
     const isBillingSame = watch("isBillingAddressSame");
 
-    useEffect(() => {
-        const {shipping, billing} = getAddressData();
-        if (shipping && billing && isBillingSameAsShipping()) {
-            console.log(isBillingSameAsShipping());
-            setValue("shipping", shipping);
-        } else if (shipping && billing && !isBillingSameAsShipping()) {
-            setValue("shipping", shipping);
-            setValue("billing", billing);
-            setValue("isBillingAddressSame", false);
-        }
-    }, [setValue]);
+    usePersistedAddress(setValue);
+    useScrollOnError(serverErrorRef)
+    useEditMode({searchParams, shippingAddressRef, billingAddressRef, isEditing, setIsEditing, setValue})
+    useScrollIntoView({ref: billingAddressRef, dependencies: [isBillingSame]})
 
-    useEffect(() => {
-        if (serverErrorRef.current) {
-            serverErrorRef.current.scrollIntoView({
-                block: "start",
-                behavior: "smooth",
-            });
-        }
-    });
-
-
-    useEffect(() => {
-        if (billingAddressRef.current) {
-            billingAddressRef.current.scrollIntoView({
-                block: "start",
-                behavior: "smooth",
-            });
-        }
-    }, [isBillingSame]);
-
-    useEffect(() => {
-        const searchParam = searchParams.get("edit");
-        console.log(searchParam);
-
-        if (searchParam === "shipping" && shippingAddressRef.current) {
-            setIsEditing("shipping");
-            shippingAddressRef.current.scrollIntoView({
-                block: "start",
-                behavior: "instant",
-            });
-        } else if (searchParam === "billing") {
-            setIsEditing("billing");
-        }
-    }, [searchParams]);
-
-    useEffect(() => {
-        if (isEditing === "billing" && billingAddressRef.current) {
-            billingAddressRef.current.scrollIntoView({
-                block: "start",
-                behavior: "instant",
-            });
-        }
-    }, [isEditing]);
-
-    // useEffect(() => {
-    //     if (isEditing === "billing") {
-    //         setValue("isBillingAddressSame", false, {shouldValidate: true});
-    //     }
-    // }, [isEditing])
-
-    useEffect(() => {
-        const searchParam = searchParams.get("edit");
-        if (searchParam === "billing") {
-            setIsEditing("billing");
-            setValue("isBillingAddressSame", false, {shouldValidate: true});
-        }
-    }, [searchParams, setValue]);
 
     useEffect(() => {
         if (billingCheckboxRef.current) {
