@@ -21,6 +21,8 @@ import {
 } from "@/app/lib/countryQueries";
 import Tooltip from "@/app/components/shared/Tooltip";
 import ChevronDownIcon from "@/app/components/shared/ChevronDownIcon";
+import useListboxNavigation from "@/app/hooks/useListboxNavigation";
+import useElementWidth from "@/app/hooks/useElementWidth";
 
 interface Props {
     labelText: string;
@@ -51,18 +53,56 @@ export default function PhoneInput({
                                        countriesWithCodes,
                                        // onCountryPhoneCodeClick,
                                        setValue,
-                                       watch,
                                    }: Props) {
     const tooltipId = useId();
     const inputId = useId();
+    const listId = useId();
+    const buttonRef = useRef<HTMLButtonElement | null>(null);
     const countryQueryRef = useRef<string>("");
     const queryTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const [suggestedCountriesWithCodes, setSuggestedCountriesWithCodes] =
         useState<CountriesWithCodes>(countriesWithCodes);
     const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
+    const optionRefs = useRef<(HTMLLIElement | null)[]>([]);
+    const divWrapperRef = useRef<HTMLDivElement | null>(null);
+    const divWrapperWidth = useElementWidth(divWrapperRef);
     const [datalistIsShown, setDatalistIsShown] = useState<boolean>(false);
     const [countryQuery, setCountryQuery] = useState<string>("");
     const [selectedPhoneCode, setSelectedPhoneCode] = useState<string>("1");
+    const {
+        activeIndex,
+        setActiveIndex,
+        handleKeyDown
+    } = useListboxNavigation({
+        options: Object.keys(suggestedCountriesWithCodes),
+        onSelect: () => {
+            onCountryPhoneCodeClick(selectedPhoneCode);
+            setDatalistIsShown(false);
+            buttonRef.current?.focus();
+        },
+        onTab: () => {
+            onCountryPhoneCodeClick(selectedPhoneCode);
+            setDatalistIsShown(false);
+        },
+        onCancel: () => {
+            setValue(`${addressType}.country`, "", {shouldValidate: true});
+            setActiveIndex(-1);
+            setDatalistIsShown(false);
+            buttonRef.current?.focus();
+        },
+        isOpen: datalistIsShown,
+        onOpen: () => {
+            setDatalistIsShown(true);
+        }
+    })
+
+    useEffect(() => {
+        if (!datalistIsShown) return;
+        const el = optionRefs.current[activeIndex];
+        if (!el) return;
+        el.scrollIntoView({block: "nearest"});
+
+    }, [datalistIsShown, activeIndex]);
 
 
     const phoneCodeErrorMessage = getErrorMessage("phoneCode");
@@ -78,13 +118,13 @@ export default function PhoneInput({
     function handleDatasetOpening() {
         setDatalistIsShown(true);
         setSuggestedCountriesWithCodes(countriesWithCodes);
+        console.log("active index", activeIndex);
     }
 
     function handleDatasetClose() {
         setDatalistIsShown(false);
         setCountryQuery("");
         countryQueryRef.current = "";
-        console.log("section blur");
     }
 
     const handleCountryOrCodeQuery = useCallback(
@@ -153,8 +193,17 @@ export default function PhoneInput({
 
                 </div>
             </div>
-            <div className="relative flex items-center" onBlur={handleDatasetClose}>
+            <div ref={divWrapperRef} className="relative flex items-center" onBlur={handleDatasetClose}>
                 <button
+                    ref={buttonRef}
+                    onKeyDown={handleKeyDown}
+                    role="combobox"
+                    aria-haspopup="listbox"
+                    aria-controls={listId}
+                    aria-expanded={datalistIsShown}
+                    aria-activedescendant={
+                        datalistIsShown ? `phone-code-option-${activeIndex}` : undefined
+                    }
                     id="dropdown-phone-button"
                     data-dropdown-toggle="dropdown-phone"
                     className={clsx(
@@ -171,25 +220,38 @@ export default function PhoneInput({
                 </button>
                 {datalistIsShown && (
                     <ul
+                        id={listId}
+                        role="listbox"
+                        style={{width: divWrapperWidth}}
                         className="absolute top-9 z-50 max-h-44 overflow-y-auto rounded-md bg-white py-2 text-sm text-black-primary shadow-md shadow-gray-400"
                         aria-labelledby="dropdown-phone-button"
                     >
                         {Object.keys(suggestedCountriesWithCodes).length > 0 ? (
-                            Object.keys(suggestedCountriesWithCodes).map((country) => {
+                            Object.keys(suggestedCountriesWithCodes).map((c, i) => {
                                 const phoneCode =
-                                    suggestedCountriesWithCodes[country].toString();
+                                    suggestedCountriesWithCodes[c].toString();
                                 return (
-                                    <li key={`${country}=${phoneCode}`}>
+                                    <li ref={(el) => {
+                                        if (el === null) return;
+                                        optionRefs.current[i] = el;
+                                    }} key={c} id={`phone-code-option-${i}`} role="option"
+                                        aria-selected={activeIndex === i}>
                                         <button
                                             type="button"
-                                            className="inline-flex w-112 px-4 py-2 text-sm text-black-primary hover:bg-gray-100"
-                                            role="menuitem"
+                                            className={clsx(
+                                                "px-4 py-2 cursor-pointer w-full text-left",
+                                                activeIndex === i && "bg-blue-primary text-white"
+                                            )}
+                                            //className="inline-flex w-full px-4 py-2 text-sm  hover:bg-blue-primary hover:text-white"
+                                            onMouseEnter={() => {
+                                                setActiveIndex(i);
+                                            }}
                                             onMouseDown={() => {
                                                 onCountryPhoneCodeClick(phoneCode);
                                             }}
                                         >
                       <span className="inline-flex items-center">
-                        {country} (+{phoneCode})
+                        {c} (+{phoneCode})
                       </span>
                                         </button>
                                     </li>

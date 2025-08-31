@@ -3,11 +3,13 @@ import {
     CombinedAddressFormData,
     CountriesWithCodes,
 } from "@/app/checkout/models";
-import {ChangeEvent, useRef, useState, KeyboardEvent, useEffect, useLayoutEffect} from "react";
+import {ChangeEvent, useRef, useState, useEffect, useId} from "react";
 import {UseFormRegister, UseFormSetValue} from "react-hook-form";
 import {FieldNameType} from "@/app/components/shipping-and-billing/AddressForm";
 import Input from "@/app/components/shipping-and-billing/Input";
 import {clsx} from "clsx";
+import useListboxNavigation from "@/app/hooks/useListboxNavigation";
+import useElementWidth from "@/app/hooks/useElementWidth";
 
 interface Props {
     suggestedCountries: CountriesWithCodes;
@@ -32,32 +34,40 @@ export default function CountriesDatalist({
                                               getErrorMessage,
                                               setValue,
                                           }: Props) {
-    const [activeIndex, setActiveIndex] = useState<number>(-1);
+    const countriesListId = useId();
     const datalistRef = useRef<HTMLUListElement | null>(null);
     const inputRef = useRef<HTMLInputElement | null>(null);
     const divRef = useRef<HTMLDivElement | null>(null);
     const optionRefs = useRef<(HTMLLIElement | null)[]>([]);
     const [datalistIsShown, setDatalistIsShown] = useState(false);
-    const [datalistWidth, setDatalistWidth] = useState(0);
-
-    useLayoutEffect(() => {
-        if (!inputRef.current) return;
-
-        function updateWidth() {
-            if (inputRef.current) {
-                setDatalistWidth(inputRef.current.clientWidth);
-            }
+    const options = Object.keys(suggestedCountries);
+    const {
+        activeIndex,
+        setActiveIndex,
+        handleKeyDown
+    } = useListboxNavigation({
+        options: Object.keys(suggestedCountries),
+        onSelect: () => {
+            onCountryClick(options[activeIndex], addressType);
+            setDatalistIsShown(false);
+            inputRef.current?.focus();
+        },
+        onTab: () => {
+            onCountryClick(options[activeIndex], addressType);
+            setDatalistIsShown(false);
+        },
+        onCancel: () => {
+            setValue(`${addressType}.country`, "", {shouldValidate: true});
+            setActiveIndex(-1);
+            setDatalistIsShown(false);
+            inputRef.current?.focus();
+        },
+        isOpen: datalistIsShown,
+        onOpen: () => {
+            setDatalistIsShown(true);
         }
-
-        updateWidth();
-
-        const observer = new ResizeObserver(updateWidth);
-        observer.observe(inputRef.current);
-
-        return () => {
-            observer.disconnect();
-        };
-    }, []);
+    })
+    const inputWidth = useElementWidth(inputRef);
 
     useEffect(() => {
         if (!datalistIsShown) return;
@@ -68,60 +78,11 @@ export default function CountriesDatalist({
     }, [datalistIsShown, activeIndex]);
 
 
-    function handleKeyDown(e: KeyboardEvent) {
-        const options = Object.keys(suggestedCountries);
-        if (options.length === 0) return;
-
-        switch (e.key) {
-            case "ArrowDown":
-                e.preventDefault();
-                if (!datalistIsShown) {
-                    setDatalistIsShown(true);
-                } else {
-                    setActiveIndex((prev) => (prev + 1) % options.length);
-                }
-                break;
-            case "ArrowUp":
-                e.preventDefault();
-                setActiveIndex((prev) => (prev - 1 + options.length) % options.length);
-                break;
-            case "Home":
-                e.preventDefault();
-                setActiveIndex(0);
-                break;
-            case "End":
-                e.preventDefault();
-                setActiveIndex(options.length - 1);
-                break;
-            case "Enter":
-                e.preventDefault();
-                const selectedEnter = options[activeIndex];
-                if (selectedEnter) {
-                    onCountryClick(options[activeIndex], addressType);
-                }
-                setDatalistIsShown(false);
-                inputRef.current?.focus();
-                break;
-            case "Escape":
-                e.preventDefault();
-                setValue(`${addressType}.country`, "", {shouldValidate: true});
-                setDatalistIsShown(false);
-                inputRef.current?.focus();
-                break;
-            case "Tab":
-                if (options[activeIndex]) {
-                    onCountryClick(options[activeIndex], addressType);
-                }
-                setDatalistIsShown(false);
-                break;
-        }
-    }
-
-
     return (
         <div
             ref={divRef}
             className="relative flex flex-col gap-2"
+            //TODO: Improve onBlur
             onBlur={() => {
                 setDatalistIsShown(false);
             }}
@@ -144,7 +105,7 @@ export default function CountriesDatalist({
                 onClick={() => setDatalistIsShown(true)}
                 onKeyDown={handleKeyDown}
                 role="combobox"
-                ariaControls="countries-list"
+                ariaControls={countriesListId}
                 ariaExpanded={datalistIsShown}
                 ariaActivedescendant={
                     datalistIsShown ? `country-option-${activeIndex}` : undefined
@@ -152,9 +113,10 @@ export default function CountriesDatalist({
             />
             {datalistIsShown && (
                 <ul
+                    role="listbox"
                     ref={datalistRef}
-                    id="countries-list"
-                    style={{width: datalistWidth}}
+                    id={countriesListId}
+                    style={{width: inputWidth}}
                     className="absolute top-16 z-50 flex max-h-44 flex-col overflow-y-auto rounded-md bg-white py-2 text-sm shadow-md shadow-gray-400"
                 >
                     {Object.keys(suggestedCountries).length > 0 ? (
