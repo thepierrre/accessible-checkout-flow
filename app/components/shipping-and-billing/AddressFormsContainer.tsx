@@ -81,13 +81,14 @@ export default function AddressFormsContainer({
         setValue,
         watch,
         formState: {errors, isSubmitting},
+        clearErrors
     } = form;
 
     const isBillingSame = watch("isBillingAddressSame");
 
     usePersistedAddress(setValue);
     useScrollOnError(serverErrorRef)
-    useEditMode({searchParams, shippingAddressRef, billingAddressRef, isEditing, setIsEditing, setValue})
+    useEditMode({searchParams, shippingAddressRef, billingAddressRef, isEditing, setIsEditing, setValue, clearErrors})
     useScrollIntoView({ref: billingAddressRef, dependencies: [isBillingSame]})
 
 

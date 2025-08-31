@@ -1,6 +1,6 @@
-import {RefObject, SetStateAction, useEffect} from "react";
+import {RefObject, SetStateAction, useEffect, useRef} from "react";
 import {ReadonlyURLSearchParams} from "next/navigation";
-import {UseFormSetValue} from "react-hook-form";
+import {UseFormClearErrors, UseFormSetValue} from "react-hook-form";
 import {CombinedAddressFormData} from "@/app/checkout/models";
 
 interface useEditModeProps {
@@ -8,8 +8,9 @@ interface useEditModeProps {
     shippingAddressRef: RefObject<HTMLFieldSetElement | null>;
     billingAddressRef: RefObject<HTMLFieldSetElement | null>;
     isEditing: boolean | "shipping" | "billing";
-    setIsEditing: (value: SetStateAction<boolean | "shipping" | "billing">) => void
-    setValue: UseFormSetValue<CombinedAddressFormData>
+    setIsEditing: (value: SetStateAction<boolean | "shipping" | "billing">) => void;
+    setValue: UseFormSetValue<CombinedAddressFormData>;
+    clearErrors: UseFormClearErrors<CombinedAddressFormData>;
 }
 
 export default function useEditMode({
@@ -18,8 +19,13 @@ export default function useEditMode({
                                         billingAddressRef,
                                         isEditing,
                                         setIsEditing,
-                                        setValue
+                                        setValue,
+                                        clearErrors,
                                     }: useEditModeProps) {
+
+    //TODO Don't reset if you enter the page with the editing=billing param
+    //const isFirstRenderRef = useRef(true);
+
     useEffect(() => {
         const searchParam = searchParams.get("edit");
         console.log(searchParam);
@@ -41,8 +47,21 @@ export default function useEditMode({
                 block: "start",
                 behavior: "instant",
             });
+
+            setValue("isBillingAddressSame", false, {shouldValidate: true});
+            setValue("billing", {
+                name: "",
+                address: "",
+                zip: "",
+                country: "",
+                phoneCode: "+1",
+                phoneNumber: "",
+                email: "",
+                region: "",
+            });
+            clearErrors("billing");
         }
-    }, [isEditing, billingAddressRef]);
+    }, [setValue, clearErrors, isEditing, billingAddressRef]);
 
     useEffect(() => {
         const searchParam = searchParams.get("edit");
@@ -50,5 +69,5 @@ export default function useEditMode({
             setIsEditing("billing");
             setValue("isBillingAddressSame", false, {shouldValidate: true});
         }
-    }, [searchParams, setValue]);
+    }, [setIsEditing, searchParams, setValue]);
 }
