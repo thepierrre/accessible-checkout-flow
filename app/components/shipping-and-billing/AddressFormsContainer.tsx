@@ -17,6 +17,7 @@ import {submitAddressForm as submitAddressFormAction} from "@/app/lib/actions";
 import {useRouter, useSearchParams} from "next/navigation";
 
 import {getCountryMatchesForNames} from "@/app/lib/countryQueries";
+import {getAddressData, isBillingSameAsShipping} from "@/app/lib/addressDataUtils";
 
 interface Props {
     //allCountries: string[];
@@ -37,8 +38,6 @@ export default function AddressFormsContainer({
         false,
     );
     const [serverError, setServerError] = useState<string | null>(null);
-    const [isCheckboxChecked, setIsCheckboxChecked] = useState<boolean>(true);
-
     const shippingAddressRef = useRef<HTMLFieldSetElement | null>(null);
     const billingAddressRef = useRef<HTMLFieldSetElement | null>(null);
     const billingCheckboxRef = useRef<HTMLInputElement | null>(null);
@@ -84,17 +83,17 @@ export default function AddressFormsContainer({
 
     const isBillingSame = watch("isBillingAddressSame");
 
-    // useEffect(() => {
-    //   const { shipping, billing } = getAddressData();
-    //   if (shipping && billing && isBillingSameAsShipping()) {
-    //     console.log(isBillingSameAsShipping());
-    //     setValue("shipping", shipping);
-    //   } else if (shipping && billing && !isBillingSameAsShipping()) {
-    //     setValue("shipping", shipping);
-    //     setValue("billing", billing);
-    //     setValue("isBillingAddressSame", false);
-    //   }
-    // }, [setValue]);
+    useEffect(() => {
+        const {shipping, billing} = getAddressData();
+        if (shipping && billing && isBillingSameAsShipping()) {
+            console.log(isBillingSameAsShipping());
+            setValue("shipping", shipping);
+        } else if (shipping && billing && !isBillingSameAsShipping()) {
+            setValue("shipping", shipping);
+            setValue("billing", billing);
+            setValue("isBillingAddressSame", false);
+        }
+    }, [setValue]);
 
     useEffect(() => {
         if (serverErrorRef.current) {
@@ -105,9 +104,9 @@ export default function AddressFormsContainer({
         }
     });
 
+
     useEffect(() => {
-        if (!isBillingSame && billingAddressRef.current) {
-            setIsCheckboxChecked(false);
+        if (billingAddressRef.current) {
             billingAddressRef.current.scrollIntoView({
                 block: "start",
                 behavior: "smooth",
@@ -139,6 +138,20 @@ export default function AddressFormsContainer({
         }
     }, [isEditing]);
 
+    // useEffect(() => {
+    //     if (isEditing === "billing") {
+    //         setValue("isBillingAddressSame", false, {shouldValidate: true});
+    //     }
+    // }, [isEditing])
+
+    useEffect(() => {
+        const searchParam = searchParams.get("edit");
+        if (searchParam === "billing") {
+            setIsEditing("billing");
+            setValue("isBillingAddressSame", false, {shouldValidate: true});
+        }
+    }, [searchParams, setValue]);
+
     useEffect(() => {
         if (billingCheckboxRef.current) {
             const checkbox = billingCheckboxRef.current;
@@ -155,34 +168,6 @@ export default function AddressFormsContainer({
                 checkbox.removeEventListener("keydown", onCheckboxEnterPress);
         }
     });
-
-    const onCheckboxChange = () => {
-        const currentIsBillingSame: boolean = getValues("isBillingAddressSame");
-        const newIsBillingSame: boolean = !currentIsBillingSame;
-
-        if (newIsBillingSame) {
-            setTimeout(() => {
-                setValue("isBillingAddressSame", true);
-            }, 550);
-            setIsCheckboxChecked(true);
-            setIsEditing(false);
-            setValue("billing", getValues("shipping"));
-            window.scrollTo({top: 0, behavior: "smooth"});
-        } else {
-            setValue("isBillingAddressSame", newIsBillingSame);
-            setValue("billing", {
-                name: "",
-                address: "",
-                zip: "",
-                country: "",
-                phoneCode: "+1",
-                phoneNumber: "",
-                email: "",
-                region: "",
-            });
-            clearErrors("billing");
-        }
-    };
 
     async function onCountryInputChange(
         addressType: AddressType,
@@ -216,6 +201,7 @@ export default function AddressFormsContainer({
     }
 
     const handleFormSubmit = async (event: FormEvent) => {
+        console.log("values", getValues("shipping"), getValues("billing"));
         event.preventDefault();
         if (isBillingSame) {
             setValue("billing", getValues("shipping"));
@@ -284,12 +270,13 @@ export default function AddressFormsContainer({
                     setValue={setValue}
                 />
                 <BillingCheckbox
-                    ref={billingCheckboxRef}
-                    checked={isCheckboxChecked}
-                    onChange={onCheckboxChange}
+                    {...register("isBillingAddressSame")}
+                    ref={(el) => {
+                        billingCheckboxRef.current = el;
+                        register("isBillingAddressSame").ref(el);
+                    }}
                 />
-
-                {(!isBillingSame || isEditing === "billing") && (
+                {(!isBillingSame) && (
                     <AddressForm
                         ref={billingAddressRef}
                         addressType="billing"

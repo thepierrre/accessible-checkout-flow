@@ -1,3 +1,5 @@
+"use client";
+
 import Table from "@/app/components/review-and-pay/Table";
 import editIcon from "../../../public/icons/editIcon.svg";
 import editIconHover from "../../../public/icons/editIconHover.svg";
@@ -58,6 +60,8 @@ export default function ReviewOrder() {
 
     useEffect(() => {
         const {shipping, billing} = getAddressData();
+        console.log("shipping", shipping);
+        console.log("billing", billing);
         setShipping(shipping);
         setBilling(billing);
     }, []);
