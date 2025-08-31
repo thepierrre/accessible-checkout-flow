@@ -7,6 +7,7 @@ interface UseListboxNavigationProps<T> {
     onCancel: () => void;
     isOpen: boolean;
     onOpen: () => void;
+    trigger: "input" | "button";
 }
 
 export default function useListboxNavigation<T>({
@@ -16,6 +17,7 @@ export default function useListboxNavigation<T>({
                                                     onCancel,
                                                     isOpen,
                                                     onOpen,
+                                                    trigger,
                                                 }: UseListboxNavigationProps<T>) {
     const [activeIndex, setActiveIndex] = useState(-1);
 
@@ -30,6 +32,15 @@ export default function useListboxNavigation<T>({
 
         //TODO: Check for more keys accessibility
         switch (e.key) {
+            case " ":
+                if (trigger === "button") {
+                    e.preventDefault();
+                    if (!isOpen) {
+                        onOpen();
+                        setActiveIndex(0);
+                    }
+                }
+                break;
             case "ArrowDown":
                 e.preventDefault();
                 if (!isOpen) {

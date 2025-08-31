@@ -65,7 +65,8 @@ export default function CountriesDatalist({
         isOpen: datalistIsShown,
         onOpen: () => {
             setDatalistIsShown(true);
-        }
+        },
+        trigger: "input"
     })
     const inputWidth = useElementWidth(inputRef);
 

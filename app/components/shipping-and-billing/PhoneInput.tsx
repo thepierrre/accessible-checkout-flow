@@ -93,7 +93,8 @@ export default function PhoneInput({
         isOpen: datalistIsShown,
         onOpen: () => {
             setDatalistIsShown(true);
-        }
+        },
+        trigger: "button"
     })
 
     useEffect(() => {
