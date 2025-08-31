@@ -254,11 +254,9 @@ export default function AddressFormsContainer({
     return (<div className="p-6 border border-gray-primary rounded-lg w-144 mx-auto">
             <section aria-labelledby="form-title" className="mb-4">
                 <h1 id="form-title" className="mb-2 text-3xl font-medium">Shipping and billing</h1>
-                <p id="form-instructions">
-                    All fields marked with <span aria-hidden="true" className="font-medium">*</span><span
-                    className="sr-only">&#34;required&#34;</span> must be
-                    completed.<br/>
-                    Phone number and state/province are optional.<br/>
+                <p id="form-instructions" className="sr-only">
+                    All fields marked with &#34;required&#34; must be completed.
+                    Phone number and state/province are optional.
                     You can use the checkbox if the delivery differs from billing.
                 </p>
             </section>
