@@ -1,4 +1,4 @@
-import {ChangeEvent, Ref, useEffect} from "react";
+import {ChangeEvent, Ref} from "react";
 import {
     AddressType,
     CombinedAddressFormData,
@@ -134,6 +134,7 @@ export default function AddressForm({
                 onCountryInputChange={onCountryInputChange}
                 register={register}
                 getErrorMessage={getErrorMessage}
+                setValue={setValue}
             />
             <PhoneInput
                 labelText="Phone number (optional)"
