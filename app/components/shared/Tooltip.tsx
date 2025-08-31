@@ -46,7 +46,7 @@ export default function Tooltip({children, label, position, id, delay = 300}: To
 
     return (
         <div
-            className="relative">
+            className="relative flex items-center">
             <div className="cursor-pointer">
                 {children({
                         onMouseEnter: showTooltip,

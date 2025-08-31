@@ -251,39 +251,30 @@ export default function AddressFormsContainer({
         )();
     };
 
-    return (
-        <form
-            id="address-form"
-            name="address-form"
-            onSubmit={handleFormSubmit}
-            className="p-6 border border-gray-primary rounded-lg w-144 mx-auto"
-        >
-            {serverError && (
-                <ErrorContainer ref={serverErrorRef} errorMessage={serverError}/>
-            )}
-            <AddressForm
-                ref={shippingAddressRef}
-                addressType="shipping"
-                suggestedCountries={suggestedCountries}
-                countriesWithCodes={countriesWithCodes}
-                onCountryInputChange={onCountryInputChange}
-                onSuggestedCountryClick={onSuggestedCountryClick}
-                onCountryPhoneCodeClick={onCountryPhoneCodeClick}
-                register={register}
-                watch={watch}
-                errors={errors}
-                setValue={setValue}
-            />
-            <BillingCheckbox
-                ref={billingCheckboxRef}
-                checked={isCheckboxChecked}
-                onChange={onCheckboxChange}
-            />
+    return (<div className="p-6 border border-gray-primary rounded-lg w-144 mx-auto">
+            <section aria-labelledby="form-title" className="mb-4">
+                <h1 id="form-title" className="mb-2 text-3xl font-medium">Shipping and billing</h1>
+                <p id="form-instructions">
+                    All fields marked with <span aria-hidden="true" className="font-medium">*</span><span
+                    className="sr-only">&#34;required&#34;</span> must be
+                    completed.<br/>
+                    Phone number and state/province are optional.<br/>
+                    You can use the checkbox if the delivery differs from billing.
+                </p>
+            </section>
+            <form
+                aria-describedby="form-instructions"
+                id="address-form"
+                name="address-form"
+                onSubmit={handleFormSubmit}
 
-            {(!isBillingSame || isEditing === "billing") && (
+            >
+                {serverError && (
+                    <ErrorContainer ref={serverErrorRef} errorMessage={serverError}/>
+                )}
                 <AddressForm
-                    ref={billingAddressRef}
-                    addressType="billing"
+                    ref={shippingAddressRef}
+                    addressType="shipping"
                     suggestedCountries={suggestedCountries}
                     countriesWithCodes={countriesWithCodes}
                     onCountryInputChange={onCountryInputChange}
@@ -294,12 +285,34 @@ export default function AddressFormsContainer({
                     errors={errors}
                     setValue={setValue}
                 />
-            )}
-            <NavigationButtons
-                isSubmitting={isSubmitting}
-                currentStep="address"
-                isEditing={isEditing}
-            />
-        </form>
+                <BillingCheckbox
+                    ref={billingCheckboxRef}
+                    checked={isCheckboxChecked}
+                    onChange={onCheckboxChange}
+                />
+
+                {(!isBillingSame || isEditing === "billing") && (
+                    <AddressForm
+                        ref={billingAddressRef}
+                        addressType="billing"
+                        suggestedCountries={suggestedCountries}
+                        countriesWithCodes={countriesWithCodes}
+                        onCountryInputChange={onCountryInputChange}
+                        onSuggestedCountryClick={onSuggestedCountryClick}
+                        onCountryPhoneCodeClick={onCountryPhoneCodeClick}
+                        register={register}
+                        watch={watch}
+                        errors={errors}
+                        setValue={setValue}
+                    />
+                )}
+                <NavigationButtons
+                    isSubmitting={isSubmitting}
+                    currentStep="address"
+                    isEditing={isEditing}
+                />
+            </form>
+        </div>
+
     );
 }
