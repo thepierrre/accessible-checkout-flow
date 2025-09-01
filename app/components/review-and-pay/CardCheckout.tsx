@@ -1,22 +1,18 @@
 "use client";
 
 import {
-  useStripe,
-  useElements,
   PaymentElement,
-  PaymentRequestButtonElement,
-  ExpressCheckoutElement,
-  useCheckout,
-  Elements,
-  CardCvcElement,
-  CardNumberElement,
-  CardExpiryElement,
-  CardElement,
+  useElements,
+  useStripe,
 } from "@stripe/react-stripe-js";
+import type {
+  PaymentRequest,
+  StripePaymentElementOptions,
+} from "@stripe/stripe-js";
+import * as stripeJs from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
 import { convertToSubcurrency } from "@/app/lib/convertToSubcurrency";
-import { PaymentRequest, StripePaymentElementOptions } from "@stripe/stripe-js";
-import * as stripeJs from "@stripe/stripe-js";
+import Button from "@/app/components/shared/Button";
 
 interface Props {
   amount: number;
@@ -94,13 +90,11 @@ export default function CardCheckout({ amount }: Props) {
   };
 
   return (
-    <div className="flex flex-col gap-8 w-full">
+    <div className="flex w-full flex-col gap-8">
       {clientSecret && (
         <form onSubmit={handleCardCheckout} className="child:w-full">
           <PaymentElement options={options} />
-          <button className="mt-6 py-2 w-full rounded-lg bg-blue-primary text-white hover:bg-blue-semidark focus:outline-solid focus:outline-offset-2">
-            Pay €{amount}
-          </button>
+          <Button label={`Pay €${amount}`} barButton={true} />
         </form>
       )}
     </div>

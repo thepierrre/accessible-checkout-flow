@@ -1,25 +1,25 @@
-import {useEffect, RefObject} from "react";
+import { type RefObject, useEffect } from "react";
 
 interface useScrollIntoViewProps {
-    ref: RefObject<HTMLElement | null>,
-    dependencies: unknown[];
-    behavior?: ScrollBehavior;
-    block?: ScrollLogicalPosition;
+  ref: RefObject<HTMLElement | null>;
+  dependencies: unknown[];
+  behavior?: ScrollBehavior;
+  block?: ScrollLogicalPosition;
 }
 
 export default function useScrollIntoView({
-                                              ref,
-                                              dependencies,
-                                              block = "start",
-                                              behavior = "smooth",
-
-                                          }: useScrollIntoViewProps) {
-    useEffect(() => {
-        if (ref.current) {
-            ref.current.scrollIntoView({
-                block,
-                behavior,
-            });
-        }
-    }, [...dependencies, block, behavior]);
+  ref,
+  dependencies,
+  block = "start",
+  behavior = "smooth",
+}: useScrollIntoViewProps) {
+  //TODO
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.scrollIntoView({
+        block,
+        behavior,
+      });
+    }
+  }, [...dependencies, block, behavior]);
 }

@@ -1,4 +1,4 @@
-import { CountriesWithCodes } from "@/app/checkout/models";
+import type { CountriesWithCodes } from "@/app/checkout/models";
 
 function getCountryMatchesForNames(
   suggestedCountriesWithCodes: CountriesWithCodes,

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
 
 export default function useKeyboardNavigation(
   listLength: number,
@@ -15,6 +15,7 @@ export default function useKeyboardNavigation(
     }
   };
 
+  //FIXME
   useEffect(() => {
     setActiveElement(0);
   }, [listLength]);

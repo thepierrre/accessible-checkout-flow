@@ -1,6 +1,6 @@
 import "@/app/globals.css";
-import { IBM_Plex_Sans } from "next/font/google";
 import { clsx } from "clsx";
+import { IBM_Plex_Sans } from "next/font/google";
 
 const ibmPlexSans = IBM_Plex_Sans({
   subsets: ["latin"],

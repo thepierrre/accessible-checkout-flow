@@ -1,21 +1,24 @@
 "use client";
 
 import {
-  useStripe,
-  useElements,
+  CardCvcElement,
+  CardExpiryElement,
+  CardNumberElement,
+  Elements,
+  ExpressCheckoutElement,
   PaymentElement,
   PaymentRequestButtonElement,
-  ExpressCheckoutElement,
   useCheckout,
-  Elements,
-  CardCvcElement,
-  CardNumberElement,
-  CardExpiryElement,
+  useElements,
+  useStripe,
 } from "@stripe/react-stripe-js";
+import * as stripeJs from "@stripe/stripe-js";
+import {
+  type PaymentRequest,
+  StripePaymentElementOptions,
+} from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
 import { convertToSubcurrency } from "@/app/lib/convertToSubcurrency";
-import { PaymentRequest, StripePaymentElementOptions } from "@stripe/stripe-js";
-import * as stripeJs from "@stripe/stripe-js";
 
 interface Props {
   amount: number;
@@ -96,7 +99,7 @@ export default function ExpressCheckout({ amount }: Props) {
   };
 
   return (
-    <section className="flex w-full child:w-full">
+    <section className="flex child:w-full w-full">
       {clientSecret && (
         <ExpressCheckoutElement onConfirm={handleExpressCheckout} />
       )}

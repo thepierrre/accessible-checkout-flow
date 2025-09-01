@@ -2,7 +2,7 @@
 
 import { countries } from "countries-list";
 import { cache } from "react";
-import {
+import type {
   CombinedAddressFormData,
   CountriesWithCodes,
 } from "@/app/checkout/models";

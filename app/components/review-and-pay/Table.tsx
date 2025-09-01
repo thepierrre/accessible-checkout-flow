@@ -38,7 +38,7 @@ export default function Table({ discountApplied }: Props) {
 
   return (
     <table className="w-full text-sm">
-      <tbody className="w-full flex flex-col mt-2 mb-4 child-odd:bg-gray-100 child:rounded-lg child:py-2 child:px-4">
+      <tbody className="mt-2 mb-4 flex w-full flex-col child:rounded-lg child-odd:bg-gray-100 child:px-4 child:py-2">
         {items.map((item) => (
           <Row
             key={item.name}
@@ -47,7 +47,7 @@ export default function Table({ discountApplied }: Props) {
           />
         ))}
       </tbody>
-      <tfoot className="flex flex-col pt-2 font-semibold child:px-4 child:py-1 border-t border-dotted">
+      <tfoot className="flex flex-col border-t border-dotted child:px-4 child:py-1 pt-2 font-semibold">
         <Row name={"Subtotal"} amount={getAllItemsPrice()} />
         {discountApplied && (
           <Row

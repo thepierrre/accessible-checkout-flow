@@ -51,7 +51,7 @@ export const addressFormSchema = z.object({
   phoneNumber: z
     .string()
     .max(15, "Phone number can have max. 15 digits.")
-    .regex(new RegExp("^[0-9]*$"), "Enter a numerical value.")
+    .regex(/^[0-9]*$/, "Enter a numerical value.")
     .optional(),
   email: z
     .string()

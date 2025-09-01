@@ -1,26 +1,28 @@
-import {RefObject, useLayoutEffect, useState} from "react";
+import { type RefObject, useLayoutEffect, useState } from "react";
 
-export default function useElementWidth(refObject: RefObject<HTMLElement | null>) {
-    const [elementWidth, setElementWidth] = useState(0);
+export default function useElementWidth(
+  refObject: RefObject<HTMLElement | null>,
+) {
+  const [elementWidth, setElementWidth] = useState(0);
 
-    useLayoutEffect(() => {
-        if (!refObject.current) return;
+  useLayoutEffect(() => {
+    if (!refObject.current) return;
 
-        function updateWidth() {
-            if (refObject.current) {
-                setElementWidth(refObject.current.clientWidth);
-            }
-        }
+    function updateWidth() {
+      if (refObject.current) {
+        setElementWidth(refObject.current.clientWidth);
+      }
+    }
 
-        updateWidth();
+    updateWidth();
 
-        const observer = new ResizeObserver(updateWidth);
-        observer.observe(refObject.current);
+    const observer = new ResizeObserver(updateWidth);
+    observer.observe(refObject.current);
 
-        return () => {
-            observer.disconnect();
-        };
-    }, [refObject]);
+    return () => {
+      observer.disconnect();
+    };
+  }, [refObject]);
 
-    return elementWidth;
+  return elementWidth;
 }
