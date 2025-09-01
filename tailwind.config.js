@@ -9,7 +9,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        green: {
+          primary: "#24cf92",
+        },
         gray: {
+          extralight: "#fcfcfd",
+          light: "#f9fafb",
           primary: "#9ca3af",
           dark: "#4b5563",
         },
@@ -48,13 +53,17 @@ module.exports = {
         112: "28rem",
         128: "32rem",
         144: "36rem",
+        160: "40rem",
+        176: "44rem",
+        192: "48rem",
+        200: "50rem",
         "35/50": "70%",
         "15/50": "30%",
       },
     },
   },
   plugins: [
-    function ({ addVariant }) {
+    ({ addVariant }) => {
       addVariant("child", "&>*");
       addVariant("child-odd", "&>*:nth-child(odd)");
     },
