@@ -1,6 +1,15 @@
 {
   "linter": {
     "rules": {
+      "nursery": {
+        "useSortedClasses": {
+          "options": {
+            "attributes": ["classList"],
+            "functions": ["clsx", "cva", "tw", "tw.*"]
+          },
+          "level": "warn"
+        }
+      },
       "suspicious": {
         "noArrayIndexKey": "off"
       }
@@ -9,18 +18,13 @@
   "formatter": {
     "enabled": true,
     "formatWithErrors": false,
-    "ignore": [],
     "attributePosition": "auto",
     "indentStyle": "space",
     "indentWidth": 2,
     "lineWidth": 80,
     "lineEnding": "lf"
   },
-  "files": {
-    "ignore": [
-      "app/ui/indicators/ChoroplethMap.tsx"
-    ]
-  },
+  "files": {},
   "javascript": {
     "formatter": {
       "arrowParentheses": "always",
