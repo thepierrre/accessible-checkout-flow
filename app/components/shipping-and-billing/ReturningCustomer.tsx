@@ -37,11 +37,10 @@ export function ReturningCustomer() {
                         />
                     )}
                 </Tooltip>
-                <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                    <div className="flex flex-col gap-3 items-center">
-                        <h2 className="text-2xl text-blue-primary font-medium">Demo</h2>
-                        <p>This is just a demo. No real login or signup here!</p></div>
-                </Modal>
+                <Modal
+                    isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}
+                    title="Demo"
+                    description="This is just a demo. No real login or signup here!"/>
             </div>
         </section>
     );
