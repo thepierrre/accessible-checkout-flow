@@ -1,30 +1,25 @@
-import Row from "@/app/components/review-and-pay/Row";
+"use client";
 
-type Item = { name: string; amount: number; priceForUnit: number };
+import Row from "@/app/components/review-and-pay/Row";
+import { Product, useOrderSummary } from "@/app/context/OrderSummaryContext";
 
 interface Props {
   discountApplied?: number;
 }
 
 export default function Table({ discountApplied }: Props) {
-  const items: Item[] = [
-    { name: "Burtukaana, Ethiopia (natural)", amount: 1, priceForUnit: 15.5 },
-    { name: "Lake Kivu, Kongo (washed)", amount: 1, priceForUnit: 13.9 },
-    { name: "Rugali, Rwanda (natural)", amount: 1, priceForUnit: 14.9 },
-    { name: "Kerinci, Indonesia (honey)", amount: 1, priceForUnit: 13.9 },
-    { name: "Nansebo, Ethiopia (natural)", amount: 1, priceForUnit: 14.9 },
-  ];
+  const [orderSummary, setOrderSummary] = useOrderSummary();
 
-  const shippingCost = 2.99;
+  const { products, shipping } = orderSummary;
 
   function getAllItemsPrice(): number {
-    return items.reduce((accumulator, currentItem) => {
-      return accumulator + currentItem.amount * currentItem.priceForUnit;
+    return products.reduce((accumulator, currentItem) => {
+      return accumulator + currentItem.amount * currentItem.price;
     }, 0);
   }
 
-  function getTotalPriceForItem(item: Item): number {
-    return item.amount * item.priceForUnit;
+  function getTotalPriceForItem(item: Product): number {
+    return item.amount * item.price;
   }
 
   function getSavedOnDiscount(discount?: number) {
@@ -33,13 +28,13 @@ export default function Table({ discountApplied }: Props) {
   }
 
   function getTotalPrice(discount?: number) {
-    return getAllItemsPrice() - getSavedOnDiscount(discount) + shippingCost;
+    return getAllItemsPrice() - getSavedOnDiscount(discount) + shipping;
   }
 
   return (
     <table className="w-full text-sm">
       <tbody className="mt-2 mb-4 flex w-full flex-col child:rounded-lg child-odd:bg-gray-100 child:px-4 child:py-2">
-        {items.map((item) => (
+        {products.map((item) => (
           <Row
             key={item.name}
             name={item.name}
@@ -56,7 +51,7 @@ export default function Table({ discountApplied }: Props) {
             isDiscount
           />
         )}
-        <Row name={"Shipping"} amount={shippingCost} />
+        <Row name={"Shipping"} amount={shipping} />
         <Row name={"Total"} amount={getTotalPrice(discountApplied)} />
       </tfoot>
     </table>

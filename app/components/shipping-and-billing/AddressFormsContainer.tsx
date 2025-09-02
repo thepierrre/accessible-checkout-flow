@@ -27,6 +27,8 @@ import useScrollOnError from "@/app/hooks/shippingAndBilling/useScrollOnError";
 import useScrollIntoView from "@/app/hooks/useScrollIntoView";
 import { submitAddressForm as submitAddressFormAction } from "@/app/lib/actions";
 import { getCountryMatchesForNames } from "@/app/lib/countryQueries";
+import Step from "@/app/components/shared/Step";
+import Heading from "@/app/components/shared/Heading";
 
 interface Props {
   //allCountries: string[];
@@ -195,24 +197,9 @@ export default function AddressFormsContainer({
 
   return (
     <div className="mx-auto w-160 rounded-xl bg-gradient-to-br from-gray-extralight to-gray-light p-10 shadow-md">
-      <div className="mb-6">
-        <p className="sr-only">Step 1 of 3</p>
-        <span
-          aria-hidden="true"
-          className="rounded-full bg-blue-extralight px-2 py-0.5 text-blue-primary text-sm tracking-wide"
-        >
-          Step 1 of 3
-        </span>
-      </div>
+      <Step current={1} max={3} />
       <section aria-labelledby="form-title" className="mb-4">
-        <h1
-          id={formTitleId}
-          className="relative mb-6 inline-block font-bold text-3xl text-gray-900 uppercase tracking-wide"
-        >
-          Shipping & Billing
-          <span className="-bottom-2 absolute left-0 h-1 w-[120%] bg-blue-primary"></span>
-        </h1>
-
+        <Heading label="Shipping & Billing" as="h1" id={formTitleId} />
         <p id={formInstructionsId} className="sr-only">
           All fields marked with &#34;required&#34; must be completed. Phone
           number and state/province are optional. You can use the checkbox if

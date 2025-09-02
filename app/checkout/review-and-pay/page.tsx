@@ -10,6 +10,7 @@ import CardCheckout from "@/app/components/review-and-pay/CardCheckout";
 import ExpressCheckout from "@/app/components/review-and-pay/ExpressCheckout";
 import ReviewOrder from "@/app/components/review-and-pay/ReviewOrder";
 import { convertToSubcurrency } from "@/app/lib/convertToSubcurrency";
+import Step from "@/app/components/shared/Step";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is not defined.");
@@ -64,14 +65,10 @@ export default function PaymentPage() {
   };
 
   return (
-    <main className="mx-auto w-160 rounded-xl bg-gradient-to-br from-white to-gray-50 p-10 shadow-md">
+    <main className="mx-auto my-4 w-160 rounded-xl bg-gradient-to-br from-white to-gray-50 p-10 shadow-md">
       <ReviewOrder />
       <div className="flex w-full flex-col">
-        <div className="my-6">
-          <span className="rounded-full bg-blue-extralight px-2 py-0.5 text-blue-primary text-sm tracking-wide">
-            Step 3 of 3
-          </span>
-        </div>
+        <Step current={3} max={3} />
         <div className="flex flex-col">
           <h1 className="relative mb-4 inline-block font-bold text-3xl text-gray-900 uppercase tracking-wide">
             Select payment

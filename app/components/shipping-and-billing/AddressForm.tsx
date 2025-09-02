@@ -13,6 +13,7 @@ import type {
 import CountriesDatalist from "@/app/components/shipping-and-billing/CountriesDatalist";
 import Input from "@/app/components/shipping-and-billing/Input";
 import PhoneInput from "@/app/components/shipping-and-billing/PhoneInput";
+import Heading from "@/app/components/shared/Heading";
 
 interface Props {
   ref?: Ref<HTMLFieldSetElement>;
@@ -67,9 +68,7 @@ export default function AddressForm({
   return (
     <fieldset className="flex w-full flex-col gap-4" ref={ref}>
       <header>
-        <legend className="border-blue-primary border-l-4 pl-3 font-semibold text-gray-800 text-xl tracking-wide">
-          <span className="capitalize">{addressType}</span> address
-        </legend>
+        <Heading label={`${addressType} address`} as="legend" />
       </header>
       <Input
         required={true}
