@@ -1,12 +1,15 @@
-import { OrderSummaryProvider } from "@/app/context/OrderSummaryContext";
 import type { ReactNode } from "react";
+import { AddressProvider } from "@/app/context/AddressContext";
+import { OrderSummaryProvider } from "@/app/context/OrderSummaryContext";
 
 export default function CheckoutLayout({ children }: { children: ReactNode }) {
   return (
-    <OrderSummaryProvider>
-      <div>
-        <div>{children}</div>
-      </div>
-    </OrderSummaryProvider>
+    <AddressProvider>
+      <OrderSummaryProvider>
+        <div>
+          <div>{children}</div>
+        </div>
+      </OrderSummaryProvider>
+    </AddressProvider>
   );
 }

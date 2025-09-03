@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amount,
       currency: "eur",
-      // Detect available review-and-pay methods based on the user's browser.
+      // Detect available review-step-and-pay methods based on the user's browser.
     });
 
     return NextResponse.json({ clientSecret: paymentIntent.client_secret });

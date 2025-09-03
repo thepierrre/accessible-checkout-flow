@@ -1,13 +1,6 @@
 "use client";
-import { clsx } from "clsx";
-import {
-  type ReactNode,
-  useEffect,
-  useId,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+
+import { type ReactNode, useId, useLayoutEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
 interface Props {

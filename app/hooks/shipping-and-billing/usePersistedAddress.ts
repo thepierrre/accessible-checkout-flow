@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import type { UseFormSetValue } from "react-hook-form";
-import type { CombinedAddressFormData } from "@/app/checkout/models";
+import type { CombinedAddressFormData } from "@/app/schemas/addressFormSchema";
 import {
   getAddressData,
   isBillingSameAsShipping,

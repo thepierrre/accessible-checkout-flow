@@ -3,7 +3,7 @@ interface Props {
   max: number;
 }
 
-export default function Step({ current, max }: Props) {
+export default function StepBadge({ current, max }: Props) {
   return (
     <div className="my-6">
       <p className="sr-only">

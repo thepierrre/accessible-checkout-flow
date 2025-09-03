@@ -1,6 +1,7 @@
 "use client";
 import "country-flag-icons/3x2/flags.css";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { countries } from "countries-list";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   type ChangeEvent,
@@ -10,44 +11,32 @@ import {
   useRef,
   useState,
 } from "react";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import {
-  type AddressType,
   type CombinedAddressFormData,
-  type CountriesWithCodes,
   combinedAddressFormSchema,
-} from "@/app/checkout/models";
+} from "@/app/schemas/addressFormSchema";
+import Heading from "@/app/components/shared/Heading";
+import StepBadge from "@/app/components/shared/StepBadge";
 import AddressForm from "@/app/components/shipping-and-billing/AddressForm";
 import BillingCheckbox from "@/app/components/shipping-and-billing/BillingCheckbox";
 import ErrorContainer from "@/app/components/shipping-and-billing/ErrorContainer";
 import NavigationButtons from "@/app/components/shipping-and-billing/NavigationButtons";
-import useEditMode from "@/app/hooks/shippingAndBilling/useEditMode";
-import usePersistedAddress from "@/app/hooks/shippingAndBilling/usePersistedAddress";
-import useScrollOnError from "@/app/hooks/shippingAndBilling/useScrollOnError";
-import useScrollIntoView from "@/app/hooks/useScrollIntoView";
+import { useAddress } from "@/app/context/AddressContext";
+import useScrollIntoView from "@/app/hooks/navigation/useScrollIntoView";
+import useEditMode from "@/app/hooks/shipping-and-billing/useEditMode";
+import usePersistedAddress from "@/app/hooks/shipping-and-billing/usePersistedAddress";
+import useScrollOnError from "@/app/hooks/shipping-and-billing/useScrollOnError";
 import { submitAddressForm as submitAddressFormAction } from "@/app/lib/actions";
-import { getCountryMatchesForNames } from "@/app/lib/countryQueries";
-import Step from "@/app/components/shared/Step";
-import Heading from "@/app/components/shared/Heading";
+import { DEFAULT_FORM_VALUES } from "@/app/constants/defaultAddressFormValues";
 
-interface Props {
-  //allCountries: string[];
-  //getCountriesForQueryAction: (query: string) => Promise<string[]>;
-  countriesWithCodes: CountriesWithCodes;
-}
-
-export default function AddressFormsContainer({
-  //allCountries,
-  //getCountriesForQueryAction,
-  countriesWithCodes,
-}: Props) {
+export default function AddressFormStep() {
+  const { setAddress } = useAddress();
   const formTitleId = useId();
   const formInstructionsId = useId();
   const addressFormId = useId();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [suggestedCountries, setSuggestedCountries] =
-    useState<CountriesWithCodes>(countriesWithCodes);
   const [isEditing, setIsEditing] = useState<boolean | "shipping" | "billing">(
     false,
   );
@@ -59,30 +48,8 @@ export default function AddressFormsContainer({
 
   const form = useForm<CombinedAddressFormData>({
     resolver: zodResolver(combinedAddressFormSchema),
-    mode: "all",
-    defaultValues: {
-      shipping: {
-        name: "",
-        address: "",
-        zip: "",
-        country: "",
-        phoneCode: "+1",
-        phoneNumber: "",
-        email: "",
-        region: "",
-      },
-      billing: {
-        name: "",
-        address: "",
-        zip: "",
-        country: "",
-        phoneCode: "+1",
-        phoneNumber: "",
-        email: "",
-        region: "",
-      },
-      isBillingAddressSame: true,
-    },
+    mode: "onBlur",
+    defaultValues: DEFAULT_FORM_VALUES,
   });
 
   const {
@@ -91,7 +58,7 @@ export default function AddressFormsContainer({
     getValues,
     setValue,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
     clearErrors,
   } = form;
 
@@ -127,32 +94,6 @@ export default function AddressFormsContainer({
     }
   });
 
-  async function onCountryInputChange(
-    addressType: AddressType,
-    event: ChangeEvent<HTMLInputElement>,
-  ) {
-    const { value } = event.target;
-
-    setValue(`${addressType}.country`, value);
-
-    const foundCountries = value
-      ? getCountryMatchesForNames(countriesWithCodes, value)
-      : countriesWithCodes;
-    setSuggestedCountries(foundCountries);
-  }
-
-  function onSuggestedCountryClick(country: string, addressType: AddressType) {
-    setValue(`${addressType}.country`, country, { shouldValidate: true });
-  }
-
-  function onCountryPhoneCodeClick(
-    phoneCodeNum: number,
-    addressType: AddressType,
-  ) {
-    const phoneCode = phoneCodeNum.toString();
-    setValue(`${addressType}.phoneCode`, phoneCode);
-  }
-
   function saveFormDataToSessionStorage(data: CombinedAddressFormData) {
     const dataString = JSON.stringify(data);
     sessionStorage.setItem("addressFormData", dataString);
@@ -174,6 +115,11 @@ export default function AddressFormsContainer({
           }
 
           saveFormDataToSessionStorage(data);
+          setAddress({
+            shipping: getValues("shipping"),
+            billing: getValues("billing"),
+            isBillingAddressSame: isBillingSame,
+          });
 
           router.push("review-and-pay");
         } catch (error: unknown) {
@@ -197,8 +143,8 @@ export default function AddressFormsContainer({
 
   return (
     <div className="mx-auto w-160 rounded-xl bg-gradient-to-br from-gray-extralight to-gray-light p-10 shadow-md">
-      <Step current={1} max={3} />
-      <section aria-labelledby="form-title" className="mb-4">
+      <StepBadge current={1} max={3} />
+      <section aria-labelledby="form-title" className="w-full">
         <Heading label="Shipping & Billing" as="h1" id={formTitleId} />
         <p id={formInstructionsId} className="sr-only">
           All fields marked with &#34;required&#34; must be completed. Phone
@@ -215,41 +161,19 @@ export default function AddressFormsContainer({
         {serverError && (
           <ErrorContainer ref={serverErrorRef} errorMessage={serverError} />
         )}
-        <AddressForm
-          ref={shippingAddressRef}
-          addressType="shipping"
-          suggestedCountries={suggestedCountries}
-          countriesWithCodes={countriesWithCodes}
-          onCountryInputChange={onCountryInputChange}
-          onSuggestedCountryClick={onSuggestedCountryClick}
-          onCountryPhoneCodeClick={onCountryPhoneCodeClick}
-          register={register}
-          watch={watch}
-          errors={errors}
-          setValue={setValue}
-        />
-        <BillingCheckbox
-          {...register("isBillingAddressSame")}
-          ref={(el) => {
-            billingCheckboxRef.current = el;
-            register("isBillingAddressSame").ref(el);
-          }}
-        />
-        {!isBillingSame && (
-          <AddressForm
-            ref={billingAddressRef}
-            addressType="billing"
-            suggestedCountries={suggestedCountries}
-            countriesWithCodes={countriesWithCodes}
-            onCountryInputChange={onCountryInputChange}
-            onSuggestedCountryClick={onSuggestedCountryClick}
-            onCountryPhoneCodeClick={onCountryPhoneCodeClick}
-            register={register}
-            watch={watch}
-            errors={errors}
-            setValue={setValue}
+        <FormProvider {...form}>
+          <AddressForm ref={shippingAddressRef} addressType="shipping" />
+          <BillingCheckbox
+            {...register("isBillingAddressSame")}
+            ref={(el) => {
+              billingCheckboxRef.current = el;
+              register("isBillingAddressSame").ref(el);
+            }}
           />
-        )}
+          {!isBillingSame && (
+            <AddressForm ref={billingAddressRef} addressType="billing" />
+          )}
+        </FormProvider>
         <NavigationButtons
           isSubmitting={isSubmitting}
           currentStep="address"

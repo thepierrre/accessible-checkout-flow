@@ -1,52 +1,25 @@
-import type { CountriesWithCodes } from "@/app/checkout/models";
-
 function getCountryMatchesForNames(
-  suggestedCountriesWithCodes: CountriesWithCodes,
+  countries: string[],
   query: string,
-): CountriesWithCodes {
-  return Object.keys(suggestedCountriesWithCodes).length > 0
-    ? Object.fromEntries(
-        Object.keys(suggestedCountriesWithCodes)
-          .filter((country) => {
-            query = query.toLowerCase();
-            country = country.toLowerCase();
+): string[] {
+  const lqQuery = query.toLowerCase();
 
-            const countryNameQueryCombos: string[] = [];
-            const splitCountry = country.split(" ");
-            for (let i = 0; i < splitCountry.length; i++) {
-              countryNameQueryCombos.push(
-                splitCountry[i],
-                splitCountry.slice(i).join(""),
-                splitCountry.slice(i).join(" "),
-              );
-            }
-            return countryNameQueryCombos.some((combo) =>
-              combo.startsWith(query),
-            );
-          })
-          .map((country) => [country, suggestedCountriesWithCodes[country]]),
-      )
-    : {};
+  return countries.filter((country) => {
+    const lqCountry = country.toLowerCase();
+
+    const countryQueryCombos: string[] = [];
+    const splitCountry = lqCountry.split(" ");
+
+    for (let i = 0; i < splitCountry.length; i++) {
+      countryQueryCombos.push(
+        splitCountry[i],
+        splitCountry.slice(i).join(""),
+        splitCountry.slice(i).join(" "),
+      );
+    }
+
+    return countryQueryCombos.some((combo) => combo.startsWith(lqQuery));
+  });
 }
 
-function getCountryMatchesForPhoneCodes(
-  suggestedCountriesWithCodes: CountriesWithCodes,
-  query: string,
-): CountriesWithCodes {
-  return Object.keys(suggestedCountriesWithCodes).length > 0
-    ? Object.fromEntries(
-        Object.keys(suggestedCountriesWithCodes)
-          .filter((country) => {
-            if (query.charAt(0) === "+") {
-              query = query.substring(1);
-            }
-            return suggestedCountriesWithCodes[country]
-              .toString()
-              .startsWith(query);
-          })
-          .map((country) => [country, suggestedCountriesWithCodes[country]]),
-      )
-    : {};
-}
-
-export { getCountryMatchesForNames, getCountryMatchesForPhoneCodes };
+export { getCountryMatchesForNames };

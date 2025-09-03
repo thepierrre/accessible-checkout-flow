@@ -1,10 +1,10 @@
 import { clsx } from "clsx";
 import { type ChangeEvent, type Ref, useId } from "react";
-import type { UseFormRegister } from "react-hook-form";
+import { useFormContext, UseFormRegister } from "react-hook-form";
 import type {
   AddressType,
   CombinedAddressFormData,
-} from "@/app/checkout/models";
+} from "@/app/schemas/addressFormSchema";
 import type { FieldNameType } from "@/app/components/shipping-and-billing/AddressForm";
 
 interface Props {
@@ -12,10 +12,8 @@ interface Props {
   labelText: string;
   placeholder?: string;
   addressType: AddressType;
-  register: UseFormRegister<CombinedAddressFormData>;
   autoComplete: string;
   type: "text" | "tel" | "email";
-  getErrorMessage: (fieldName: FieldNameType) => string | null;
   onChange?: (
     addressType: AddressType,
     event: ChangeEvent<HTMLInputElement>,
@@ -35,10 +33,8 @@ export default function Input({
   labelText,
   placeholder,
   addressType,
-  register,
   autoComplete,
   type,
-  getErrorMessage,
   onChange,
   onClick,
   required = false,
@@ -49,8 +45,13 @@ export default function Input({
   ariaActivedescendant,
   onKeyDown,
 }: Props) {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<CombinedAddressFormData>();
+  const errorMessage = errors[addressType]?.[name]?.message;
+
   const id = useId();
-  const errorMessage = getErrorMessage(name);
 
   const { ref: registerRef, ...rest } = register(`${addressType}.${name}`);
 

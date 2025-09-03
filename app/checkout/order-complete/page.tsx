@@ -1,20 +1,21 @@
 "use client";
 
 import clsx from "clsx";
-import { type FormEvent, useId, useState } from "react";
-import Modal from "@/app/components/shared/Modal";
+import { type FormEvent, useEffect, useId, useState } from "react";
 import Button from "@/app/components/shared/Button";
-
-const EMAIL = "piotr@example.com";
+import Modal from "@/app/components/shared/Modal";
+import { getAddressData } from "@/app/lib/addressDataUtils";
+import { useRouter } from "next/navigation";
 
 type FormErrors = {
   email?: string;
   question?: string;
 };
 
+//TODO redirect if not navigated from payment
 export default function OrderCompletePage() {
+  const router = useRouter();
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
-  const [isOrderModalOpen, setIsOrderModalOpen] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [successMessage, setSuccessMessage] = useState("");
@@ -22,6 +23,26 @@ export default function OrderCompletePage() {
   const questionTextareaId = useId();
   const emailInputId = useId();
   const formId = useId();
+  const [canAccessPage, setCanAccessPage] = useState(false);
+
+  const [buyerEmail, setBuyerEmail] = useState<string>("");
+
+  useEffect(() => {
+    const { billing } = getAddressData(); // your localStorage helper
+
+    const lastOrder = JSON.parse(sessionStorage.getItem("lastOrder") || "{}");
+
+    if (!lastOrder.intentId) {
+      router.replace("/checkout/shipping-and-billing");
+      return;
+    }
+
+    setBuyerEmail(billing.email);
+    setCanAccessPage(true);
+
+    sessionStorage.removeItem("lastOrder");
+    sessionStorage.removeItem("addressFormData");
+  }, [router]);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -63,45 +84,40 @@ export default function OrderCompletePage() {
     }, 3000);
   }
 
+  if (!canAccessPage) {
+    return null;
+  }
+
   return (
     <main className="mx-auto my-12 max-w-lg space-y-8 rounded-xl bg-gradient-to-br from-white to-gray-50 px-10 py-8 shadow-md">
       <div className="space-y-4 text-center">
-        <h1 className="relative mb-4 inline-block font-bold text-3xl uppercase tracking-wide">
-          <span className="relative z-10 px-8 text-white">
-            Thank you, Piotr!
-          </span>
+        <h1 className="relative mb-4 py-2 text-center font-bold text-3xl uppercase tracking-wide">
+          <span className="relative z-10 px-8 text-white">Thank you!</span>
           <span className="-skew-x-12 absolute inset-0 bg-blue-primary"></span>
         </h1>
         <div className="flex flex-col gap-1">
           <p>
             Your order has been placed successfully and we&#39;ve sent a
-            confirmation to <span className="font-semibold">{EMAIL}</span>.
+            confirmation to <span className="font-semibold">{buyerEmail}</span>.
           </p>
           <p>We&#39;ll let you know as soon as we&#39;ve shipped your order.</p>
         </div>
 
         <p className="font-semibold">Looking for something else?</p>
 
-        <button
-          type="button"
+        <Button
           onClick={() => setIsDemoModalOpen(true)}
-          className={clsx(
-            "w-30 rounded-md bg-blue-primary px-6 py-2 text-white hover:bg-blue-semidark",
-          )}
-        >
-          Continue shopping
-        </button>
+          label="Continue shopping"
+        />
+        <p className="text-gray-500 text-xs">
+          <span className="font-semibold">Note:</span> This page is only shown
+          once right after your order.
+          <br /> If you refresh or leave and come back, it won’t be accessible
+          again.
+        </p>
       </div>
 
       <div className="space-y-4 text-center">
-        <button
-          type="button"
-          onClick={() => setIsOrderModalOpen(true)}
-          className="font-medium text-blue-primary underline hover:text-blue-semidark"
-        >
-          View order details
-        </button>
-
         <div>
           <button
             type="button"
@@ -146,7 +162,7 @@ export default function OrderCompletePage() {
                   name="email"
                   placeholder="max.mustermann@example.com"
                   type="email"
-                  defaultValue={EMAIL}
+                  defaultValue={buyerEmail}
                   aria-required="true"
                   aria-invalid={!!formErrors.email}
                   aria-describedby={
@@ -208,28 +224,13 @@ export default function OrderCompletePage() {
                 </p>
               </fieldset>
 
-              <div className="flex justify-center gap-2">
-                <Button
-                  type="reset"
-                  label="Reset"
-                  size="small"
-                  variant="secondary"
-                />
+              <div className="flex justify-center">
                 <Button type="submit" label="Send" size="small" />
               </div>
             </form>
           )}
         </div>
       </div>
-
-      <Modal
-        isOpen={isOrderModalOpen}
-        onClose={() => setIsOrderModalOpen(false)}
-        title="Order details"
-        description="Here’s a summary of your recent order."
-      >
-        <ul className="space-y-2">{/*<li></li>*/}</ul>
-      </Modal>
 
       <Modal
         isOpen={isDemoModalOpen}

@@ -1,7 +1,7 @@
 import type { ReadonlyURLSearchParams } from "next/navigation";
 import { type RefObject, type SetStateAction, useEffect, useRef } from "react";
 import type { UseFormClearErrors, UseFormSetValue } from "react-hook-form";
-import type { CombinedAddressFormData } from "@/app/checkout/models";
+import type { CombinedAddressFormData } from "@/app/schemas/addressFormSchema";
 
 interface useEditModeProps {
   searchParams: ReadonlyURLSearchParams;

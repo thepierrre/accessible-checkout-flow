@@ -10,7 +10,7 @@ const classes = {
   regular: "py-2",
 };
 
-interface ButtonProps {
+interface Props {
   size?: "small" | "regular";
   type?: "reset" | "submit" | "button";
   variant?: "primary" | "secondary";
@@ -38,7 +38,7 @@ export default function Button({
   ariaExpanded = false,
   ariaPressed = false,
   barButton = false,
-}: ButtonProps) {
+}: Props) {
   return (
     <button
       type={type}

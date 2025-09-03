@@ -1,18 +1,22 @@
 import { clsx } from "clsx";
 import { type ChangeEvent, useEffect, useId, useRef, useState } from "react";
-import type { UseFormRegister, UseFormSetValue } from "react-hook-form";
+import {
+  useFormContext,
+  UseFormRegister,
+  UseFormSetValue,
+} from "react-hook-form";
 import type {
   AddressType,
   CombinedAddressFormData,
   CountriesWithCodes,
-} from "@/app/checkout/models";
+} from "@/app/schemas/addressFormSchema";
 import type { FieldNameType } from "@/app/components/shipping-and-billing/AddressForm";
 import Input from "@/app/components/shipping-and-billing/Input";
-import useElementWidth from "@/app/hooks/useElementWidth";
-import useListboxNavigation from "@/app/hooks/useListboxNavigation";
+import useElementWidth from "@/app/hooks/ui/useElementWidth";
+import useListboxNavigation from "@/app/hooks/navigation/useListboxNavigation";
 
 interface Props {
-  suggestedCountries: CountriesWithCodes;
+  countries: string[];
   addressType: AddressType;
   country: string;
   onCountryInputChange: (
@@ -20,18 +24,14 @@ interface Props {
     event: ChangeEvent<HTMLInputElement>,
   ) => void;
   onCountryClick: (country: string, addressType: AddressType) => void;
-  register: UseFormRegister<CombinedAddressFormData>;
-  getErrorMessage: (fieldName: FieldNameType) => string | null;
   setValue: UseFormSetValue<CombinedAddressFormData>;
 }
 
 export default function CountriesDatalist({
-  suggestedCountries,
+  countries,
   addressType,
   onCountryInputChange,
   onCountryClick,
-  register,
-  getErrorMessage,
   setValue,
 }: Props) {
   const countriesListId = useId();
@@ -40,9 +40,9 @@ export default function CountriesDatalist({
   const divRef = useRef<HTMLDivElement | null>(null);
   const optionRefs = useRef<(HTMLLIElement | null)[]>([]);
   const [datalistIsShown, setDatalistIsShown] = useState(false);
-  const options = Object.keys(suggestedCountries);
+  const options = Object.keys(countries);
   const { activeIndex, setActiveIndex, handleKeyDown } = useListboxNavigation({
-    options: Object.keys(suggestedCountries),
+    options: Object.keys(countries),
     onSelect: () => {
       onCountryClick(options[activeIndex], addressType);
       setDatalistIsShown(false);
@@ -91,10 +91,8 @@ export default function CountriesDatalist({
         labelText="Country/Territory"
         placeholder="Germany"
         addressType={addressType}
-        register={register}
-        autoComplete="none"
+        autoComplete="country-name"
         type="text"
-        getErrorMessage={getErrorMessage}
         onChange={(addressType, e) => {
           onCountryInputChange(addressType, e);
           setDatalistIsShown(true);
@@ -117,8 +115,8 @@ export default function CountriesDatalist({
           style={{ width: inputWidth }}
           className="absolute top-20 z-50 flex max-h-44 flex-col overflow-y-auto rounded-md bg-white py-2 text-sm shadow-gray-400 shadow-md"
         >
-          {Object.keys(suggestedCountries).length > 0 ? (
-            Object.keys(suggestedCountries).map((c, i) => (
+          {countries.length > 0 ? (
+            countries.map((c, i) => (
               <li
                 tabIndex={-1}
                 ref={(el) => {

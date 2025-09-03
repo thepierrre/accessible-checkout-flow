@@ -13,25 +13,29 @@ import {
 } from "react";
 import { type FieldErrors, useForm } from "react-hook-form";
 import { getDiscount as getDiscountAction } from "@/app/lib/actions";
-import removeIcon from "../../../public/icons/removeIcon.svg";
-import removeIconHover from "../../../public/icons/removeIconHover.svg";
+import removeIcon from "../../../../public/icons/removeIcon.svg";
+import removeIconHover from "../../../../public/icons/removeIconHover.svg";
 import Button from "@/app/components/shared/Button";
+import { useOrderSummary } from "@/app/context/OrderSummaryContext";
 
 type FormValues = {
   promoCode: string;
 };
 
-interface Props {
-  applyDiscount: (discount: number) => void;
-  discountApplied: number | undefined;
-  setDiscountApplied: Dispatch<SetStateAction<number | undefined>>;
-}
+// interface Props {
+//   // applyDiscount: (discount: number) => void;
+//   //discountApplied: number | undefined;
+//   //setDiscountApplied: Dispatch<SetStateAction<number | undefined>>;
+// }
 
-export default function PromoCodeForm({
-  applyDiscount,
-  discountApplied,
-  setDiscountApplied,
-}: Props) {
+export default function PromoCodeForm(
+  //     {
+  //   // applyDiscount,
+  //   //discountApplied,
+  //   //setDiscountApplied,
+  // }: Props
+) {
+  const { discount, setDiscount } = useOrderSummary();
   const promoCodeInputId = useId();
   const promoCodeFormId = useId();
   const [isRemoveIconHovered, setIsRemoveIconHovered] = useState(false);
@@ -65,7 +69,7 @@ export default function PromoCodeForm({
       } else if (success && message) {
         const isMessageNumericString = !isNaN(+(+message).toString());
         if (isMessageNumericString) {
-          applyDiscount(+message);
+          setDiscount(+message);
         }
       }
       console.log(response);
@@ -76,7 +80,7 @@ export default function PromoCodeForm({
   }
 
   function handleRemovePromoCode() {
-    setDiscountApplied(undefined);
+    setDiscount(0);
     setValue("promoCode", "");
   }
 
@@ -101,25 +105,25 @@ export default function PromoCodeForm({
               {...register("promoCode")}
               placeholder="Enter code here"
               autoComplete="off"
-              disabled={discountApplied !== undefined}
+              disabled={discount !== 0}
               className={clsx(
                 "h-10 w-full rounded-md border px-2 text-base focus:outline-none focus:ring-1",
                 errors.promoCode?.message
                   ? "border-red-primary focus:ring-red-primary"
                   : "border-gray-300 focus:border-blue-primary focus:ring-blue-primary",
-                discountApplied
+                discount
                   ? "cursor-not-allowed border-teal-500 bg-teal-50 pl-6 font-medium text-teal-500"
                   : "pl-2",
               )}
             ></input>
-            {discountApplied && (
+            {discount !== 0 && (
               <span className="absolute left-2 top-1/2 -translate-y-1/2 text-teal-500">
                 ✔
               </span>
             )}
           </div>
 
-          {!discountApplied ? (
+          {discount === 0 ? (
             <button
               type="submit"
               className="h-10 w-20 text-white text-sm rounded-md self-end mb-0.5 mr-3 disabled:cursor-not-allowed bg-blue-primary hover:bg-blue-semidark disabled:bg-blue-semilight"

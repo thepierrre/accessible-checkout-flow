@@ -3,7 +3,7 @@
 import { clsx } from "clsx";
 import { type KeyboardEvent, type ReactNode, useState } from "react";
 
-type TooltipProps = {
+type Props = {
   children: (props: {
     onMouseEnter: () => void;
     onMouseLeave: () => void;
@@ -24,7 +24,7 @@ export default function Tooltip({
   position,
   id,
   delay = 300,
-}: TooltipProps) {
+}: Props) {
   const [isShown, setIsShown] = useState(false);
   let timeoutId: ReturnType<typeof setTimeout> | null = null;
 

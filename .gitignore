@@ -22,7 +22,7 @@
 # production
 /build
 
-# misc
+# ui
 .DS_Store
 *.pem
 

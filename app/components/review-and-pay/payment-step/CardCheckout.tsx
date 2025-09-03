@@ -62,7 +62,7 @@ export default function CardCheckout({ amount }: Props) {
       elements,
       clientSecret,
       confirmParams: {
-        return_url: `http://www.localhost:3000/payment-success?amount=${amount}`,
+        return_url: `${window.location.origin}/payment-success`,
       },
     });
 
@@ -92,7 +92,10 @@ export default function CardCheckout({ amount }: Props) {
   return (
     <div className="flex w-full flex-col gap-8">
       {clientSecret && (
-        <form onSubmit={handleCardCheckout} className="child:w-full">
+        <form
+          onSubmit={handleCardCheckout}
+          className="flex child:w-full flex-col gap-4"
+        >
           <PaymentElement options={options} />
           <Button label={`Pay €${amount}`} barButton={true} />
         </form>

@@ -1,60 +1,51 @@
 "use client";
 
 import {
-  useContext,
   createContext,
+  type Dispatch,
   type ReactNode,
+  type SetStateAction,
+  useContext,
   useState,
-  Dispatch,
-  SetStateAction,
 } from "react";
-
-export type Product = { name: string; price: number; amount: number };
-
-type OrderSummary = {
-  products: Product[];
-  shipping: number;
-};
+import { DEFAULT_SUMMARY } from "@/app/constants/defaultOrderSummary";
+import type { OrderSummary } from "@/app/types/orderSummary";
 
 type OrderSummaryContextType = {
   orderSummary: OrderSummary;
   setOrderSummary: Dispatch<SetStateAction<OrderSummary>>;
-};
-
-const defaultSummary = {
-  products: [
-    { name: "Burtukaana, Ethiopia (natural)", price: 15.5, amount: 1 },
-    { name: "Lake Kivu, Kongo (washed)", price: 13.9, amount: 1 },
-    { name: "Rugali, Rwanda (natural)", price: 14.9, amount: 1 },
-    { name: "Kerinci, Indonesia (honey)", price: 13.9, amount: 1 },
-    { name: "Nansebo, Ethiopia (natural)", price: 14.5, amount: 1 },
-  ],
-  shipping: 2.99,
+  setDiscount: (discount: number) => void;
+  discount: number;
 };
 
 export const OrderSummaryContext = createContext<
   OrderSummaryContextType | undefined
 >(undefined);
 
-export function useOrderSummary(): [
-  OrderSummary,
-  Dispatch<SetStateAction<OrderSummary>>,
-] {
-  const ctx = useContext(OrderSummaryContext);
-  if (!ctx) {
+export function useOrderSummary() {
+  const context = useContext(OrderSummaryContext);
+  if (!context) {
     throw new Error(
       "useOrderSummary was used outside the OrderSummaryProvider.",
     );
   }
-  return [ctx?.orderSummary, ctx?.setOrderSummary];
+  return context;
 }
 
 export function OrderSummaryProvider({ children }: { children: ReactNode }) {
   const [orderSummary, setOrderSummary] =
-    useState<OrderSummary>(defaultSummary);
+    useState<OrderSummary>(DEFAULT_SUMMARY);
+
+  const setDiscount = (discount: number) => {
+    setOrderSummary((prev) => ({ ...prev, discount }));
+  };
+
+  const discount = orderSummary?.discount;
 
   return (
-    <OrderSummaryContext.Provider value={{ orderSummary, setOrderSummary }}>
+    <OrderSummaryContext.Provider
+      value={{ orderSummary, setOrderSummary, setDiscount, discount }}
+    >
       {children}
     </OrderSummaryContext.Provider>
   );
