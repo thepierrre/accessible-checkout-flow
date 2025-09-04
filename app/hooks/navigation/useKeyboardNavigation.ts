@@ -1,21 +1,30 @@
-import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
+import {
+  type Dispatch,
+  type SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 export default function useKeyboardNavigation(
   listLength: number,
 ): [number, Dispatch<SetStateAction<number>>] {
   const [activeElement, setActiveElement] = useState(0);
 
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === "ArrowUp") {
-      setActiveElement((prev) => (prev > 0 ? prev - 1 : 0));
-    } else if (e.key === "ArrowDown") {
-      setActiveElement((prev) =>
-        prev < listLength - 1 ? prev + 1 : listLength - 1,
-      );
-    }
-  };
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "ArrowUp") {
+        setActiveElement((prev) => (prev > 0 ? prev - 1 : 0));
+      } else if (e.key === "ArrowDown") {
+        setActiveElement((prev) =>
+          prev < listLength - 1 ? prev + 1 : listLength - 1,
+        );
+      }
+    },
+    [listLength],
+  );
 
-  //FIXME
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     setActiveElement(0);
   }, [listLength]);

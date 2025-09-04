@@ -1,7 +1,7 @@
 "use server";
 
 import type { CombinedAddressFormData } from "@/app/schemas/addressFormSchema";
-import type { ServerResponse } from "@/app/types/server";
+import type { ServerResponse } from "@/app/types/serverTypes";
 
 export async function getDiscount(promoCode: string): Promise<ServerResponse> {
   if (promoCode === "TIMEFORCOFFEE") {

@@ -1,15 +1,15 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import PromoCodeForm from "@/app/components/review-and-pay/review-step/PromoCodeForm";
 import Heading from "@/app/components/shared/Heading";
 import { useOrderSummary } from "@/app/context/OrderSummaryContext";
 import collapseIcon from "@/public/icons/collapseIcon.svg";
 import expandIcon from "@/public/icons/expandIcon.svg";
+import Button from "@/app/components/shared/Button";
 
 export default function PromoCodeSection() {
-  const { discount } = useOrderSummary();
+  const { discount, promoCode } = useOrderSummary();
   const [isAddingCode, setIsAddingCode] = useState(false);
 
   function handleCollapseOrExpand() {
@@ -25,25 +25,23 @@ export default function PromoCodeSection() {
   }
 
   return (
-    <section className="flex flex-col">
-      <div className="flex border-gray-primary border-b pb-2">
+    <section className="flex flex-col pb-4 border-gray-300 border-b">
+      <div className="flex">
         <div className="mb-2 flex grow gap-2">
           <Heading label="Promo code" as="h2" />
         </div>
-        {/*TODO examine*/}
-        {/** biome-ignore lint/a11y/noStaticElementInteractions: <explanation> */}
-        <div className="inline-flex cursor-pointer items-center gap-1 rounded-full bg-blue-extralight px-3 font-medium text-blue-primary text-sm transition-colors duration-200 hover:bg-blue-light">
-          {/*TODO examine*/}
-          {/** biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-          <p onClick={handleCollapseOrExpand}>
-            {!isAddingCode ? (!discount ? "Add code" : "Expand") : "Collapse"}
-          </p>
-          <Image
-            src={handleCodeIconDisplay()}
-            alt="Add code icon"
-            className="w-4 h-4"
-          />
-        </div>
+        <Button
+          variant="soft"
+          size="small"
+          label={
+            !isAddingCode ? (!discount ? "Add code" : "Expand") : "Collapse"
+          }
+          onClick={handleCollapseOrExpand}
+          icon={{
+            img: { src: handleCodeIconDisplay(), alt: "Add code icon" },
+            position: "right",
+          }}
+        ></Button>
       </div>
 
       {isAddingCode && <PromoCodeForm />}

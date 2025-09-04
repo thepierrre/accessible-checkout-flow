@@ -1,11 +1,9 @@
 import { clsx } from "clsx";
 import { type ChangeEvent, type Ref, useId } from "react";
-import { useFormContext, UseFormRegister } from "react-hook-form";
-import type {
-  AddressType,
-  CombinedAddressFormData,
-} from "@/app/schemas/addressFormSchema";
+import { useFormContext } from "react-hook-form";
+import type { CombinedAddressFormData } from "@/app/schemas/addressFormSchema";
 import type { FieldNameType } from "@/app/components/shipping-and-billing/AddressForm";
+import type { AddressType } from "@/app/types/address";
 
 interface Props {
   name: FieldNameType;
@@ -23,7 +21,6 @@ interface Props {
   required?: boolean;
   role?: string;
   ariaControls?: string;
-  ariaExpanded?: boolean;
   ariaActivedescendant?: string;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
@@ -41,7 +38,6 @@ export default function Input({
   ref,
   role,
   ariaControls,
-  ariaExpanded,
   ariaActivedescendant,
   onKeyDown,
 }: Props) {
@@ -56,11 +52,11 @@ export default function Input({
   const { ref: registerRef, ...rest } = register(`${addressType}.${name}`);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-1 sm:gap-2">
       <label
         htmlFor={id}
         className={clsx(
-          "font-medium",
+          "font-medium text-md sm:text-sm",
           labelText !== "State/Province (optional)" && "after:content-['*']",
         )}
       >
@@ -79,8 +75,6 @@ export default function Input({
         aria-errormessage={errorMessage ? `${id}-error-message` : undefined}
         role={role}
         aria-controls={ariaControls}
-        //TODO: aria-expanded
-        // aria-expanded={ariaExpanded}
         aria-activedescendant={ariaActivedescendant}
         id={id}
         placeholder={placeholder}
@@ -90,13 +84,12 @@ export default function Input({
         onKeyDown={onKeyDown}
         type={type}
         className={clsx(
-          "h-10 w-full rounded-md border px-2 text-base focus:outline-none focus:ring-1",
+          "h-12 w-full rounded-lg border px-2 text-md focus:outline-none focus:ring-1 sm:h-10 sm:text-sm",
           errorMessage
             ? "border-red-primary focus:ring-red-primary"
             : "border-gray-300 focus:border-blue-primary focus:ring-blue-primary",
         )}
       />
-
       <p
         id={`${id}-error-message`}
         className={clsx(

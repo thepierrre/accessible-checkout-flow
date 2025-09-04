@@ -1,16 +1,8 @@
 "use client";
 import "country-flag-icons/3x2/flags.css";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { countries } from "countries-list";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  type ChangeEvent,
-  type FormEvent,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-} from "react";
+import { type FormEvent, useEffect, useId, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
   type CombinedAddressFormData,
@@ -142,7 +134,7 @@ export default function AddressFormStep() {
   };
 
   return (
-    <div className="mx-auto w-160 rounded-xl bg-gradient-to-br from-gray-extralight to-gray-light p-10 shadow-md">
+    <div className="mx-auto w-full px-6 sm:w-160 sm:rounded-xl sm:bg-gradient-to-br sm:from-gray-extralight sm:to-gray-light sm:p-10 sm:shadow-md">
       <StepBadge current={1} max={3} />
       <section aria-labelledby="form-title" className="w-full">
         <Heading label="Shipping & Billing" as="h1" id={formTitleId} />

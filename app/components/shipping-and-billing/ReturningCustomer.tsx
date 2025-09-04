@@ -11,11 +11,11 @@ export function ReturningCustomer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <section className="relative my-6 w-144 text-center">
-      <div className="absolute inset-0 flex items-center">
+    <section className="relative mb-4 w-full text-center sm:my-2 sm:w-160">
+      <div className="hidden sm:absolute sm:inset-0 sm:flex sm:items-center">
         <span className="w-full border-gray-300 border-t" />
       </div>
-      <span className="relative mx-auto inline-flex items-center gap-2 bg-white px-4 font-medium text-gray-800 text-lg">
+      <span className="relative mx-auto inline-flex items-center gap-1 bg-white px-4 font-medium text-gray-800 text-md sm:gap-2">
         Returning customer?
         <button
           type="button"
@@ -38,7 +38,13 @@ export function ReturningCustomer() {
           id={tooltipId}
         >
           {(triggerProps) => (
-            <Image tabIndex={0} src={questionIcon} alt="" {...triggerProps} />
+            <Image
+              tabIndex={0}
+              src={questionIcon}
+              alt=""
+              {...triggerProps}
+              className="rounded-full focus:outline-none focus:ring-2 focus:ring-blue-primary"
+            />
           )}
         </Tooltip>
       </span>
@@ -46,7 +52,7 @@ export function ReturningCustomer() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title="Demo"
-        description="This is just a demo. No real login or signup here!"
+        description="This is just a checkout flow demo. No real login or signup here!"
       />
     </section>
   );

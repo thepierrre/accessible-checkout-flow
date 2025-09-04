@@ -1,14 +1,11 @@
 import { clsx } from "clsx";
 import Image from "next/image";
 import { useId } from "react";
-import { useFormContext, UseFormRegister } from "react-hook-form";
-import type {
-  AddressType,
-  CombinedAddressFormData,
-} from "@/app/schemas/addressFormSchema";
+import { useFormContext } from "react-hook-form";
+import type { CombinedAddressFormData } from "@/app/schemas/addressFormSchema";
 import Tooltip from "@/app/components/shared/Tooltip";
-import type { FieldNameType } from "@/app/components/shipping-and-billing/AddressForm";
 import questionIcon from "../../../public/icons/questionIcon.svg";
+import type { AddressType } from "@/app/types/address";
 
 interface Props {
   labelText: string;
@@ -28,7 +25,10 @@ export default function PhoneInput({ labelText, addressType }: Props) {
   return (
     <section className="flex flex-col gap-0.5">
       <div className="relative flex gap-1">
-        <label htmlFor={`${addressType}-phone`} className="font-medium">
+        <label
+          htmlFor={`${addressType}-phone`}
+          className="font-medium text-md sm:text-sm"
+        >
           {labelText}
         </label>
         <Tooltip
@@ -40,27 +40,21 @@ export default function PhoneInput({ labelText, addressType }: Props) {
             <Image
               src={questionIcon}
               alt=""
-              className="w-5"
               tabIndex={0}
               {...triggerProps}
+              className="w-6 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-primary"
             />
           )}
         </Tooltip>
       </div>
       {/*TODO examine / write explanation*/}
       <div className="relative flex items-center">
-        <label
-          htmlFor={inputId}
-          className="sr-only mb-2 font-semibold text-sm antialiased"
-        >
-          Phone number:
-        </label>
         <input
           type="tel"
           id={inputId}
           autoComplete="tel"
           className={clsx(
-            "relative h-10 grow rounded-md border border-gray-300 p-2 text-gray-900 text-sm focus:outline-none focus:ring-1",
+            "relative h-12 grow rounded-md border border-gray-300 p-2 text-gray-900 text-md focus:outline-none focus:ring-1 sm:h-10 sm:text-sm",
             errorMessage
               ? "border-red-primary focus:ring-red-primary"
               : "border-gray-300 focus:border-blue-primary focus:ring-blue-primary",

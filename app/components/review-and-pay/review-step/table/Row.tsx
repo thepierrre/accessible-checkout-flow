@@ -25,12 +25,12 @@ function Row({ name, amount, isDiscount, body = false }: Props) {
     >
       <Cell
         scope={body ? undefined : "row"}
-        className="rounded-l-lg px-4 py-2 text-left"
+        className={clsx("rounded-l-lg px-4 text-left", body ? "py-2" : "pt-2")}
       >
         {name}
       </Cell>
       <td
-        className="rounded-r-lg px-4 py-2 text-right"
+        className={clsx("rounded-r-lg px-4 text-right", body ? "py-2" : "pt-2")}
         aria-label={isDiscount ? `Minus ${formattedAmount}` : undefined}
       >
         <span>{isDiscount ? "–" : ""}</span>

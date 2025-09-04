@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Modal from "@/app/components/shared/Modal";
 import Button from "@/app/components/shared/Button";
@@ -17,7 +16,7 @@ export default function NavigationButtons({
   isEditing,
 }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const router = useRouter();
+  // const router = useRouter();
 
   function handlePreviousStepClick() {
     if (currentStep === "address") {
@@ -49,7 +48,7 @@ export default function NavigationButtons({
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title="Demo"
-        description="This is just a demo. No real cart here!"
+        description="This is just a checkout flow demo. No real cart here!"
       />
     </section>
   );

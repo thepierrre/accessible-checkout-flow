@@ -16,6 +16,10 @@ type OrderSummaryContextType = {
   setOrderSummary: Dispatch<SetStateAction<OrderSummary>>;
   setDiscount: (discount: number) => void;
   discount: number;
+  promoCode: string;
+  setPromoCode: (code: string) => void;
+  total: number;
+  setTotal: (total: number) => void;
 };
 
 export const OrderSummaryContext = createContext<
@@ -35,6 +39,8 @@ export function useOrderSummary() {
 export function OrderSummaryProvider({ children }: { children: ReactNode }) {
   const [orderSummary, setOrderSummary] =
     useState<OrderSummary>(DEFAULT_SUMMARY);
+  const [promoCode, setPromoCode] = useState("");
+  const [total, setTotal] = useState(0);
 
   const setDiscount = (discount: number) => {
     setOrderSummary((prev) => ({ ...prev, discount }));
@@ -44,7 +50,16 @@ export function OrderSummaryProvider({ children }: { children: ReactNode }) {
 
   return (
     <OrderSummaryContext.Provider
-      value={{ orderSummary, setOrderSummary, setDiscount, discount }}
+      value={{
+        orderSummary,
+        setOrderSummary,
+        setDiscount,
+        discount,
+        promoCode,
+        setPromoCode,
+        total,
+        setTotal,
+      }}
     >
       {children}
     </OrderSummaryContext.Provider>

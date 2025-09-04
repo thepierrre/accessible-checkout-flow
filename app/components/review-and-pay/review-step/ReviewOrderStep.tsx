@@ -9,10 +9,11 @@ export default function ReviewOrderStep() {
     <section className="w-full">
       <StepBadge current={2} max={3} />
       <div className="mx-auto flex flex-col">
-        <Heading label="Review order" as="h1" />
-        <h2 className="mb-6 w-full text-gray-dark">
-          Take a moment to ensure everything is correct.
-        </h2>
+        <Heading
+          label="Review order"
+          as="h1"
+          subheading="Take a moment to ensure everything is correct."
+        />
       </div>
       <div className="flex flex-col gap-4">
         <PromoCodeSection />

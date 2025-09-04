@@ -1,7 +1,12 @@
 "use client";
 
 import { clsx } from "clsx";
-import { type KeyboardEvent, type ReactNode, useState } from "react";
+import {
+  type KeyboardEvent,
+  type MouseEvent,
+  type ReactNode,
+  useState,
+} from "react";
 
 type Props = {
   children: (props: {
@@ -10,12 +15,13 @@ type Props = {
     onFocus: () => void;
     onBlur: () => void;
     onKeyDown: (e: KeyboardEvent) => void;
+    onClick: (e: MouseEvent) => void;
     "aria-describedby": string;
   }) => ReactNode;
   delay?: number;
   id: string;
   label: string;
-  position: "left" | "right";
+  position: "left" | "right" | "bottom";
 };
 
 export default function Tooltip({
@@ -28,9 +34,17 @@ export default function Tooltip({
   const [isShown, setIsShown] = useState(false);
   let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
-  function showTooltip() {
+  function showTooltip(autoHide = false, delay: number) {
+    if (timeoutId) clearTimeout(timeoutId);
+
     timeoutId = setTimeout(() => {
       setIsShown(true);
+
+      if (autoHide) {
+        timeoutId = setTimeout(() => {
+          setIsShown(false);
+        }, 2000);
+      }
     }, delay);
   }
 
@@ -49,15 +63,20 @@ export default function Tooltip({
     setIsShown(false);
   }
 
+  function handleClick() {
+    showTooltip(true, 0);
+  }
+
   return (
-    <div className="relative flex items-center">
+    <div className="relative flex hidden items-center sm:block">
       <div className="cursor-pointer">
         {children({
-          onMouseEnter: showTooltip,
+          onMouseEnter: () => showTooltip(false, delay),
           onMouseLeave: hideTooltip,
-          onFocus: showTooltip,
+          onFocus: () => showTooltip(false, delay),
           onBlur: hideTooltip,
           onKeyDown: handleKeyDown,
+          onClick: handleClick,
           "aria-describedby": id,
         })}
       </div>

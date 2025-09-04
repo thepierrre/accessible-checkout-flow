@@ -1,5 +1,5 @@
 import Row from "@/app/components/review-and-pay/review-step/table/Row";
-import type { Product } from "@/app/context/OrderSummaryContext";
+import type { Product } from "@/app/types/orderSummary";
 
 interface Props {
   products: Product[];

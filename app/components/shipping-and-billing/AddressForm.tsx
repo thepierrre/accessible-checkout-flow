@@ -91,7 +91,7 @@ export default function AddressForm({ ref = null, addressType }: Props) {
         placeholder="81002"
         addressType={addressType}
         autoComplete="postal-code"
-        type="text"
+        type="tel"
       />
       <Input
         name="region"

@@ -90,16 +90,19 @@ export default function Modal({
         aria-modal="true"
         aria-labelledby={`${id}-title`}
         aria-describedby={`${id}-description`}
-        className="relative h-full max-h-28 w-full max-w-md rounded-lg bg-white p-4"
+        className="relative rounded-lg bg-white px-10 py-8"
       >
         <div className="flex flex-col items-center gap-3">
-          <h2
+          <h1
             id={`${id}-title`}
             className="font-semibold text-2xl text-blue-primary"
           >
             {title}
-          </h2>
-          <p id={`${id}-description`} className="text-gray-600">
+          </h1>
+          <p
+            id={`${id}-description`}
+            className="text-gray-600 text-sm sm:text-md"
+          >
             {description}
           </p>
         </div>
@@ -108,9 +111,11 @@ export default function Modal({
           type="button"
           aria-label="Close modal"
           onClick={onClose}
-          className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full text-gray-500 transition-200 hover:bg-gray-100 hover:text-gray-700"
+          className="absolute top-3 right-3 flex h-10 w-10 items-center justify-center rounded-full text-gray-500 transition-200 hover:bg-gray-100 hover:text-gray-700"
         >
-          <span aria-hidden="true">✕</span>
+          <span aria-hidden="true" className="text-xl">
+            ✕
+          </span>
         </button>
       </div>
     </div>,

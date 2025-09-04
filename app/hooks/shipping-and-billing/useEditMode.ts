@@ -55,8 +55,7 @@ export default function useEditMode({
         address: "",
         zip: "",
         country: "",
-        phoneCode: "+1",
-        phoneNumber: "",
+        phone: "",
         email: "",
         region: "",
       });

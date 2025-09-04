@@ -1,19 +1,11 @@
 import { clsx } from "clsx";
 import { type ChangeEvent, useEffect, useId, useRef, useState } from "react";
-import {
-  useFormContext,
-  UseFormRegister,
-  UseFormSetValue,
-} from "react-hook-form";
-import type {
-  AddressType,
-  CombinedAddressFormData,
-  CountriesWithCodes,
-} from "@/app/schemas/addressFormSchema";
-import type { FieldNameType } from "@/app/components/shipping-and-billing/AddressForm";
+import type { UseFormSetValue } from "react-hook-form";
+import type { CombinedAddressFormData } from "@/app/schemas/addressFormSchema";
 import Input from "@/app/components/shipping-and-billing/Input";
 import useElementWidth from "@/app/hooks/ui/useElementWidth";
 import useListboxNavigation from "@/app/hooks/navigation/useListboxNavigation";
+import { AddressType } from "@/app/types/address";
 
 interface Props {
   countries: string[];
@@ -42,9 +34,9 @@ export default function CountriesDatalist({
   const [datalistIsShown, setDatalistIsShown] = useState(false);
   const options = Object.keys(countries);
   const { activeIndex, setActiveIndex, handleKeyDown } = useListboxNavigation({
-    options: Object.keys(countries),
-    onSelect: () => {
-      onCountryClick(options[activeIndex], addressType);
+    options: countries,
+    onSelect: (country: string) => {
+      onCountryClick(country, addressType);
       setDatalistIsShown(false);
       inputRef.current?.focus();
     },
@@ -101,7 +93,6 @@ export default function CountriesDatalist({
         onKeyDown={handleKeyDown}
         role="combobox"
         ariaControls={countriesListId}
-        ariaExpanded={datalistIsShown}
         ariaActivedescendant={
           datalistIsShown ? `country-option-${activeIndex}` : undefined
         }
@@ -113,7 +104,7 @@ export default function CountriesDatalist({
           ref={datalistRef}
           id={countriesListId}
           style={{ width: inputWidth }}
-          className="absolute top-20 z-50 flex max-h-44 flex-col overflow-y-auto rounded-md bg-white py-2 text-sm shadow-gray-400 shadow-md"
+          className="absolute top-20 z-50 flex max-h-64 flex-col overflow-y-auto rounded-md bg-white py-2 shadow-gray-400 shadow-md"
         >
           {countries.length > 0 ? (
             countries.map((c, i) => (
@@ -136,7 +127,7 @@ export default function CountriesDatalist({
                 role="option"
                 aria-selected={activeIndex === i}
                 className={clsx(
-                  "cursor-pointer px-4 py-2",
+                  "cursor-pointer p-2 text-sm",
                   activeIndex === i && "bg-blue-primary text-white",
                 )}
               >
@@ -144,7 +135,7 @@ export default function CountriesDatalist({
               </li>
             ))
           ) : (
-            <p className="px-4 py-2">No matching countries</p>
+            <p className="px-4 py-2 text-md">No matching countries</p>
           )}
         </ul>
       )}

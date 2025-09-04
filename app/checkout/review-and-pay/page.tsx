@@ -23,8 +23,11 @@ export default function PaymentPage() {
   if (!canAccess) return null;
 
   return (
-    <main className="mx-auto my-4 w-160 rounded-xl bg-gradient-to-br from-white to-gray-50 p-10 shadow-md">
+    <main className="animate-fade-in-up my-10 mx-auto w-full px-6 sm:w-160 sm:rounded-xl sm:bg-gradient-to-br sm:from-gray-extralight sm:to-gray-light sm:p-10 sm:shadow-md ">
       <ReviewOrderStep />
+      <div className="my-6">
+        <span className="block w-full border-t border-gray-300" />
+      </div>
       <PaymentStep />
     </main>
   );

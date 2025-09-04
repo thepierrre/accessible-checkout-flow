@@ -1,78 +1,19 @@
 "use client";
 
 import {
-  CardCvcElement,
-  CardExpiryElement,
-  CardNumberElement,
-  Elements,
   ExpressCheckoutElement,
-  PaymentElement,
-  PaymentRequestButtonElement,
-  useCheckout,
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import * as stripeJs from "@stripe/stripe-js";
-import {
-  type PaymentRequest,
-  StripePaymentElementOptions,
-} from "@stripe/stripe-js";
-import { useEffect, useState } from "react";
-import { convertToSubcurrency } from "@/app/lib/convertToSubcurrency";
 
 interface Props {
-  amount: number;
+  clientSecret: string;
 }
 
-export default function ExpressCheckout({ amount }: Props) {
+export default function ExpressCheckout({ clientSecret }: Props) {
   const stripe = useStripe();
   const elements = useElements();
-  const [paymentRequest, setPaymentRequest] = useState<PaymentRequest | null>(
-    null,
-  );
 
-  const [errorMessage, setErrorMessage] = useState<string>();
-  const [clientSecret, setClientSecret] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-
-  // useEffect(() => {
-  //   if (stripe) {
-  //     const pr: PaymentRequest | null = stripe.paymentRequest({
-  //       country: "DE",
-  //       currency: "eur",
-  //       total: {
-  //         label: "Demo total",
-  //         amount: convertToSubcurrency(amount),
-  //       },
-  //       requestPayerName: true,
-  //       requestPayerEmail: true,
-  //     });
-  //
-  //     // Check the availability of the ExpressCheckout Request API.
-  //
-  //     if (pr) {
-  //       pr.canMakePayment().then((result) => {
-  //         if (result) {
-  //           setPaymentRequest(pr);
-  //         }
-  //       });
-  //     }
-  //   }
-  // }, [stripe, amount]);
-
-  useEffect(() => {
-    fetch("/api/create-payment-intent", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ amount: convertToSubcurrency(amount) }),
-    })
-      .then((response) => response.json())
-      .then((data) => setClientSecret(data.clientSecret));
-  }, [amount]);
-
-  // FIXME: Improve the UX for the loading state.
   if (!clientSecret || !stripe || !elements) {
     return <div>Loading...</div>;
   }
@@ -98,14 +39,15 @@ export default function ExpressCheckout({ amount }: Props) {
 
     if (error) {
       console.error(error);
-      // This point is reached only if there's an immediate error when confirming the review-step-and-pay. Show the error to your customer (for example, review-step-and-pay details incomplete).
+      // This point is reached only if there's an immediate error when confirming the review-step-and-pay.
+      // Show the error to your customer (for example, review-step-and-pay details incomplete).
     } else {
       // Your customer will be redirected to your `return_url`.
     }
   };
 
   return (
-    <section className="flex child:w-full w-full">
+    <section className="flex child:w-full child:mb-3 w-full">
       {clientSecret && (
         <ExpressCheckoutElement onConfirm={handleExpressCheckout} />
       )}

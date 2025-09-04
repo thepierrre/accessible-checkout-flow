@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import type { UseFormSetValue } from "react-hook-form";
-import type { CombinedAddressFormData } from "@/app/schemas/addressFormSchema";
 import {
   getAddressData,
   isBillingSameAsShipping,
 } from "@/app/lib/addressDataUtils";
+import type { CombinedAddressFormData } from "@/app/schemas/addressFormSchema";
 
 export default function usePersistedAddress(
   setValue: UseFormSetValue<CombinedAddressFormData>,

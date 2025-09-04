@@ -2,62 +2,38 @@
 
 import { clsx } from "clsx";
 import Image from "next/image";
-import {
-  BaseSyntheticEvent,
-  type Dispatch,
-  FormEvent,
-  type SetStateAction,
-  useRef,
-  useState,
-  useId,
-} from "react";
+import { useId } from "react";
 import { type FieldErrors, useForm } from "react-hook-form";
 import { getDiscount as getDiscountAction } from "@/app/lib/actions";
 import removeIcon from "../../../../public/icons/removeIcon.svg";
-import removeIconHover from "../../../../public/icons/removeIconHover.svg";
-import Button from "@/app/components/shared/Button";
 import { useOrderSummary } from "@/app/context/OrderSummaryContext";
+import Button from "@/app/components/shared/Button";
 
 type FormValues = {
   promoCode: string;
 };
 
-// interface Props {
-//   // applyDiscount: (discount: number) => void;
-//   //discountApplied: number | undefined;
-//   //setDiscountApplied: Dispatch<SetStateAction<number | undefined>>;
-// }
-
-export default function PromoCodeForm(
-  //     {
-  //   // applyDiscount,
-  //   //discountApplied,
-  //   //setDiscountApplied,
-  // }: Props
-) {
-  const { discount, setDiscount } = useOrderSummary();
+export default function PromoCodeForm() {
+  const { discount, setDiscount, promoCode, setPromoCode } = useOrderSummary();
   const promoCodeInputId = useId();
   const promoCodeFormId = useId();
-  const [isRemoveIconHovered, setIsRemoveIconHovered] = useState(false);
   const form = useForm<FormValues>({
     defaultValues: {
-      promoCode: "",
+      promoCode: promoCode || "",
     },
   });
-  const removeIconRef = useRef<HTMLDivElement | null>(null);
   const {
     handleSubmit,
     register,
     watch,
     setError,
-    setValue,
     formState: { errors },
+    reset,
   } = form;
 
   async function onValidFormSubmit(data: FormValues) {
     try {
       const { promoCode } = data;
-      console.log(promoCode);
 
       const response = await getDiscountAction(promoCode);
       const { success, message, errorMessage } = response;
@@ -70,9 +46,9 @@ export default function PromoCodeForm(
         const isMessageNumericString = !isNaN(+(+message).toString());
         if (isMessageNumericString) {
           setDiscount(+message);
+          setPromoCode(promoCode);
         }
       }
-      console.log(response);
       console.log("error:", errors);
     } catch (error) {
       console.error(error);
@@ -81,7 +57,8 @@ export default function PromoCodeForm(
 
   function handleRemovePromoCode() {
     setDiscount(0);
-    setValue("promoCode", "");
+    setPromoCode("");
+    reset({ promoCode: "" });
   }
 
   async function onInvalidFormSubmit(errors: FieldErrors<FormValues>) {
@@ -107,7 +84,7 @@ export default function PromoCodeForm(
               autoComplete="off"
               disabled={discount !== 0}
               className={clsx(
-                "h-10 w-full rounded-md border px-2 text-base focus:outline-none focus:ring-1",
+                "h-10 w-full rounded-md border px-2 text-md focus:outline-none focus:ring-1 sm:h-8 sm:text-sm",
                 errors.promoCode?.message
                   ? "border-red-primary focus:ring-red-primary"
                   : "border-gray-300 focus:border-blue-primary focus:ring-blue-primary",
@@ -124,36 +101,26 @@ export default function PromoCodeForm(
           </div>
 
           {discount === 0 ? (
-            <button
+            <Button
               type="submit"
-              className="h-10 w-20 text-white text-sm rounded-md self-end mb-0.5 mr-3 disabled:cursor-not-allowed bg-blue-primary hover:bg-blue-semidark disabled:bg-blue-semilight"
+              size="small"
               disabled={isInputEmpty || errors.promoCode?.message !== undefined}
-            >
-              Apply
-            </button>
+              label="Apply"
+            />
           ) : (
-            //TODO examine this
-            // biome-ignore lint/a11y/noStaticElementInteractions: <explanation>
-            // biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-            <div
-              ref={removeIconRef}
-              onMouseEnter={() => setIsRemoveIconHovered(true)}
-              onMouseLeave={() => setIsRemoveIconHovered(false)}
-              className="flex items-center mr-3 cursor-pointer"
+            <button
+              type="button"
+              className="mr-3 flex cursor-pointer items-center"
               onClick={handleRemovePromoCode}
             >
-              <Image
-                src={isRemoveIconHovered ? removeIconHover : removeIcon}
-                alt="Remove"
-                className="h-6 w-6"
-              />
-            </div>
+              <Image src={removeIcon} alt="Remove" className="h-6 w-6" />
+            </button>
           )}
         </div>
         <p
           className={clsx(
             "overflow-hidden text-red-primary text-sm transition-[max-height] duration-700",
-            errors.promoCode?.message ? "max-h-8" : "max-h-0",
+            errors.promoCode?.message ? "mt-1 max-h-8" : "max-h-0",
           )}
         >
           {errors.promoCode?.message ?? ""}

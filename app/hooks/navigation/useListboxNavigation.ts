@@ -27,12 +27,10 @@ export default function useListboxNavigation<T>({
     }
   }, [activeIndex, isOpen, options.length]);
 
-  //FIXME
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (options.length === 0) return;
 
-      //TODO: Check for more keys accessibility
       switch (e.key) {
         case " ":
           if (trigger === "button") {
@@ -79,7 +77,7 @@ export default function useListboxNavigation<T>({
           break;
       }
     },
-    [activeIndex, isOpen, onCancel, onOpen, onSelect, onTab, options],
+    [activeIndex, isOpen, onCancel, onOpen, onSelect, onTab, options, trigger],
   );
 
   return { activeIndex, setActiveIndex, handleKeyDown };

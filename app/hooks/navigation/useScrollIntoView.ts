@@ -13,7 +13,7 @@ export default function useScrollIntoView({
   block = "start",
   behavior = "smooth",
 }: useScrollIntoViewProps) {
-  //TODO
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (ref.current) {
       ref.current.scrollIntoView({

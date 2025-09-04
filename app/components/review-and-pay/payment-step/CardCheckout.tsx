@@ -5,101 +5,68 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import type {
-  PaymentRequest,
-  StripePaymentElementOptions,
-} from "@stripe/stripe-js";
-import * as stripeJs from "@stripe/stripe-js";
-import { useEffect, useState } from "react";
-import { convertToSubcurrency } from "@/app/lib/convertToSubcurrency";
+import { useState, type FormEvent } from "react";
+import type { StripePaymentElementOptions } from "@stripe/stripe-js";
 import Button from "@/app/components/shared/Button";
 
 interface Props {
   amount: number;
+  clientSecret: string;
 }
 
-export default function CardCheckout({ amount }: Props) {
+export default function CardCheckout({ amount, clientSecret }: Props) {
   const stripe = useStripe();
   const elements = useElements();
-  const [paymentRequest, setPaymentRequest] = useState<PaymentRequest | null>(
-    null,
-  );
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const [errorMessage, setErrorMessage] = useState<string>();
-  const [clientSecret, setClientSecret] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  if (!stripe || !elements) {
+    return <div>Loading card form…</div>;
+  }
 
-  useEffect(() => {
-    fetch("/api/create-payment-intent", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ amount: convertToSubcurrency(amount) }),
-    })
-      .then((response) => response.json())
-      .then((data) => setClientSecret(data.clientSecret));
-  }, [amount]);
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
 
-  async function handleCardCheckout(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+    if (!stripe || !elements) return;
 
-    setLoading(true);
-
-    if (!stripe || !elements) {
-      setLoading(false);
-      return;
-    }
+    // setLoading(true);
 
     const { error: submitError } = await elements.submit();
     if (submitError) {
-      setErrorMessage(submitError.message);
-      setLoading(false);
+      setErrorMessage(submitError.message || "Invalid payment details");
+      // setLoading(false);
       return;
     }
 
-    const { error: confirmPaymentError } = await stripe.confirmPayment({
+    const intentId = clientSecret?.split("_secret")[0];
+
+    if (intentId) {
+      sessionStorage.setItem("lastOrder", JSON.stringify({ intentId }));
+    }
+
+    const { error } = await stripe.confirmPayment({
       elements,
       clientSecret,
       confirmParams: {
-        return_url: `${window.location.origin}/payment-success`,
+        return_url: `${window.location.origin}/checkout/order-complete?session_id={CHECKOUT_SESSION_ID}`,
       },
     });
 
-    if (confirmPaymentError) {
-      setErrorMessage(confirmPaymentError.message);
+    if (error) {
+      setErrorMessage(error.message || "Something went wrong");
+      console.log("inside3");
     }
-
-    setLoading(false);
-  }
-
-  // FIXME: Improve the UX for the loading state.
-  if (!clientSecret || !stripe || !elements) {
-    return <div>Loading...</div>;
   }
 
   const options: StripePaymentElementOptions = {
-    wallets: {
-      googlePay: "never",
-      applePay: "never",
-    },
+    wallets: { googlePay: "never", applePay: "never" },
     paymentMethodOrder: ["card"],
-    layout: {
-      type: "tabs",
-    },
+    layout: { type: "tabs" },
   };
 
   return (
-    <div className="flex w-full flex-col gap-8">
-      {clientSecret && (
-        <form
-          onSubmit={handleCardCheckout}
-          className="flex child:w-full flex-col gap-4"
-        >
-          <PaymentElement options={options} />
-          <Button label={`Pay €${amount}`} barButton={true} />
-        </form>
-      )}
-    </div>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <PaymentElement options={options} />
+      <Button type="submit" label={`Pay €${amount}`} barButton />
+    </form>
   );
 }
