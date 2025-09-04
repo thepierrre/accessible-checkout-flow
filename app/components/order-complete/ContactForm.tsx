@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import Button from "@/app/components/shared/Button";
-import { type FormEvent, useId, useState } from "react";
+import { type FormEvent, useEffect, useId, useState } from "react";
 
 type FormErrors = {
   email?: string;
@@ -16,6 +16,25 @@ interface Props {
 export default function ContactForm({ orderEmail }: Props) {
   const questionTextareaId = useId();
   const emailInputId = useId();
+  const formHeadingId = useId();
+  const formId = useId();
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [formErrors, setFormErrors] = useState<FormErrors>({});
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isFadingOut, setIsFadingOut] = useState(false);
+
+  useEffect(() => {
+    if (!isFormOpen) return;
+
+    function handleEscKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setIsFormOpen(false);
+      }
+    }
+
+    document.addEventListener("keydown", handleEscKeyDown);
+    return () => document.removeEventListener("keydown", handleEscKeyDown);
+  }, [isFormOpen]);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -56,19 +75,14 @@ export default function ContactForm({ orderEmail }: Props) {
 
     setTimeout(() => {
       setIsFadingOut(true);
-    }, 2500);
+    }, 4500);
 
     setTimeout(() => {
       setSuccessMessage("");
       setIsFadingOut(false);
-    }, 3000);
+    }, 5000);
   }
 
-  const formId = useId();
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [formErrors, setFormErrors] = useState<FormErrors>({});
-  const [successMessage, setSuccessMessage] = useState("");
-  const [isFadingOut, setIsFadingOut] = useState(false);
   return (
     <div className="space-y-4 text-center">
       <button
@@ -105,9 +119,12 @@ export default function ContactForm({ orderEmail }: Props) {
           className="mt-4 space-y-3 text-left"
           onSubmit={handleSubmit}
           noValidate
+          aria-labelledby={formHeadingId}
         >
-          <fieldset className="flex flex-col gap-1">
-            <legend className="sr-only">Contact form</legend>
+          <h2 className="sr-only" id={formHeadingId}>
+            Contact form
+          </h2>
+          <div className="flex flex-col gap-1">
             <label htmlFor={emailInputId} className="block font-medium">
               Your email*
             </label>
@@ -130,7 +147,7 @@ export default function ContactForm({ orderEmail }: Props) {
               )}
             />
             <p
-              id={`${questionTextareaId}-error-message`}
+              id={`${emailInputId}-error-message`}
               className={clsx(
                 "overflow-hidden text-red-primary text-sm transition-[max-height] duration-700",
                 formErrors.email ? "max-h-8" : "max-h-0",
@@ -138,8 +155,8 @@ export default function ContactForm({ orderEmail }: Props) {
             >
               {formErrors.email || ""}
             </p>
-          </fieldset>
-          <fieldset className="flex flex-col gap-1">
+          </div>
+          <div className="flex flex-col gap-1">
             <label htmlFor={questionTextareaId} className="block font-medium">
               Your message*
             </label>
@@ -149,7 +166,7 @@ export default function ContactForm({ orderEmail }: Props) {
               aria-required="true"
               aria-invalid={!!formErrors.question}
               aria-describedby={
-                formErrors.email
+                formErrors.question
                   ? `${questionTextareaId}-error-message`
                   : undefined
               }
@@ -171,7 +188,7 @@ export default function ContactForm({ orderEmail }: Props) {
             >
               {formErrors.question || ""}
             </p>
-          </fieldset>
+          </div>
 
           <div className="flex justify-center">
             <Button type="submit" label="Send" />

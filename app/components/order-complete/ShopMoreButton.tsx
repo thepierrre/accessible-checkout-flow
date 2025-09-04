@@ -18,7 +18,7 @@ export default function ShopMoreButton() {
         isOpen={isDemoModalOpen}
         onClose={() => setIsDemoModalOpen(false)}
         title="Demo"
-        description="This is just a demo. No real shop here."
+        description="This is just a checkout flow demo. No real shop here."
       />
     </>
   );

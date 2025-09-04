@@ -48,7 +48,7 @@ export default function NavigationButtons({
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title="Demo"
-        description="This is just a checkout flow demo. No real cart here!"
+        description="This is just a checkout flow demo. No real cart here."
       />
     </section>
   );

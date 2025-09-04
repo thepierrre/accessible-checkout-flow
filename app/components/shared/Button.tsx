@@ -67,7 +67,9 @@ export default function Button({
       aria-pressed={ariaPressed}
       onClick={onClick}
       className={clsx(
-        disabled ? "cursor-not-allowed" : "cursor-pointer",
+        disabled
+          ? "cursor-not-allowed bg-blue-semilight hover:bg-blue-semilight"
+          : "cursor-pointer",
         size === "small" ? classes.small : classes.regular,
         variant === "primary" && classes.primary,
         variant === "secondary" && classes.secondary,

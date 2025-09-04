@@ -52,7 +52,7 @@ export function ReturningCustomer() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         title="Demo"
-        description="This is just a checkout flow demo. No real login or signup here!"
+        description="This is just a checkout flow demo. No real login or signup here."
       />
     </section>
   );

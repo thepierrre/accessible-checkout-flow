@@ -9,10 +9,11 @@ export default function OrderCompleteInfo({ orderEmail }: Props) {
         <span className="relative z-10 px-8 text-white">Thank you!</span>
         <span className="-skew-x-12 absolute inset-0 bg-blue-primary"></span>
       </h1>
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-3">
         <p>
-          Your order has been placed successfully and we&#39;ve sent a
-          confirmation to <span className="font-semibold">{orderEmail}</span>.
+          Your order has been placed successfully.
+          <br /> We&#39;ve sent a confirmation to{" "}
+          <span className="font-semibold">{orderEmail}</span>.
         </p>
         <p>We&#39;ll let you know as soon as we&#39;ve shipped your order.</p>
       </div>
