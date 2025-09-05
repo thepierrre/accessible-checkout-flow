@@ -8,6 +8,7 @@ import usePopupNavigation from "@/app/hooks/navigation/usePopupNavigation";
 import type { AddressType } from "@/app/types/address";
 import { usePopupStyle } from "@/app/hooks/ui/usePopupStyle";
 import InputErrorMessage from "@/app/components/shipping-and-billing/InputErrorMessage";
+import { useActiveScroll } from "@/app/hooks/navigation/useActiveScroll";
 
 interface Props {
   countries: string[];
@@ -65,6 +66,7 @@ export default function CountryPopup({
   });
   const inputWidth = useElementWidth(inputRef);
   const popupStyle = usePopupStyle(inputRef, inputWidth);
+  useActiveScroll(optionRefs, activeIndex, isOpen);
 
   return (
     // biome-ignore lint/a11y/noStaticElementInteractions: <explanation>
