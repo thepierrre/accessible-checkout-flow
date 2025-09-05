@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import { type ChangeEvent, type Ref, useId } from "react";
+import { type ChangeEvent, type KeyboardEvent, type Ref, useId } from "react";
 import { useFormContext } from "react-hook-form";
 import type { CombinedAddressFormData } from "@/app/schemas/addressFormSchema";
 import type { FieldNameType } from "@/app/components/shipping-and-billing/AddressForm";
@@ -22,7 +22,7 @@ interface Props {
   role?: string;
   ariaControls?: string;
   ariaActivedescendant?: string;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
 }
 
 export default function Input({

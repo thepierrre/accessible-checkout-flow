@@ -2,7 +2,7 @@ import { countries } from "countries-list";
 import { type ChangeEvent, type Ref, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import Heading from "@/app/components/shared/Heading";
-import CountriesDatalist from "@/app/components/shipping-and-billing/CountriesDatalist";
+import CountriesListbox from "@/app/components/shipping-and-billing/CountriesListbox";
 import Input from "@/app/components/shipping-and-billing/Input";
 import PhoneInput from "@/app/components/shipping-and-billing/PhoneInput";
 import { getCountryMatchesForNames } from "@/app/lib/countryQueries";
@@ -101,7 +101,7 @@ export default function AddressForm({ ref = null, addressType }: Props) {
         autoComplete="address-level1"
         type="text"
       />
-      <CountriesDatalist
+      <CountriesListbox
         countries={suggestedCountries}
         addressType={addressType}
         country={country}

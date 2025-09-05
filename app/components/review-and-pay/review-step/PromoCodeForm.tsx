@@ -2,18 +2,24 @@
 
 import { clsx } from "clsx";
 import Image from "next/image";
-import { useId } from "react";
-import { type FieldErrors, useForm } from "react-hook-form";
+import { useId, useState } from "react";
+import { useForm } from "react-hook-form";
 import { getDiscount as getDiscountAction } from "@/app/lib/actions";
 import removeIcon from "../../../../public/icons/removeIcon.svg";
 import { useOrderSummary } from "@/app/context/OrderSummaryContext";
 import Button from "@/app/components/shared/Button";
+import { useOnlineStatus } from "@/app/hooks/useOnlineStatus";
+import { useAppMessage } from "@/app/context/AppMessageContext";
+import ErrorContainer from "@/app/components/shipping-and-billing/ErrorContainer";
 
 type FormValues = {
   promoCode: string;
 };
 
 export default function PromoCodeForm() {
+  const { isOnline, notifyOffline } = useOnlineStatus();
+  const [isLoading, setIsLoading] = useState(false);
+  const { appMessage, setAppMessage, clearAppMessage } = useAppMessage();
   const { discount, setDiscount, promoCode, setPromoCode } = useOrderSummary();
   const promoCodeInputId = useId();
   const promoCodeFormId = useId();
@@ -31,7 +37,15 @@ export default function PromoCodeForm() {
     reset,
   } = form;
 
-  async function onValidFormSubmit(data: FormValues) {
+  async function onFormSubmit(data: FormValues) {
+    if (!isOnline) {
+      notifyOffline();
+      return;
+    }
+
+    clearAppMessage();
+    setIsLoading(true);
+
     try {
       const { promoCode } = data;
 
@@ -52,6 +66,14 @@ export default function PromoCodeForm() {
       console.log("error:", errors);
     } catch (error) {
       console.error(error);
+
+      setAppMessage(
+        typeof error === "string"
+          ? error
+          : "Something went wrong. Please try again.",
+      );
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -61,18 +83,15 @@ export default function PromoCodeForm() {
     reset({ promoCode: "" });
   }
 
-  async function onInvalidFormSubmit(errors: FieldErrors<FormValues>) {
-    console.log(errors);
-  }
-
   const isInputEmpty = watch("promoCode") === "";
 
   return (
     <div className="w-full">
+      {appMessage && <ErrorContainer errorMessage={appMessage} />}
       <form
         id={promoCodeFormId}
         name="promo-code-form"
-        onSubmit={handleSubmit(onValidFormSubmit, onInvalidFormSubmit)}
+        onSubmit={handleSubmit(onFormSubmit)}
         className="mx-2 flex w-full flex-col p-2"
       >
         <div className="flex w-full gap-2">
@@ -93,18 +112,17 @@ export default function PromoCodeForm() {
                   : "pl-2",
               )}
             ></input>
-            {discount !== 0 && (
-              <span className="absolute left-2 top-1/2 -translate-y-1/2 text-teal-500">
-                ✔
-              </span>
-            )}
           </div>
 
           {discount === 0 ? (
             <Button
               type="submit"
               size="small"
-              disabled={isInputEmpty || errors.promoCode?.message !== undefined}
+              disabled={
+                isLoading ||
+                isInputEmpty ||
+                errors.promoCode?.message !== undefined
+              }
               label="Apply"
             />
           ) : (

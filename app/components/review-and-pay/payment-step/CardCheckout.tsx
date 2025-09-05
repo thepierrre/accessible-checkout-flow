@@ -8,6 +8,9 @@ import {
 import { useState, type FormEvent } from "react";
 import type { StripePaymentElementOptions } from "@stripe/stripe-js";
 import Button from "@/app/components/shared/Button";
+import { useOnlineStatus } from "@/app/hooks/useOnlineStatus";
+import { useAppMessage } from "@/app/context/AppMessageContext";
+import ErrorContainer from "@/app/components/shipping-and-billing/ErrorContainer";
 
 interface Props {
   amount: number;
@@ -15,9 +18,11 @@ interface Props {
 }
 
 export default function CardCheckout({ amount, clientSecret }: Props) {
+  const { isOnline, notifyOffline } = useOnlineStatus();
+  const { appMessage, setAppMessage, clearAppMessage } = useAppMessage();
   const stripe = useStripe();
+  const [isLoading, setIsLoading] = useState(false);
   const elements = useElements();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   if (!stripe || !elements) {
     return <div>Loading card form…</div>;
@@ -26,14 +31,25 @@ export default function CardCheckout({ amount, clientSecret }: Props) {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
+    if (!isOnline) {
+      notifyOffline();
+      return;
+    }
+
+    clearAppMessage();
+
     if (!stripe || !elements) return;
 
-    // setLoading(true);
+    setIsLoading(true);
 
     const { error: submitError } = await elements.submit();
     if (submitError) {
-      setErrorMessage(submitError.message || "Invalid payment details");
-      // setLoading(false);
+      setIsLoading(false);
+      if (submitError.type === "validation_error") {
+        console.error(submitError.message);
+        return;
+      }
+      setAppMessage(submitError.message || "Invalid payment details");
       return;
     }
 
@@ -52,9 +68,10 @@ export default function CardCheckout({ amount, clientSecret }: Props) {
     });
 
     if (error) {
-      setErrorMessage(error.message || "Something went wrong");
-      console.log("inside3");
+      console.error(error);
     }
+
+    setIsLoading(false);
   }
 
   const options: StripePaymentElementOptions = {
@@ -66,7 +83,14 @@ export default function CardCheckout({ amount, clientSecret }: Props) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <PaymentElement options={options} />
-      <Button type="submit" label={`Pay €${amount}`} barButton />
+      {!isOnline && appMessage && <ErrorContainer errorMessage={appMessage} />}
+      <Button
+        type="submit"
+        label={`Pay €${amount}`}
+        barButton
+        disabled={isLoading}
+        isLoading={isLoading}
+      />
     </form>
   );
 }

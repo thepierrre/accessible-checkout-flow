@@ -5,12 +5,18 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
+import { useOnlineStatus } from "@/app/hooks/useOnlineStatus";
+import { useAppMessage } from "@/app/context/AppMessageContext";
+import { useRouter } from "next/navigation";
 
 interface Props {
   clientSecret: string;
 }
 
 export default function ExpressCheckout({ clientSecret }: Props) {
+  const { isOnline, notifyOffline } = useOnlineStatus();
+  const router = useRouter();
+  const { setAppMessage, clearAppMessage } = useAppMessage();
   const stripe = useStripe();
   const elements = useElements();
 
@@ -19,6 +25,13 @@ export default function ExpressCheckout({ clientSecret }: Props) {
   }
 
   const handleExpressCheckout = async () => {
+    if (!isOnline) {
+      notifyOffline();
+      return;
+    }
+
+    clearAppMessage();
+
     const intentId = clientSecret?.split("_secret")[0];
 
     if (intentId) {
@@ -26,28 +39,22 @@ export default function ExpressCheckout({ clientSecret }: Props) {
     }
 
     const { error } = await stripe.confirmPayment({
-      // `Elements` instance that's used to create the Express Checkout Element.
       elements,
-      // `clientSecret` from the created PaymentIntent
       clientSecret,
       confirmParams: {
         return_url: `${window.location.origin}/checkout/order-complete?session_id={CHECKOUT_SESSION_ID}`,
       },
-      // Uncomment below if you only want redirect for redirect-based payments.
-      // redirect: 'if_required',
     });
 
     if (error) {
+      setAppMessage(error.message ?? "Payment error. Please try again.");
+      router.push("/checkout/review-and-pay");
       console.error(error);
-      // This point is reached only if there's an immediate error when confirming the review-step-and-pay.
-      // Show the error to your customer (for example, review-step-and-pay details incomplete).
-    } else {
-      // Your customer will be redirected to your `return_url`.
     }
   };
 
   return (
-    <section className="flex child:w-full child:mb-3 w-full">
+    <section className="child:mb-3 flex child:w-full w-full">
       {clientSecret && (
         <ExpressCheckoutElement onConfirm={handleExpressCheckout} />
       )}

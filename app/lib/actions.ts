@@ -4,7 +4,7 @@ import type { CombinedAddressFormData } from "@/app/schemas/addressFormSchema";
 import type { ServerResponse } from "@/app/types/serverTypes";
 
 export async function getDiscount(promoCode: string): Promise<ServerResponse> {
-  if (promoCode === "TIMEFORCOFFEE") {
+  if (promoCode.toLowerCase() === "TIMEFORCOFFEE".toLowerCase()) {
     return { success: true, message: "10" };
   } else if (promoCode === "SALE-XXL") {
     return { success: true, message: "25" };

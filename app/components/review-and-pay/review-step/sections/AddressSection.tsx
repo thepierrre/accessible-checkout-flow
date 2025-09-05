@@ -25,7 +25,7 @@ export default function AddressSection({ type }: Props) {
   const billingSameAsShipping = isBillingSameAsShipping();
 
   return (
-    <section className="mt-2 flex flex-col pb-4 border-gray-300 border-b">
+    <section className="mt-2 flex flex-col border-gray-300 border-b pb-4">
       <div className="mb-2 flex">
         <div className="mb-2 flex grow gap-2">
           <Heading label={type} as="h2" />

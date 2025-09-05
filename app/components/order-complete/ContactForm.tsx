@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import Button from "@/app/components/shared/Button";
-import { type FormEvent, useEffect, useId, useState } from "react";
+import { type FormEvent, useEffect, useId, useRef, useState } from "react";
 
 type FormErrors = {
   email?: string;
@@ -18,10 +18,17 @@ export default function ContactForm({ orderEmail }: Props) {
   const emailInputId = useId();
   const formHeadingId = useId();
   const formId = useId();
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [successMessage, setSuccessMessage] = useState("");
   const [isFadingOut, setIsFadingOut] = useState(false);
+
+  useEffect(() => {
+    if (isFormOpen && textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, [isFormOpen]);
 
   useEffect(() => {
     if (!isFormOpen) return;
@@ -161,6 +168,7 @@ export default function ContactForm({ orderEmail }: Props) {
               Your message*
             </label>
             <textarea
+              ref={textareaRef}
               id={questionTextareaId}
               name="question"
               aria-required="true"

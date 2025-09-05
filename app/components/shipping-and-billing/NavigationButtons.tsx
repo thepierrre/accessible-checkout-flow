@@ -28,7 +28,7 @@ export default function NavigationButtons({
   function getNextStepText() {
     if (currentStep === "cart") return "Shipping & Billing";
     else if (currentStep === "address") {
-      if (isEditing) return "Save Changes & Pay";
+      if (isEditing) return "Save & Pay";
       else return "Review & Pay";
     }
     return "";

@@ -57,12 +57,14 @@ export default function useListboxNavigation<T>({
           );
           break;
         case "Enter": {
-          e.preventDefault();
-          if (!isOpen) onOpen();
-          const activeEl = options[activeIndex];
-          if (activeEl) {
-            onSelect(activeEl, activeIndex);
+          if (isOpen) {
+            e.preventDefault();
+            const activeEl = options[activeIndex];
+            if (activeEl) {
+              onSelect(activeEl, activeIndex);
+            }
           }
+
           break;
         }
         case "Escape":

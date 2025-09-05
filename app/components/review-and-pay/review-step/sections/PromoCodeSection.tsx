@@ -9,7 +9,7 @@ import expandIcon from "@/public/icons/expandIcon.svg";
 import Button from "@/app/components/shared/Button";
 
 export default function PromoCodeSection() {
-  const { discount, promoCode } = useOrderSummary();
+  const { discount } = useOrderSummary();
   const [isAddingCode, setIsAddingCode] = useState(false);
 
   function handleCollapseOrExpand() {
@@ -25,7 +25,7 @@ export default function PromoCodeSection() {
   }
 
   return (
-    <section className="flex flex-col pb-4 border-gray-300 border-b">
+    <section className="flex flex-col border-gray-300 border-b pb-4">
       <div className="flex">
         <div className="mb-2 flex grow gap-2">
           <Heading label="Promo code" as="h2" />

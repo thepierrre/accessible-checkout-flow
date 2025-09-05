@@ -6,7 +6,7 @@ export default function BillingCheckbox(props: Props) {
   const checkboxId = useId();
   return (
     <section className="relative my-6 flex items-center gap-2">
-      <div className="relative">
+      <div className="relative flex items-center">
         <input
           {...props}
           id={checkboxId}
@@ -14,6 +14,7 @@ export default function BillingCheckbox(props: Props) {
           className="peer h-8 w-8 appearance-none rounded-md border-2 border-blue-primary bg-white checked:border-0 checked:bg-blue-primary focus:outline-none focus:ring-2 focus:ring-blue-primary focus:ring-offset-1 sm:h-6 sm:w-6"
         />
         <svg
+          aria-hidden="true"
           className="pointer-events-none absolute inset-0 m-auto hidden h-5 w-5 sm:h-5 sm:w-5 peer-checked:block"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -21,8 +22,7 @@ export default function BillingCheckbox(props: Props) {
           strokeWidth="3"
           strokeLinecap="round"
           strokeLinejoin="round"
-          viewBox="0 0 24 30"
-          aria-hidden="true"
+          viewBox="0 0 24 24"
         >
           <polyline points="20 6 9 17 4 12" />
         </svg>
