@@ -3,6 +3,7 @@
 import clsx from "clsx";
 import Button from "@/app/components/shared/Button";
 import { type FormEvent, useEffect, useId, useRef, useState } from "react";
+import useGeneratedIds from "@/app/hooks/useGeneratedIds";
 
 type FormErrors = {
   email?: string;
@@ -14,10 +15,14 @@ interface Props {
 }
 
 export default function ContactForm({ orderEmail }: Props) {
-  const questionTextareaId = useId();
-  const emailInputId = useId();
-  const formHeadingId = useId();
-  const formId = useId();
+  const { questionTextareaId, emailInputId, formHeadingId, formId } =
+    useGeneratedIds(
+      "questionTextareaId",
+      "emailInputId",
+      "formHeadingId",
+      "formId",
+    );
+
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formErrors, setFormErrors] = useState<FormErrors>({});

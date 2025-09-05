@@ -11,6 +11,7 @@ import Button from "@/app/components/shared/Button";
 import { useOnlineStatus } from "@/app/hooks/useOnlineStatus";
 import { useAppMessage } from "@/app/context/AppMessageContext";
 import ErrorContainer from "@/app/components/shipping-and-billing/ErrorContainer";
+import useGeneratedIds from "@/app/hooks/useGeneratedIds";
 
 type FormValues = {
   promoCode: string;
@@ -21,8 +22,11 @@ export default function PromoCodeForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { appMessage, setAppMessage, clearAppMessage } = useAppMessage();
   const { discount, setDiscount, promoCode, setPromoCode } = useOrderSummary();
-  const promoCodeInputId = useId();
-  const promoCodeFormId = useId();
+  const { promoCodeInputId, promoCodeFormId } = useGeneratedIds(
+    "promoCodeInputId",
+    "promoCodeFormId",
+  );
+
   const form = useForm<FormValues>({
     defaultValues: {
       promoCode: promoCode || "",

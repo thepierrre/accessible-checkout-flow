@@ -5,7 +5,10 @@ const DEFAULT_ADDRESS = {
   address: "",
   zip: "",
   country: "",
-  phone: "",
+  phone: {
+    phoneCode: "",
+    phoneNumber: "",
+  },
   email: "",
   region: "",
 };

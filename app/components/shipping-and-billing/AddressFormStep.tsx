@@ -2,7 +2,7 @@
 import "country-flag-icons/3x2/flags.css";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
-import { type FormEvent, useId, useRef, useState } from "react";
+import { type FormEvent, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
   type CombinedAddressFormData,
@@ -22,14 +22,17 @@ import { submitAddressForm as submitAddressFormAction } from "@/app/lib/actions"
 import { DEFAULT_FORM_VALUES } from "@/app/constants/defaultAddressFormValues";
 import { useOnlineStatus } from "@/app/hooks/useOnlineStatus";
 import { useAppMessage } from "@/app/context/AppMessageContext";
+import useGeneratedIds from "@/app/hooks/useGeneratedIds";
 
 export default function AddressFormStep() {
   const { setAddress } = useAddress();
   const { isOnline, notifyOffline } = useOnlineStatus();
   const { appMessage, setAppMessage } = useAppMessage();
-  const formTitleId = useId();
-  const formInstructionsId = useId();
-  const addressFormId = useId();
+  const { formTitleId, formInstructionsId, addressFormId } = useGeneratedIds(
+    "formTitleId",
+    "formInstructionsId",
+    "addressFormId",
+  );
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isEditing, setIsEditing] = useState<boolean | "shipping" | "billing">(
@@ -43,6 +46,7 @@ export default function AddressFormStep() {
   const form = useForm<CombinedAddressFormData>({
     resolver: zodResolver(combinedAddressFormSchema),
     mode: "onBlur",
+    reValidateMode: "onChange",
     defaultValues: DEFAULT_FORM_VALUES,
   });
 
@@ -76,7 +80,7 @@ export default function AddressFormStep() {
   }
 
   const handleFormSubmit = async (event: FormEvent) => {
-    console.log("values", getValues("shipping"), getValues("billing"));
+    console.log("shipping values", getValues("shipping"));
     event.preventDefault();
     if (isBillingSame) {
       setValue("billing", getValues("shipping"));

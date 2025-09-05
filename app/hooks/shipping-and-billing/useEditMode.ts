@@ -51,7 +51,11 @@ export default function useEditMode({
           address: "",
           zip: "",
           country: "",
-          phone: "",
+          // phone: "",
+          phone: {
+            phoneCode: "+49", // or "" if you don’t want to default
+            phoneNumber: "",
+          },
           email: "",
           region: "",
         });

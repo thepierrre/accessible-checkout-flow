@@ -1,5 +1,61 @@
-import { parsePhoneNumberFromString } from "libphonenumber-js";
+import { isValidPhoneNumber } from "libphonenumber-js";
 import { z } from "zod";
+
+const phoneSchema = z
+  .object({
+    phoneCode: z.string().optional().default(""),
+    phoneNumber: z
+      .string()
+      .max(30, "Phone number is too long.")
+      .optional()
+      .default(""),
+  })
+  .superRefine(({ phoneCode, phoneNumber }, ctx) => {
+    const num = phoneNumber?.trim() ?? "";
+
+    // Both empty => valid
+    if (!phoneCode && !num) return;
+
+    // Code empty, number present but invalid
+    if (!phoneCode && num && !/^[0-9\s\-().]+$/.test(num)) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["phoneNumber"],
+        message: "Enter a valid phone number.",
+      });
+      return;
+    }
+
+    // Code empty, number exists
+    if (!phoneCode && num) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["phoneCode"],
+        message: "Code is required if a phone number is entered.",
+      });
+      return;
+    }
+
+    // Code exists, number empty
+    if (phoneCode && !num) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["phoneNumber"],
+        message: "Phone number can’t be empty if code is entered.",
+      });
+      return;
+    }
+
+    // Both exist => check if code + number form a valid international number
+    const full = `${phoneCode}${num}`;
+    if (!isValidPhoneNumber(full)) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["phoneNumber"],
+        message: "Enter a valid phone number.",
+      });
+    }
+  });
 
 export const addressFormSchema = z.object({
   name: z
@@ -28,19 +84,7 @@ export const addressFormSchema = z.object({
     .max(100, "Country/Territory can have max. 255 characters.")
     .default(""),
 
-  phone: z
-    .string()
-    .refine(
-      (val) => {
-        if (val === "") return true;
-        const phone = parsePhoneNumberFromString(val);
-        return phone?.isValid();
-      },
-      {
-        message: "Enter a valid international phone number.",
-      },
-    )
-    .optional(),
+  phone: phoneSchema.optional(),
   email: z
     .string()
     .nonempty("Email can't be empty.")
