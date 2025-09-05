@@ -1,21 +1,36 @@
 import { type NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error("STRIPE_SECRET_KEY is required.");
+}
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2025-02-24.acacia",
 });
 
 export async function POST(request: NextRequest) {
   try {
-    const { amount } = await request.json();
+    const { amount, paymentIntentId } = await request.json();
 
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount,
-      currency: "eur",
-      // Detect available review-step-and-pay methods based on the user's browser.
+    let paymentIntent: Stripe.PaymentIntent;
+
+    if (paymentIntentId) {
+      paymentIntent = await stripe.paymentIntents.update(paymentIntentId, {
+        amount,
+      });
+    } else {
+      paymentIntent = await stripe.paymentIntents.create({
+        amount,
+        currency: "eur",
+        automatic_payment_methods: { enabled: true },
+      });
+    }
+
+    return NextResponse.json({
+      clientSecret: paymentIntent.client_secret,
+      id: paymentIntent.id,
     });
-
-    return NextResponse.json({ clientSecret: paymentIntent.client_secret });
   } catch (error) {
     console.error("Internal error: ", error);
     return NextResponse.json(

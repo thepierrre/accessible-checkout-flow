@@ -22,18 +22,25 @@ const stripePromise = loadStripe(publishableKey);
 export default function PaymentStep() {
   const { total } = useOrderSummary();
   const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
 
   useEffect(() => {
+    setClientSecret(null);
+
     fetch("/api/create-payment-intent", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         amount: convertToSubcurrency(Number(total.toFixed(2))),
+        paymentIntentId,
       }),
     })
       .then((res) => res.json())
-      .then((data) => setClientSecret(data.clientSecret));
-  }, [total]);
+      .then((data) => {
+        setClientSecret(data.clientSecret);
+        setPaymentIntentId(data.id);
+      });
+  }, [total, paymentIntentId]);
 
   if (!clientSecret) {
     return (
