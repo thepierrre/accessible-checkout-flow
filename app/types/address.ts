@@ -4,8 +4,8 @@ export type Address = {
   zip: string;
   country: string;
   phone?: {
-    phoneCode: "";
-    phoneNumber: "";
+    phoneCode: string;
+    phoneNumber: string;
   };
   email: string;
   region?: string;
