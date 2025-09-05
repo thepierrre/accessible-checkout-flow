@@ -15,12 +15,11 @@ export default function AddressSection({ type }: Props) {
 
   const addressType = combinedAddress[type];
 
-  console.log("addressType", addressType);
-
   if (!addressType) return;
 
-  const { email, name, address, zip, region, country, phoneCode, phoneNumber } =
-    addressType;
+  const { email, name, address, zip, region, country, phone } = addressType;
+
+  const { phoneCode, phoneNumber } = phone ?? {};
 
   const billingSameAsShipping = isBillingSameAsShipping();
 
@@ -53,7 +52,7 @@ export default function AddressSection({ type }: Props) {
             <p>{country}</p>
             {phoneCode && phoneNumber && (
               <p className="flex gap-1">
-                <span>(+{phoneCode})</span>
+                <span>({phoneCode})</span>
                 <span>{phoneNumber}</span>
               </p>
             )}
