@@ -22,7 +22,6 @@ export default function ContactForm({ orderEmail }: Props) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [formErrors, setFormErrors] = useState<FormErrors>({});
   const [successMessage, setSuccessMessage] = useState("");
-  const [isFadingOut, setIsFadingOut] = useState(false);
 
   useEffect(() => {
     if (isFormOpen && textareaRef.current) {
@@ -79,15 +78,6 @@ export default function ContactForm({ orderEmail }: Props) {
     setSuccessMessage(
       "Thank you for your message. We will get back to you soon.",
     );
-
-    setTimeout(() => {
-      setIsFadingOut(true);
-    }, 4500);
-
-    setTimeout(() => {
-      setSuccessMessage("");
-      setIsFadingOut(false);
-    }, 5000);
   }
 
   return (
@@ -112,9 +102,7 @@ export default function ContactForm({ orderEmail }: Props) {
         className={clsx(
           "flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition-opacity duration-500",
           successMessage
-            ? isFadingOut
-              ? "mt-4 border-green-200 text-green-700 opacity-0"
-              : "mt-4 border-green-200 bg-green-50 text-green-700 opacity-100"
+            ? "mt-4 border-green-200 bg-green-50 text-green-700 opacity-100"
             : "border-transparent text-transparent opacity-0",
         )}
       >
