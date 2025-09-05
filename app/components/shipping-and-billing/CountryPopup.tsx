@@ -72,7 +72,7 @@ export default function CountryPopup({
     // biome-ignore lint/a11y/noStaticElementInteractions: <explanation>
     <div
       ref={divRef}
-      className=" flex flex-col gap-2"
+      className="flex flex-col gap-2"
       //TODO: Improve onBlur
       onBlur={() => {
         setisOpen(false);

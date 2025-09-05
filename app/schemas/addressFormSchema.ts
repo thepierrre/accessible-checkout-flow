@@ -31,7 +31,7 @@ const phoneSchema = z
       ctx.addIssue({
         code: "custom",
         path: ["phoneCode"],
-        message: "Code is required if a phone number is entered.",
+        message: "Code is required if phone number is entered.",
       });
       return;
     }
@@ -83,13 +83,13 @@ export const addressFormSchema = z.object({
     .min(1, "Country/Territory can't be empty.")
     .max(100, "Country/Territory can have max. 255 characters.")
     .default(""),
-
   phone: phoneSchema.optional(),
   email: z
     .string()
     .nonempty("Email can't be empty.")
     .email({ message: "Enter a valid email." })
-    .max(100, "Email can have max. 255 characters."),
+    .max(100, "Email can have max. 255 characters.")
+    .default(""),
 });
 
 export const combinedAddressFormSchema = z.object({

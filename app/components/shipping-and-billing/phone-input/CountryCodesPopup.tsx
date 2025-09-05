@@ -77,13 +77,15 @@ export default function CountryCodesPopup({
           }
         }}
         className={clsx(
-          "h:12 flex min-w-[4.5rem] items-center justify-between rounded-md border px-2 py-2 text-sm focus:outline-none focus:ring-1 h-12 sm:h-10",
+          "h:12 flex h-12 min-w-[4.5rem] items-center justify-between rounded-md border bg-white px-2 py-2 text-sm focus:outline-none focus:ring-1 sm:h-10",
           error
             ? "border-red-primary focus:ring-red-primary"
             : "border-gray-300 focus:border-blue-primary focus:ring-blue-primary",
         )}
       >
-        {selected ? selected.dialCode : "+0"}
+        <span className={clsx(!selected && "text-gray-primary")}>
+          {selected ? selected.dialCode : "+0"}
+        </span>
         <span aria-hidden="true">▾</span>
       </button>
 
