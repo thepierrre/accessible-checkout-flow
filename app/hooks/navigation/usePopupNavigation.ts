@@ -1,6 +1,6 @@
 import { type KeyboardEvent, useCallback, useEffect, useState } from "react";
 
-interface UseListboxNavigationProps<T> {
+interface Props<T> {
   options: T[];
   onSelect: (option: T, index: number) => void;
   onTab: () => void;
@@ -10,7 +10,7 @@ interface UseListboxNavigationProps<T> {
   trigger: "input" | "button";
 }
 
-export default function useListboxNavigation<T>({
+export default function usePopupNavigation<T>({
   options,
   onSelect,
   onTab,
@@ -18,7 +18,7 @@ export default function useListboxNavigation<T>({
   isOpen,
   onOpen,
   trigger,
-}: UseListboxNavigationProps<T>) {
+}: Props<T>) {
   const [activeIndex, setActiveIndex] = useState(-1);
 
   useEffect(() => {

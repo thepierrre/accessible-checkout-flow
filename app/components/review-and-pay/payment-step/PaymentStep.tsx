@@ -48,24 +48,10 @@ export default function PaymentStep() {
         <h2 className="mb-6 animate-pulse font-bold text-2xl text-blue-primary uppercase tracking-wider">
           Preparing secure checkout
         </h2>
-        <div className="h-2 w-72 animate-[loading_1.5s_infinite] rounded-full bg-gradient-to-r from-blue-semilight via-blue-primary to-blue-semidark" />
+        <div className="loadingBar bg-gradient-to-r from-blue-300 via-blue-500 to-blue-900" />
         <p className="mt-4 text-gray-600 text-sm">
           Hang on, we are connecting…
         </p>
-        <style jsx>{`
-                    @keyframes loading {
-                        0% {
-                            background-position: -200px 0;
-                        }
-                        100% {
-                            background-position: calc(200px + 100%) 0;
-                        }
-                    }
-
-                    div {
-                        background-size: 200% 100%;
-                    }
-                `}</style>
       </div>
     );
   }
