@@ -52,7 +52,8 @@ export default function CountryCodesPopup({
 }: Props) {
   const optionRefs = useRef<(HTMLLIElement | null)[]>([]);
   const filteredOptions = useDialCodeQueryOptions(options, activeQuery);
-  const { setValue } = useFormContext<CombinedAddressFormData>();
+  const { setValue, getValues, trigger } =
+    useFormContext<CombinedAddressFormData>();
 
   const { reset } = useQueryBuffer();
   const { isOpen, setIsOpen, popupId, popupStyle } = popup;
@@ -69,14 +70,20 @@ export default function CountryCodesPopup({
         aria-controls={popupId}
         onClick={() => setIsOpen((o) => !o)}
         onKeyDown={onCombinedKeyDown}
+        onBlur={() => {
+          const num = getValues(`${addressType}.phone.phoneNumber`)?.trim();
+          if (num) {
+            trigger(`${addressType}.phone.phoneNumber`);
+          }
+        }}
         className={clsx(
-          "flex min-w-[4.5rem] items-center justify-between rounded-md border px-2 py-2 text-sm focus:outline-none focus:ring-1",
+          "h:12 flex min-w-[4.5rem] items-center justify-between rounded-md border px-2 py-2 text-sm focus:outline-none focus:ring-1 h-12 sm:h-10",
           error
             ? "border-red-primary focus:ring-red-primary"
             : "border-gray-300 focus:border-blue-primary focus:ring-blue-primary",
         )}
       >
-        {selected ? selected.dialCode : "Code"}
+        {selected ? selected.dialCode : "+0"}
         <span aria-hidden="true">▾</span>
       </button>
 
