@@ -29,7 +29,7 @@ export default function LinkButton({
   onClick,
 }: LinkButtonProps) {
   const classes = clsx(
-    "text-sm px-2",
+    "px-2 text-sm",
     disabled ? "cursor-not-allowed" : "cursor-pointer",
     size === "small" ? "px-2 py-1 text-sm" : "px-3 text-base",
     variant === "primary" &&
@@ -37,9 +37,9 @@ export default function LinkButton({
     variant === "secondary" &&
       "border-2 border-blue-primary bg-white text-blue-semidark hover:bg-blue-light",
     variant === "soft" &&
-      "h-8 flex bg-blue-extralight text-blue-primary hover:bg-blue-light",
+      "focus-primary-rounded flex h-8 rounded-full bg-blue-extralight text-blue-primary hover:bg-blue-light",
     barButton && "w-full",
-    "inline-flex items-center gap-1 rounded-full font-medium transition-colors duration-200",
+    "inline-flex items-center gap-1 font-medium transition-colors duration-200",
   );
 
   const Img = icon ? <Image {...icon.img} className="h-5 w-5" /> : null;

@@ -111,7 +111,7 @@ export default function Modal({
           type="button"
           aria-label="Close modal"
           onClick={onClose}
-          className="absolute top-3 right-3 flex h-10 w-10 items-center justify-center rounded-full text-gray-500 transition-200 hover:bg-gray-100 hover:text-gray-700"
+          className="absolute top-3 right-3 flex h-10 w-10 items-center justify-center rounded-full text-gray-500 transition-200 hover:bg-gray-100 hover:text-gray-700 focus-primary-rounded"
         >
           <span aria-hidden="true" className="text-xl">
             ✕

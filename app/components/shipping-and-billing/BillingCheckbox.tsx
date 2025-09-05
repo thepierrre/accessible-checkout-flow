@@ -4,6 +4,7 @@ type Props = ComponentPropsWithRef<"input">;
 
 export default function BillingCheckbox(props: Props) {
   const checkboxId = useId();
+
   return (
     <section className="relative my-6 flex items-center gap-2">
       <div className="relative flex items-center">
@@ -11,7 +12,7 @@ export default function BillingCheckbox(props: Props) {
           {...props}
           id={checkboxId}
           type="checkbox"
-          className="peer h-8 w-8 appearance-none rounded-md border-2 border-blue-primary bg-white checked:border-0 checked:bg-blue-primary focus:outline-none focus:ring-2 focus:ring-blue-primary focus:ring-offset-1 sm:h-6 sm:w-6"
+          className="peer h-8 w-8 appearance-none rounded-md border-2 border-blue-primary bg-white checked:border-0 checked:bg-blue-primary sm:h-6 sm:w-6 focus-primary"
         />
         <svg
           aria-hidden="true"

@@ -19,7 +19,7 @@ export function ReturningCustomer() {
         Returning customer?
         <button
           type="button"
-          className="font-medium text-blue-primary focus:outline-blue-primary"
+          className="focus-primary text-blue-primary"
           onClick={() => setIsModalOpen(true)}
         >
           Log in
@@ -27,7 +27,7 @@ export function ReturningCustomer() {
         <span>or</span>
         <button
           type="button"
-          className="font-medium text-blue-primary focus:outline-blue-primary"
+          className="focus-primary text-blue-primary"
           onClick={() => setIsModalOpen(true)}
         >
           Sign up

@@ -3,11 +3,11 @@ import { clsx } from "clsx";
 import Image, { type ImageProps } from "next/image";
 
 const classes = {
-  soft: "h-8 flex px-4 cursor-pointer items-center gap-1 bg-blue-extralight font-medium rounded-3xl text-blue-primary transition-colors duration-200 hover:bg-blue-light text-sm",
+  soft: "h-8 flex px-4 cursor-pointer items-center gap-1 bg-blue-extralight font-medium rounded-3xl text-blue-primary transition-colors duration-200 hover:bg-blue-light text-sm focus-primary-rounded",
   primary:
-    "bg-blue-primary text-white hover:bg-blue-semidark hover:bg-green-dark focus:outline-solid focus:outline-offset-2 px-6 rounded-xl",
+    "bg-blue-primary text-white hover:bg-blue-semidark hover:bg-green-dark px-6 rounded-xl focus-primary",
   secondary:
-    "border-2 border-blue-primary bg-white px-4 py-1 text-blue-semidark hover:bg-blue-light focus:ring focus:ring-blue-primary rounded-xl",
+    "border-2 border-blue-primary bg-white px-4 py-1 text-blue-semidark hover:bg-blue-light rounded-xl focus-primary",
   small: "py-0 text-sm",
   regular: "py-2 text-lg",
 };
@@ -67,7 +67,10 @@ export default function Button({
       aria-controls={ariaControls}
       aria-expanded={ariaExpanded}
       aria-pressed={ariaPressed}
-      onClick={onClick}
+      onClick={(e) => {
+        onClick?.();
+        e.currentTarget.blur();
+      }}
       className={clsx(
         size === "small" ? classes.small : classes.regular,
         variant === "primary" && classes.primary,

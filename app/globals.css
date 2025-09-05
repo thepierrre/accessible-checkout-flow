@@ -6,6 +6,14 @@ body {
     @apply text-black-primary
 }
 
+.focus-primary {
+    @apply font-medium focus:outline-none focus:ring-2 focus:ring-blue-primary focus:ring-offset-2 focus:rounded-xl;
+}
+
+.focus-primary-rounded {
+    @apply font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-primary focus-visible:ring-offset-0 focus-visible:rounded-full;
+}
+
 .loadingBar {
     height: 0.5rem;
     width: 18rem;
