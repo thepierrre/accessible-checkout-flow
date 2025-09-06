@@ -19,7 +19,8 @@ I wanted to build a project that:
 
 * Address form built with React Hook Form
 * Review page with order summary and discount code support.
-  * Discount code: entering ```TIMEFORCOFFEE``` applies a 10% discount.
+  * Discount code: <span style="color:seagreen; font-weight:bold">TIMEFORCOFFEE</span> applies a 10% discount.
+
 
 ### Stripe integration:
   * **Express checkout** (with a disclaimer that no actual charge is made).
