@@ -98,7 +98,7 @@ export default function ContactForm({ orderEmail }: Props) {
           }
           setSuccessMessage("");
         }}
-        className="focus-primary font-medium text-blue-primary underline focus:ring-offset-3"
+        className="focus-primary-square px-2 font-medium text-blue-primary underline focus:rounded-md focus:outline-none focus:ring-2 focus:ring-blue-primary focus:ring-offset-3"
       >
         {isFormOpen ? "Hide contact form" : "Need help? Contact us"}
       </button>
