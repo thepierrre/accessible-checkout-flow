@@ -45,7 +45,7 @@ I wanted to build a project that:
 ### Running locally
 
 ```bash
-git clone <repo-url>
+git clone git@github.com:thepierrre/accessible-checkout-flow.git
 cd accessible-checkout-flow
 npm install
 npm run dev
