@@ -53,7 +53,7 @@ npm run dev
 
 The app will be available at http://localhost:3000 by default.
 
-⚠️ **Note 1:** When running the app locally, **Stripe Express Checkout** may not be available because it requires a publicly accessible URL for redirect. 
+⚠️ **Note 1:** When running the app locally, **Stripe Express Checkout** will not be available because it requires a publicly accessible URL for redirect. 
 If you want to test it, consider using a tunneling tool like [Anchor](https://anchor.dev/) to expose your local server.
 
 ⚠️ **Note 2:** Some buttons (_Login_, _Sign up_, _Edit card_, _Back to shop_) are mock elements that open a "It's just a demo" modal. For now, the focus is on checkout, but I may expand this into a full shopping flow later.
