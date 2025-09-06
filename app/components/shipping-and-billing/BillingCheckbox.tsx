@@ -12,7 +12,7 @@ export default function BillingCheckbox(props: Props) {
           {...props}
           id={checkboxId}
           type="checkbox"
-          className="peer h-8 w-8 appearance-none rounded-md border-2 border-blue-primary bg-white checked:border-0 checked:bg-blue-primary sm:h-6 sm:w-6 focus-primary"
+          className="peer h-8 w-8 appearance-none rounded-md border-2 border-blue-primary bg-white checked:border-0 checked:bg-blue-primary sm:h-6 sm:w-6 focus-primary focus:rounded-md"
         />
         <svg
           aria-hidden="true"
