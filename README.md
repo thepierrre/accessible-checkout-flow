@@ -4,7 +4,7 @@ This is a small demo project showcasing an accessible checkout flow built with N
 Instead of creating a full e-commerce site, I focused on a single but realistic use case - implementing an **accessible checkout process** with form handling and external payment integration.
 
 **The project is deployed on Vercel:**
-👉 [**CLICK HERE**](https://vercel.com/thepierrres-projects/accessible-checkout-flow)
+👉 [**CLICK HERE**](https://accessible-checkout-flow.vercel.app)
 
 ## Why I built this
 
