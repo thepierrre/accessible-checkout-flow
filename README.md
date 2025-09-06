@@ -33,13 +33,14 @@ I wanted to build a project that:
 * Keyboard navigation support
 * Custom components with ARIA labels and roles
 * Focus management and form validation designed with screen readers in mind
-* Most features are implemented manually to deepen my understanding.
+* Most features are implemented manually to deepen my understanding
 
 ### Tech Stack
 
 * Next.js
 * React Hook Form for form management
 * Stripe API for payments
+* Deployed on Vercel
 
 ### Running locally
 
