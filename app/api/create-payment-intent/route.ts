@@ -13,6 +13,13 @@ export async function POST(request: NextRequest) {
   try {
     const { amount, paymentIntentId } = await request.json();
 
+    if (!amount || amount < 1) {
+      return NextResponse.json(
+        { error: "Invalid purchase amount: it must be greater than 0." },
+        { status: 400 },
+      );
+    }
+
     let paymentIntent: Stripe.PaymentIntent;
 
     if (paymentIntentId) {
@@ -31,11 +38,24 @@ export async function POST(request: NextRequest) {
       clientSecret: paymentIntent.client_secret,
       id: paymentIntent.id,
     });
-  } catch (error) {
-    console.error("Internal error: ", error);
+  } catch (e: unknown) {
+    if (e instanceof Stripe.errors.StripeError) {
+      console.error("Stripe error:", {
+        type: e.type,
+        code: e.code,
+        param: e.param,
+        message: e.message,
+      });
+      return NextResponse.json(
+        { error: `Payment failed: ${e.message}` },
+        { status: 400 },
+      );
+    }
+
+    console.error("Internal server error: ", e);
     return NextResponse.json(
       {
-        error: `Internal server error: ${error}`,
+        error: `Internal server error: ${e}`,
       },
       { status: 500 },
     );

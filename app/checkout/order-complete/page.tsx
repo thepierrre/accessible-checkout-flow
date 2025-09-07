@@ -1,9 +1,10 @@
 import OrderCompleteView from "@/app/components/order-complete/OrderCompleteView";
-import { icons } from "@/app/constants/icons";
+import type { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Checkout | Order Complete",
-  icons,
+  description:
+    "Thank you for your order. Your purchase has been completed successfully.",
 };
 
 export default function OrderCompletePage() {

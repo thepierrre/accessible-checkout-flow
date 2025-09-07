@@ -11,7 +11,7 @@ export function ReturningCustomer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <section className="relative mb-4 w-full text-center sm:my-2 sm:w-160">
+    <aside className="relative mb-4 w-full text-center sm:my-2 sm:w-160">
       <div className="hidden sm:absolute sm:inset-0 sm:flex sm:items-center">
         <span className="w-full border-gray-300 border-t" />
       </div>
@@ -54,6 +54,6 @@ export function ReturningCustomer() {
         title="Demo"
         description="This is just a checkout flow demo. No real login or signup here."
       />
-    </section>
+    </aside>
   );
 }

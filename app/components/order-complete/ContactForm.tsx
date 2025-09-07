@@ -1,8 +1,8 @@
 "use client";
 
 import clsx from "clsx";
+import { type FormEvent, useEffect, useRef, useState } from "react";
 import Button from "@/app/components/shared/Button";
-import { type FormEvent, useEffect, useId, useRef, useState } from "react";
 import useGeneratedIds from "@/app/hooks/useGeneratedIds";
 
 type FormErrors = {

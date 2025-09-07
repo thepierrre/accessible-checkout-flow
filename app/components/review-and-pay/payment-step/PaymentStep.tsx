@@ -5,11 +5,12 @@ import { loadStripe } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
 import Heading from "@/app/components/shared/Heading";
 import StepBadge from "@/app/components/shared/StepBadge";
-import { APPEARANCE } from "@/app/constants/stripe";
+import { APPEARANCE } from "@/app/constants/stripeAppearance";
 import { useOrderSummary } from "@/app/context/OrderSummaryContext";
 import { convertToSubcurrency } from "@/app/lib/convertToSubcurrency";
 import CardCheckout from "./CardCheckout";
 import ExpressCheckout from "./ExpressCheckout";
+import LoadingCheckout from "@/app/components/review-and-pay/payment-step/LoadingCheckout";
 
 const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
 
@@ -26,6 +27,7 @@ export default function PaymentStep() {
 
   useEffect(() => {
     setClientSecret(null);
+    const controller = new AbortController();
 
     fetch("/api/create-payment-intent", {
       method: "POST",
@@ -34,26 +36,25 @@ export default function PaymentStep() {
         amount: convertToSubcurrency(Number(total.toFixed(2))),
         paymentIntentId,
       }),
+      signal: controller.signal,
     })
       .then((res) => res.json())
       .then((data) => {
         setClientSecret(data.clientSecret);
         setPaymentIntentId(data.id);
+      })
+      .catch((err) => {
+        console.info("Payment intent fetch was aborted.");
+        if (err.name === "AbortError") return;
       });
+
+    return () => {
+      controller.abort();
+    };
   }, [total, paymentIntentId]);
 
   if (!clientSecret) {
-    return (
-      <div className="flex flex-col items-center justify-center py-16">
-        <h2 className="mb-6 animate-pulse font-bold text-2xl text-blue-primary uppercase tracking-wider">
-          Preparing secure checkout
-        </h2>
-        <div className="loadingBar bg-gradient-to-r from-blue-300 via-blue-500 to-blue-900" />
-        <p className="mt-4 text-gray-600 text-sm">
-          Hang on, we are connecting…
-        </p>
-      </div>
-    );
+    return <LoadingCheckout />;
   }
 
   const options = {

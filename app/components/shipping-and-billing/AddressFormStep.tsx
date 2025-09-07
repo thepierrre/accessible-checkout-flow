@@ -12,7 +12,7 @@ import Heading from "@/app/components/shared/Heading";
 import StepBadge from "@/app/components/shared/StepBadge";
 import AddressForm from "@/app/components/shipping-and-billing/AddressForm";
 import BillingCheckbox from "@/app/components/shipping-and-billing/BillingCheckbox";
-import ErrorContainer from "@/app/components/shipping-and-billing/ErrorContainer";
+import ErrorComponent from "@/app/components/shipping-and-billing/ErrorComponent";
 import NavigationButtons from "@/app/components/shipping-and-billing/NavigationButtons";
 import { useAddress } from "@/app/context/AddressContext";
 import useEditMode from "@/app/hooks/shipping-and-billing/useEditMode";
@@ -127,7 +127,7 @@ export default function AddressFormStep() {
   };
 
   return (
-    <div className="mx-auto w-full px-6 sm:w-160 sm:rounded-xl sm:bg-gradient-to-br sm:from-gray-extralight sm:to-gray-light sm:p-10 sm:shadow-md">
+    <main className="mx-auto w-full px-6 sm:w-160 sm:rounded-xl sm:bg-gradient-to-br sm:from-gray-extralight sm:to-gray-light sm:p-10 sm:shadow-md">
       <StepBadge current={1} max={3} />
       <section aria-labelledby="form-title" className="w-full">
         <Heading label="Shipping & Billing" as="h1" id={formTitleId} />
@@ -144,7 +144,7 @@ export default function AddressFormStep() {
         onSubmit={handleFormSubmit}
       >
         {appMessage && (
-          <ErrorContainer ref={serverErrorRef} errorMessage={appMessage} />
+          <ErrorComponent ref={serverErrorRef} errorMessage={appMessage} />
         )}
         <FormProvider {...form}>
           <AddressForm ref={shippingAddressRef} addressType="shipping" />
@@ -165,6 +165,6 @@ export default function AddressFormStep() {
           isEditing={isEditing}
         />
       </form>
-    </div>
+    </main>
   );
 }

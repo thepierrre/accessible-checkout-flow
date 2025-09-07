@@ -10,7 +10,7 @@ import type { StripePaymentElementOptions } from "@stripe/stripe-js";
 import Button from "@/app/components/shared/Button";
 import { useOnlineStatus } from "@/app/hooks/useOnlineStatus";
 import { useAppMessage } from "@/app/context/AppMessageContext";
-import ErrorContainer from "@/app/components/shipping-and-billing/ErrorContainer";
+import ErrorComponent from "@/app/components/shipping-and-billing/ErrorComponent";
 
 interface Props {
   amount: number;
@@ -83,7 +83,7 @@ export default function CardCheckout({ amount, clientSecret }: Props) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <PaymentElement options={options} />
-      {!isOnline && appMessage && <ErrorContainer errorMessage={appMessage} />}
+      {!isOnline && appMessage && <ErrorComponent errorMessage={appMessage} />}
       <Button
         type="submit"
         label={`Pay €${amount}`}

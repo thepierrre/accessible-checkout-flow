@@ -1,9 +1,9 @@
 import ReviewAndPayView from "@/app/components/review-and-pay/ReviewAndPayView";
-import { icons } from "@/app/constants/icons";
+import type { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Checkout | Review & Pay",
-  icons,
+  description: "Review your order and pay.",
 };
 
 export default function ReviewAndPayPage() {

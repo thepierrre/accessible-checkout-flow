@@ -12,15 +12,12 @@ interface Props {
 
 export default function AddressSection({ type }: Props) {
   const combinedAddress = useAddress();
-
   const addressType = combinedAddress[type];
 
   if (!addressType) return;
 
   const { email, name, address, zip, region, country, phone } = addressType;
-
   const { phoneCode, phoneNumber } = phone ?? {};
-
   const billingSameAsShipping = isBillingSameAsShipping();
 
   return (

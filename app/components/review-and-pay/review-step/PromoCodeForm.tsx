@@ -2,7 +2,7 @@
 
 import { clsx } from "clsx";
 import Image from "next/image";
-import { useId, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { getDiscount as getDiscountAction } from "@/app/lib/actions";
 import removeIcon from "../../../../public/icons/removeIcon.svg";
@@ -10,7 +10,7 @@ import { useOrderSummary } from "@/app/context/OrderSummaryContext";
 import Button from "@/app/components/shared/Button";
 import { useOnlineStatus } from "@/app/hooks/useOnlineStatus";
 import { useAppMessage } from "@/app/context/AppMessageContext";
-import ErrorContainer from "@/app/components/shipping-and-billing/ErrorContainer";
+import ErrorComponent from "@/app/components/shipping-and-billing/ErrorComponent";
 import useGeneratedIds from "@/app/hooks/useGeneratedIds";
 
 type FormValues = {
@@ -91,7 +91,7 @@ export default function PromoCodeForm() {
 
   return (
     <div className="w-full">
-      {appMessage && <ErrorContainer errorMessage={appMessage} />}
+      {appMessage && <ErrorComponent errorMessage={appMessage} />}
       <form
         id={promoCodeFormId}
         name="promo-code-form"

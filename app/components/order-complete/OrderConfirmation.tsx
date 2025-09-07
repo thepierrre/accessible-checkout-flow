@@ -2,7 +2,7 @@ interface Props {
   orderEmail: string;
 }
 
-export default function OrderCompleteInfo({ orderEmail }: Props) {
+export default function OrderConfirmation({ orderEmail }: Props) {
   return (
     <>
       <h1 className="relative mb-4 py-2 text-center font-bold text-3xl uppercase tracking-wide">

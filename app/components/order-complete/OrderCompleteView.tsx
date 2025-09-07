@@ -3,11 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ContactForm from "@/app/components/order-complete/ContactForm";
-import OrderCompleteInfo from "@/app/components/order-complete/OrderCompleteInfo";
+import OrderConfirmation from "@/app/components/order-complete/OrderConfirmation";
 import PageShownOnceDisclaimer from "@/app/components/order-complete/PageShownOnceDisclaimer";
+import ProcessingPayment from "@/app/components/order-complete/ProcessingPayment";
 import ShopMoreButton from "@/app/components/order-complete/ShopMoreButton";
 import { getAddressData } from "@/app/lib/addressDataUtils";
-import ProcessingPayment from "@/app/components/order-complete/ProcessingPayment";
 
 export default function OrderCompleteView() {
   const router = useRouter();
@@ -26,7 +26,7 @@ export default function OrderCompleteView() {
 
     setBuyerEmail(billing.email);
 
-    // Adds an artificial delay to simulate connecting to the provider
+    // Adds an artificial delay to simulate connecting to the provider (for demo purposes)
     const timer = setTimeout(() => {
       setCanAccessPage(true);
       setIsProcessing(false);
@@ -42,13 +42,11 @@ export default function OrderCompleteView() {
   if (!canAccessPage) return null;
 
   return (
-    <main className="mx-auto mt-24 max-w-lg animate-fade-in-up space-y-8 px-10 py-8">
-      <div className="space-y-4 text-center">
-        <OrderCompleteInfo orderEmail={buyerEmail} />
-        <ShopMoreButton />
-        <PageShownOnceDisclaimer />
-        <ContactForm orderEmail={buyerEmail} />
-      </div>
+    <main className="mx-auto mt-24 max-w-lg animate-fade-in-up space-y-4 px-10 py-8 text-center">
+      <OrderConfirmation orderEmail={buyerEmail} />
+      <ShopMoreButton />
+      <PageShownOnceDisclaimer />
+      <ContactForm orderEmail={buyerEmail} />
     </main>
   );
 }

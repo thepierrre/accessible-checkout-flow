@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
 import { clsx } from "clsx";
 import Image, { type ImageProps } from "next/image";
+import type { ReactNode } from "react";
 
 const classes = {
   soft: "h-8 flex px-4 cursor-pointer items-center gap-1 bg-blue-extralight font-medium rounded-3xl text-blue-primary transition-colors duration-200 hover:bg-blue-light text-sm focus-primary-rounded",

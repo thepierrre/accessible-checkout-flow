@@ -5,6 +5,7 @@ import {
   type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
+  useRef,
   useState,
 } from "react";
 
@@ -32,16 +33,16 @@ export default function Tooltip({
   delay = 300,
 }: Props) {
   const [isShown, setIsShown] = useState(false);
-  let timeoutId: ReturnType<typeof setTimeout> | null = null;
+  const timeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function showTooltip(autoHide = false, delay: number) {
-    if (timeoutId) clearTimeout(timeoutId);
+    if (timeoutId.current) clearTimeout(timeoutId.current);
 
-    timeoutId = setTimeout(() => {
+    timeoutId.current = setTimeout(() => {
       setIsShown(true);
 
       if (autoHide) {
-        timeoutId = setTimeout(() => {
+        timeoutId.current = setTimeout(() => {
           setIsShown(false);
         }, 2000);
       }
@@ -49,9 +50,9 @@ export default function Tooltip({
   }
 
   function hideTooltip() {
-    if (timeoutId !== null) {
-      clearTimeout(timeoutId);
-      timeoutId = null;
+    if (timeoutId.current !== null) {
+      clearTimeout(timeoutId.current);
+      timeoutId.current = null;
     }
     setIsShown(false);
   }
@@ -68,7 +69,7 @@ export default function Tooltip({
   }
 
   return (
-    <div className="relative flex hidden items-center sm:block">
+    <div className="relative hidden items-center sm:block">
       <div className="cursor-pointer">
         {children({
           onMouseEnter: () => showTooltip(false, delay),

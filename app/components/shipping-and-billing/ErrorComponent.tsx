@@ -5,7 +5,7 @@ interface Props {
   errorMessage: string | null;
 }
 
-export default function ErrorContainer({ ref, errorMessage }: Props) {
+export default function ErrorComponent({ ref, errorMessage }: Props) {
   return (
     <section
       role="alert"
