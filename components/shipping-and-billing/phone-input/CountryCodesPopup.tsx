@@ -58,7 +58,6 @@ export default function CountryCodesPopup({
       <input
         type="tel"
         role="combobox"
-        inputMode="tel"
         autoComplete="tel-country-code"
         placeholder="+0"
         aria-haspopup="listbox"
