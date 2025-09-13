@@ -129,7 +129,6 @@ export default function PhoneInput({ labelText, addressType }: Props) {
 
       <div className="flex gap-1">
         <CountryCodesPopup
-          selection={{ selected, setSelected }}
           navigation={{
             activeIndex,
             setActiveIndex,

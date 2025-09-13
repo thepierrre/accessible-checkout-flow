@@ -13,11 +13,6 @@ import type { CombinedAddressFormData } from "@/schemas/addressFormSchema";
 import type { AddressType } from "@/types/address";
 import type { CountryOption } from "./PhoneInput";
 
-interface SelectionProps {
-  selected: CountryOption | null;
-  setSelected: (selected: CountryOption | null) => void;
-}
-
 interface NavigatonProps {
   activeIndex: number;
   setActiveIndex: (index: number) => void;
@@ -34,7 +29,6 @@ interface PopupProps {
 interface Props {
   options: CountryOption[];
   activeQuery: string;
-  selection: SelectionProps;
   navigation: NavigatonProps;
   popup: PopupProps;
   addressType: AddressType;
@@ -44,7 +38,6 @@ interface Props {
 export default function CountryCodesPopup({
   options,
   activeQuery,
-  selection,
   navigation,
   popup,
   addressType,
@@ -57,7 +50,6 @@ export default function CountryCodesPopup({
 
   const { reset } = useQueryBuffer();
   const { isOpen, setIsOpen, popupId, popupStyle } = popup;
-  const { selected, setSelected } = selection;
   const { activeIndex, setActiveIndex, onCombinedKeyDown } = navigation;
   useActiveScroll(optionRefs, activeIndex, isOpen);
 
@@ -73,7 +65,6 @@ export default function CountryCodesPopup({
         aria-expanded={isOpen}
         aria-controls={popupId}
         {...register(`${addressType}.phone.phoneCode`)}
-        value={selected ? selected.dialCode : ""}
         onFocus={() => setIsOpen(true)}
         onChange={() => {
           setIsOpen(true);
@@ -121,7 +112,6 @@ export default function CountryCodesPopup({
               )}
               onMouseEnter={() => setActiveIndex(i)}
               onMouseDown={() => {
-                setSelected(c);
                 setValue(`${addressType}.phone.phoneCode`, c.dialCode, {
                   shouldValidate: true,
                 });
