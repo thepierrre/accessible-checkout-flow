@@ -75,7 +75,7 @@ export default function CountryCodesPopup({
           if (num) trigger(`${addressType}.phone.phoneNumber`);
         }}
         className={clsx(
-          "h-12 w-16 rounded-md border bg-white px-2 text-sm focus:outline-none focus:ring-1 sm:h-10",
+          "h-12 w-16 rounded-md border bg-white px-2 text-md focus:outline-none focus:ring-1 sm:h-10 sm:text-sm",
           error
             ? "border-red-primary focus:ring-red-primary"
             : "border-gray-300 focus:border-blue-primary focus:ring-blue-primary",
