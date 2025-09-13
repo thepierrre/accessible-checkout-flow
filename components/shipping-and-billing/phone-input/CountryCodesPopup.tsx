@@ -57,6 +57,7 @@ export default function CountryCodesPopup({
     <div className="relative">
       <input
         type="tel"
+        inputMode="text"
         role="combobox"
         autoComplete="tel-country-code"
         placeholder="+0"
