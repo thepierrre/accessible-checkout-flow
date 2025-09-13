@@ -9,7 +9,11 @@ interface Props {
   error?: string;
 }
 
-export default function PhoneInputFields({ addressType, id, error }: Props) {
+export default function PhoneNumberInputField({
+  addressType,
+  id,
+  error,
+}: Props) {
   const { register } = useFormContext<CombinedAddressFormData>();
 
   return (

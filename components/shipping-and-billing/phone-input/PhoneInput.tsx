@@ -13,7 +13,7 @@ import { useClickOutside } from "@/hooks/navigation/useClickOutside";
 import { useQueryBuffer } from "@/hooks/shipping-and-billing/useQueryBuffer";
 import InputErrorMessage from "@/components/shipping-and-billing/InputErrorMessage";
 import CountryCodesPopup from "@/components/shipping-and-billing/phone-input/CountryCodesPopup";
-import PhoneInputFields from "@/components/shipping-and-billing/phone-input/PhoneInputFields";
+import PhoneNumberInputField from "@/components/shipping-and-billing/phone-input/PhoneNumberInputField";
 import useGeneratedIds from "@/hooks/useGeneratedIds";
 import { usePopupStyle } from "@/hooks/ui/usePopupStyle";
 import { TooltipContent, TooltipTrigger } from "@radix-ui/react-tooltip";
@@ -91,10 +91,7 @@ export default function PhoneInput({ labelText, addressType }: Props) {
     onOpen: () => setIsOpen(true),
   });
 
-  const { inputId, popupId } = useGeneratedIds(
-    "inputId",
-    "popupId",
-  );
+  const { inputId, popupId } = useGeneratedIds("inputId", "popupId");
 
   const phoneErrors = errors[addressType]?.phone;
   const [phoneCodeError, phoneNumberError] = [
@@ -120,7 +117,7 @@ export default function PhoneInput({ labelText, addressType }: Props) {
                 tabIndex={0}
                 src={questionIcon}
                 alt=""
-                className="rounded-full focus:outline-none focus:ring-2 focus:ring-blue-primary"
+                className="pointer-events-none rounded-full focus:outline-none focus:ring-2 focus:ring-blue-primary"
               />
             </TooltipTrigger>
             <TooltipContent className="fade-in-0 zoom-in-95 data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 origin-[--radix-tooltip-content-transform-origin] animate-in overflow-hidden rounded-md bg-blue-primary px-3 py-1.5 text-white text-xs data-[state=closed]:animate-out">
@@ -144,7 +141,7 @@ export default function PhoneInput({ labelText, addressType }: Props) {
           addressType={addressType}
           error={phoneCodeError}
         />
-        <PhoneInputFields
+        <PhoneNumberInputField
           addressType={addressType}
           id={inputId}
           error={!phoneCodeError ? phoneNumberError : undefined}
