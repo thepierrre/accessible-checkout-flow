@@ -2,7 +2,7 @@ import "@/app/globals.css";
 import { clsx } from "clsx";
 import { IBM_Plex_Sans } from "next/font/google";
 import type { ReactNode } from "react";
-import { icons } from "@/app/constants/icons";
+import { icons } from "@/constants/icons";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

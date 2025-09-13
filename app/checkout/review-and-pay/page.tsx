@@ -1,4 +1,4 @@
-import ReviewAndPayView from "@/app/components/review-and-pay/ReviewAndPayView";
+import ReviewAndPayView from "@/components/review-and-pay/ReviewAndPayView";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

@@ -1,4 +1,4 @@
-import OrderCompleteView from "@/app/components/order-complete/OrderCompleteView";
+import OrderCompleteView from "@/components/order-complete/OrderCompleteView";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

@@ -1,5 +1,5 @@
-import AddressFormStep from "@/app/components/shipping-and-billing/AddressFormStep";
-import { ReturningCustomer } from "@/app/components/shipping-and-billing/ReturningCustomer";
+import AddressFormStep from "@/components/shipping-and-billing/AddressFormStep";
+import { ReturningCustomer } from "@/components/shipping-and-billing/ReturningCustomer";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 
